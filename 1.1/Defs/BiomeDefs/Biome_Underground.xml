@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <BiomeDef>
+    <defName>Underground</defName>
+    <label>underground</label>
+    <description>Rocks, rocks, and rocks. That's all to the earth beneath your feet. Due to works blocking the way, it's extremely hard to travel in all weather.</description>
+    <workerClass>BiomeWorker_Tundra</workerClass>
+    <!--Borrowing worker from tundra, because why not?-->
+    <animalDensity>0.01</animalDensity>
+    <plantDensity>0.01</plantDensity>
+    <settlementSelectionWeight>0.32</settlementSelectionWeight>
+    <texture>World/Biomes/Tundra</texture>
+    <soundsAmbient>
+      <li>AmbientNightInsects_Standard</li>
+    </soundsAmbient>
+    <diseaseMtbDays>80</diseaseMtbDays>
+    <diseases>
+      <li>
+        <diseaseInc>Disease_FibrousMechanites</diseaseInc>
+        <commonality>40</commonality>
+      </li>
+      <li>
+        <diseaseInc>Disease_SensoryMechanites</diseaseInc>
+        <commonality>40</commonality>
+      </li>
+    </diseases>
+    <terrainsByFertility>
+      <li>
+        <terrain>Soil</terrain>
+        <min>-999</min>
+        <max>0.87</max>
+      </li>
+    </terrainsByFertility>
+    <terrainPatchMakers>
+      <li>
+        <perlinFrequency>0.015</perlinFrequency>
+        <thresholds>
+          <li>
+            <terrain>MossyTerrain</terrain>
+            <min>0.64</min>
+            <max>0.83</max>
+          </li>
+          <li>
+            <terrain>Marsh</terrain>
+            <min>0.83</min>
+            <max>999</max>
+          </li>
+        </thresholds>
+      </li>
+    </terrainPatchMakers>
+    <baseWeatherCommonalities>
+      <Clear>20</Clear>
+    </baseWeatherCommonalities>
+    <wildPlants>
+    </wildPlants>
+    <wildAnimals>
+    </wildAnimals>
+    <allowedPackAnimals>
+      <li>Muffalo</li>
+    </allowedPackAnimals>
+  </BiomeDef>
+</Defs>

@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <ThingDef ParentName="BuildingBase">
+    <defName>miningshaft</defName>
+    <label>mining shaft</label>
+    <description>Allows digging deep into the planet for exploration and mining. Requires power.</description>
+    <thingClass>DeepRim.Building_MiningShaft</thingClass>
+    <graphicData>
+      <texPath>Things/industrialmine</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(3,3)</drawSize>
+    </graphicData>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>Standable</passability>
+    <castEdgeShadows>true</castEdgeShadows>
+    <fillPercent>0.7</fillPercent>
+    <canOverlapZones>true</canOverlapZones>
+    <hasInteractionCell>True</hasInteractionCell>
+    <interactionCellOffset>(0,0,-2)</interactionCellOffset>
+    <statBases>
+      <WorkToBuild>12500</WorkToBuild>
+      <MaxHitPoints>300</MaxHitPoints>
+      <Flammability>1.0</Flammability>
+      <Beauty>-60</Beauty>
+      <Cleanliness>-20</Cleanliness>
+    </statBases>
+    <tickerType>Normal</tickerType>
+    <comps>
+      <li Class="CompProperties_HeatPusher">
+        <compClass>CompHeatPusherPowered</compClass>
+        <heatPerSecond>55</heatPerSecond>
+        <heatPushMaxTemperature>1500</heatPushMaxTemperature>
+      </li>
+      <li Class="CompProperties_Glower">
+        <glowRadius>4</glowRadius>
+        <glowColor>(255,0,0,0)</glowColor>
+      </li>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>1200</basePowerConsumption>
+      </li>
+      <li Class="CompProperties_Flickable" />
+    </comps>
+    <size>(3,3)</size>
+    <stuffCategories>
+      <li>Metallic</li>
+    </stuffCategories>
+    <costStuffCount>145</costStuffCount>
+    <costList>
+      <ComponentIndustrial>5</ComponentIndustrial>
+    </costList>
+    <building>
+      <deconstructible>true</deconstructible>
+    </building>
+    <killedLeavings>
+      <ChunkSlagSteel>6</ChunkSlagSteel>
+    </killedLeavings>
+    <leaveResourcesWhenKilled>false</leaveResourcesWhenKilled>
+    <designationCategory>Production</designationCategory>
+    <staticSunShadowHeight>0.6</staticSunShadowHeight>
+    <placeWorkers>
+      <li>DeepRim.PlaceWorker_AboveGround</li>
+    </placeWorkers>
+  </ThingDef>
+  <!--
+	<ThingDef ParentName="BuildingBase">
+		<defName>shaft</defName>
+		<label>shaft</label>
+		<description>A simple elevator shaft made for exploring deep holes. Requires power.</description>
+		<thingClass>DeepRim.Building_Shaft</thingClass>
+		<graphicData>
+			<texPath>Things/industrialmine</texPath>
+			<graphicClass>Graphic_Single</graphicClass>
+			<drawSize>(3,3)</drawSize>
+		</graphicData>
+		<altitudeLayer>Building</altitudeLayer>
+		<passability>Standable</passability>
+		<castEdgeShadows>true</castEdgeShadows>
+		<fillPercent>0.7</fillPercent>
+		<canOverlapZones>true</canOverlapZones>
+		<hasInteractionCell>True</hasInteractionCell>
+		<interactionCellOffset>(0,0,-2)</interactionCellOffset>
+		<statBases>
+			<WorkToBuild>12500</WorkToBuild>
+			<MaxHitPoints>300</MaxHitPoints>
+			<Flammability>1.0</Flammability>
+			<Beauty>-60</Beauty>
+			<Cleanliness>-20</Cleanliness>
+		</statBases>
+		<tickerType>Normal</tickerType>
+		<comps>
+			<li Class="CompProperties_HeatPusher">
+				<compClass>CompHeatPusherPowered</compClass>
+				<heatPerSecond>55</heatPerSecond>
+				<heatPushMaxTemperature>1500</heatPushMaxTemperature>
+			</li>
+			<li Class="CompProperties_Glower">
+				<glowRadius>4</glowRadius>
+				<glowColor>(255,0,0,0)</glowColor>
+			</li>
+			<li Class="CompProperties_Power">
+				<compClass>CompPowerTrader</compClass>
+				<basePowerConsumption>1200</basePowerConsumption>
+			</li>
+			<li Class="CompProperties_Flickable"/>
+		</comps>
+		<size>(3,3)</size>
+		<stuffCategories>
+			<li>Metallic</li>
+		</stuffCategories>
+		<costStuffCount>145</costStuffCount>
+		<costList>
+			<Component>15</Component>
+		</costList>
+		<placeWorkers>
+		</placeWorkers>
+		<building>
+			<deconstructible>true</deconstructible>
+		</building>
+		<killedLeavings>
+			<ChunkSlagSteel>6</ChunkSlagSteel>
+		</killedLeavings>
+		<leaveResourcesWhenKilled>false</leaveResourcesWhenKilled>
+		 <designationCategory>Production</designationCategory>
+		<staticSunShadowHeight>0.6</staticSunShadowHeight>
+
+	</ThingDef>
+	-->
+</Defs>

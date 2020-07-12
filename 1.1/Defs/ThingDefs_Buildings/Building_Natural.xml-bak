@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <ThingDef ParentName="BuildingNaturalBase">
+    <defName>DeepHole</defName>
+    <thingClass>Building</thingClass>
+    <label>deep hole</label>
+    <graphicData>
+      <texPath>Things/Building/Natural/SteamGeyser</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <shaderType>Transparent</shaderType>
+      <drawSize>(4,4)</drawSize>
+    </graphicData>
+    <altitudeLayer>Floor</altitudeLayer>
+		<rotatable>false</rotatable>
+    <destroyable>false</destroyable>
+    <useHitPoints>false</useHitPoints>
+    <tickerType>Normal</tickerType>
+    <selectable>true</selectable>
+    <description>Natural hole in the ground. Quite deep, avoid jumping without protection. By building an mining elevator, it's possible to explore the underground.</description>
+    <size>(2,2)</size>
+    <neverOverlapFloors>true</neverOverlapFloors>
+    <blockPlants>true</blockPlants>
+    <building>
+      <isEdifice>false</isEdifice>
+      <claimable>false</claimable>
+      <deconstructible>false</deconstructible>
+    </building>
+    </ThingDef>
+    
+
+</Defs>

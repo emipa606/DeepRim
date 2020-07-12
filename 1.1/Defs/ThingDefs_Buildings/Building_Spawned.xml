@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <ThingDef ParentName="BuildingBase">
+    <defName>undergroundlift</defName>
+    <label>underground lift</label>
+    <description>Allows you to get up to ground.</description>
+    <thingClass>DeepRim.Building_SpawnedLift</thingClass>
+    <graphicData>
+      <texPath>Things/shaft</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(3,3)</drawSize>
+    </graphicData>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>Standable</passability>
+    <castEdgeShadows>true</castEdgeShadows>
+    <fillPercent>0.7</fillPercent>
+    <canOverlapZones>true</canOverlapZones>
+    <tickerType>Normal</tickerType>
+    <comps>
+      <li Class="CompProperties_Glower">
+        <glowRadius>4</glowRadius>
+        <glowColor>(255,0,0,0)</glowColor>
+      </li>
+    </comps>
+    <size>(3,3)</size>
+    <blockPlants>true</blockPlants>
+    <stuffCategories>
+      <li>Metallic</li>
+    </stuffCategories>
+    <building>
+      <deconstructible>false</deconstructible>
+    </building>
+    <destroyable>true</destroyable>
+    <useHitPoints>false</useHitPoints>
+    <leaveResourcesWhenKilled>false</leaveResourcesWhenKilled>
+    <staticSunShadowHeight>0.6</staticSunShadowHeight>
+  </ThingDef>
+</Defs>
