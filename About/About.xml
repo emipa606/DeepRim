@@ -7,6 +7,7 @@
   <supportedVersions>
     <li>1.0</li>
     <li>1.1</li>
+    <li>1.2</li>
   </supportedVersions>
   <modDependencies>
     <li>
@@ -29,6 +30,9 @@ https://invite.gg/mlie
 
 Non-steam version:
 https://github.com/emipa606/DeepRim
+
+- Added smoke to the drill when drilling
+- Added Send up-button to the underground drill
 	
 --- Original Description ---
 Allows construction of mining shaft, which can drill down and bring you new maps to explore and mine for resource.  
