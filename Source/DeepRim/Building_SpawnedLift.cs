@@ -27,51 +27,51 @@ namespace DeepRim
             return returnString;
         }
 
-		public override IEnumerable<Gizmo> GetGizmos()
-		{
-			if (surfaceMap != null)
-			{
-				Command_Action bringUp = new Command_Action();
-				bringUp.action = new Action(this.BringUp);
-				bringUp.defaultLabel = "Bring Up";
-				bringUp.defaultDesc = "Bring everything on the elavator up to the surface";
-				bringUp.icon = Building_MiningShaft.UI_BringUp;
-				yield return bringUp;
-				bringUp = null;
-				yield break;
-			}
-		}
+        public override IEnumerable<Gizmo> GetGizmos()
+        {
+            if (surfaceMap != null)
+            {
+                Command_Action bringUp = new Command_Action();
+                bringUp.action = new Action(this.BringUp);
+                bringUp.defaultLabel = "Bring Up";
+                bringUp.defaultDesc = "Bring everything on the elevator up to the surface";
+                bringUp.icon = Building_MiningShaft.UI_BringUp;
+                yield return bringUp;
+                bringUp = null;
+                yield break;
+            }
+        }
 
-		private void BringUp()
-		{
-			Messages.Message("Bringing Up", MessageTypeDefOf.PositiveEvent, true);
-			IEnumerable<IntVec3> cells = this.OccupiedRect().Cells;
-			foreach (IntVec3 intVec in cells)
-			{
-				List<Thing> thingList = intVec.GetThingList(this.Map);
-				for (int i = 0; i < thingList.Count; i++)
-				{
-					Log.Warning(string.Concat(new object[]
-					{
-						"Test ",
-						i,
-						" ",
-						thingList[i]
-					}), false);
-					bool flag2 = thingList[i] is Pawn || (thingList[i] is ThingWithComps && !(thingList[i] is Building));
-					if (flag2)
-					{
-						Thing thing = thingList[i];
-						thing.DeSpawn(DestroyMode.Vanish);
-						GenSpawn.Spawn(thing, intVec, surfaceMap, WipeMode.Vanish);
-					}
-				}
-			}
-		}
+        private void BringUp()
+        {
+            Messages.Message("Bringing Up", MessageTypeDefOf.PositiveEvent, true);
+            IEnumerable<IntVec3> cells = this.OccupiedRect().Cells;
+            foreach (IntVec3 intVec in cells)
+            {
+                List<Thing> thingList = intVec.GetThingList(this.Map);
+                for (int i = 0; i < thingList.Count; i++)
+                {
+                    //Log.Warning(string.Concat(new object[]
+                    //{
+                    //	"Test ",
+                    //	i,
+                    //	" ",
+                    //	thingList[i]
+                    //}), false);
+                    bool flag2 = thingList[i] is Pawn || ((thingList[i] is ThingWithComps || thingList[i] is Thing) && !(thingList[i] is Building));
+                    if (flag2)
+                    {
+                        Thing thing = thingList[i];
+                        thing.DeSpawn(DestroyMode.Vanish);
+                        GenSpawn.Spawn(thing, intVec, surfaceMap, WipeMode.Vanish);
+                    }
+                }
+            }
+        }
 
-		// Token: 0x04000019 RID: 25
-		public int depth;
+        // Token: 0x04000019 RID: 25
+        public int depth;
 
-		public Map surfaceMap;
+        public Map surfaceMap;
     }
 }

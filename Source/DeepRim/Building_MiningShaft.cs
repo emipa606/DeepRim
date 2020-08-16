@@ -313,7 +313,7 @@ namespace DeepRim
                     List<Thing> thingList = intVec.GetThingList(base.Map);
                     for (int i = 0; i < thingList.Count; i++)
                     {
-                        bool flag2 = thingList[i] is Pawn || (thingList[i] is ThingWithComps && !(thingList[i] is Building));
+                        bool flag2 = thingList[i] is Pawn || ((thingList[i] is ThingWithComps || thingList[i] is Thing) && !(thingList[i] is Building));
                         if (flag2)
                         {
                             Thing thing = thingList[i];
@@ -342,14 +342,16 @@ namespace DeepRim
                     List<Thing> thingList = intVec.GetThingList(this.connectedMap);
                     for (int i = 0; i < thingList.Count; i++)
                     {
-                        Log.Warning(string.Concat(new object[]
-                        {
-                            "Test ",
-                            i,
-                            " ",
-                            thingList[i]
-                        }), false);
-                        bool flag2 = thingList[i] is Pawn || (thingList[i] is ThingWithComps && !(thingList[i] is Building));
+                        //Log.Warning(string.Concat(new object[]
+                        //{
+                        //    "Test ",
+                        //    i,
+                        //    " ",
+                        //    thingList[i],
+                        //    " ",
+                        //    thingList[i].GetType()
+                        //}), false);
+                        bool flag2 = thingList[i] is Pawn || ((thingList[i] is ThingWithComps || thingList[i] is Thing) && !(thingList[i] is Building));
                         if (flag2)
                         {
                             Thing thing = thingList[i];
@@ -365,6 +367,10 @@ namespace DeepRim
         public override void Tick()
         {
             base.Tick();
+            if (connectedLift != null && ((Building_SpawnedLift)this.connectedLift).surfaceMap == null)
+            {
+                ((Building_SpawnedLift)this.connectedLift).surfaceMap = Map;
+            }
             bool flag = this.mode == 1;
             if (flag)
             {
