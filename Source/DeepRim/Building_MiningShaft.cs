@@ -53,12 +53,12 @@ namespace DeepRim
             }
             else
             {
-                command.defaultDesc = "Toggle target between new layer and old layers. Currently, mining shaft is set to dig towards old layer, depth:" + this.targetedLevel;
+                command.defaultDesc = "Toggle target between new layer and old layers. Currently, mining shaft is set to old layer, depth:" + this.targetedLevel;
             }
             command.icon = Building_MiningShaft.UI_Option;
             yield return command;
             bool flag2 = this.mode == 0;
-            if (flag2)
+            if (flag2 && flag)
             {
                 Command_Action command_ActionStart = new Command_Action();
                 command_ActionStart.action = new Action(this.StartDrilling);
@@ -92,7 +92,7 @@ namespace DeepRim
                 else
                 {
                     bool flag5 = this.mode == 2;
-                    if (flag5)
+                    if (flag5 || (!flag && this.mode != 3))
                     {
                         Command_Action command_ActionAbandon = new Command_Action();
                         command_ActionAbandon.action = new Action(this.PrepareToAbandon);
@@ -202,9 +202,9 @@ namespace DeepRim
         }
 
         // Token: 0x06000008 RID: 8 RVA: 0x000022A4 File Offset: 0x000004A4
-        private void PauseDrilling()
+        public void PauseDrilling()
         {
-            this.mode = 1;
+            this.mode = 0;
         }
 
         // Token: 0x06000009 RID: 9 RVA: 0x000022AE File Offset: 0x000004AE
@@ -218,6 +218,7 @@ namespace DeepRim
         private void Abandon()
         {
             this.mode = 0;
+            this.drillNew = true;
             bool flag = this.connectedMapParent != null;
             if (flag)
             {
@@ -397,7 +398,7 @@ namespace DeepRim
                     if (flag4)
                     {
                         this.ChargeLevel = 0;
-                        this.mode = 2;
+                        this.mode = 0;
                         this.FinishedDrill();
                     }
                 }

@@ -18,12 +18,13 @@ namespace DeepRim
 		private FloatMenu MakeMenu()
 		{
 			List<FloatMenuOption> list = new List<FloatMenuOption>();
-			bool flag = this.shaft.curMode == 0;
+			bool flag = this.shaft.curMode != 1;
 			if (flag)
 			{
 				list.Add(new FloatMenuOption("New Layer", delegate()
 				{
 					this.shaft.drillNew = true;
+					this.shaft.PauseDrilling();
 				}, MenuOptionPriority.Default, null, null, 0f, null, null));
 				using (Dictionary<int, UndergroundMapParent>.Enumerator enumerator = this.manager.layersState.GetEnumerator())
 				{
@@ -37,6 +38,7 @@ namespace DeepRim
 							{
 								this.shaft.drillNew = false;
 								this.shaft.targetedLevel = pair.Key;
+								this.shaft.PauseDrilling();
 							}, MenuOptionPriority.Default, null, null, 0f, null, null));
 						}
 					}
