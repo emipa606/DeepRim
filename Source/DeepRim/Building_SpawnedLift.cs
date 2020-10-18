@@ -14,7 +14,7 @@ namespace DeepRim
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look<int>(ref this.depth, "depth", 0, false);
+            Scribe_Values.Look<int>(ref depth, "depth", 0, false);
         }
 
         // Token: 0x0600002C RID: 44 RVA: 0x00002F18 File Offset: 0x00001118
@@ -32,7 +32,7 @@ namespace DeepRim
             if (surfaceMap != null)
             {
                 Command_Action bringUp = new Command_Action();
-                bringUp.action = new Action(this.BringUp);
+                bringUp.action = new Action(BringUp);
                 bringUp.defaultLabel = "Bring Up";
                 bringUp.defaultDesc = "Bring everything on the elevator up to the surface";
                 bringUp.icon = Building_MiningShaft.UI_BringUp;
@@ -48,7 +48,7 @@ namespace DeepRim
             IEnumerable<IntVec3> cells = this.OccupiedRect().Cells;
             foreach (IntVec3 intVec in cells)
             {
-                List<Thing> thingList = intVec.GetThingList(this.Map);
+                List<Thing> thingList = intVec.GetThingList(Map);
                 for (int i = 0; i < thingList.Count; i++)
                 {
                     //Log.Warning(string.Concat(new object[]

@@ -11,22 +11,22 @@ namespace DeepRim
 		// Token: 0x06000039 RID: 57 RVA: 0x00003233 File Offset: 0x00001433
 		public override void ProcessInput(Event ev)
 		{
-			Find.WindowStack.Add(this.MakeMenu());
+			Find.WindowStack.Add(MakeMenu());
 		}
 
 		// Token: 0x0600003A RID: 58 RVA: 0x00003248 File Offset: 0x00001448
 		private FloatMenu MakeMenu()
 		{
 			List<FloatMenuOption> list = new List<FloatMenuOption>();
-			bool flag = this.shaft.curMode != 1;
+			bool flag = shaft.curMode != 1;
 			if (flag)
 			{
 				list.Add(new FloatMenuOption("New Layer", delegate()
 				{
-					this.shaft.drillNew = true;
-					this.shaft.PauseDrilling();
+					shaft.drillNew = true;
+					shaft.PauseDrilling();
 				}, MenuOptionPriority.Default, null, null, 0f, null, null));
-				using (Dictionary<int, UndergroundMapParent>.Enumerator enumerator = this.manager.layersState.GetEnumerator())
+				using (Dictionary<int, UndergroundMapParent>.Enumerator enumerator = manager.layersState.GetEnumerator())
 				{
 					while (enumerator.MoveNext())
 					{
@@ -36,9 +36,10 @@ namespace DeepRim
 						{
 							list.Add(new FloatMenuOption("Layer at Depth:" + pair.Key + "0m", delegate()
 							{
-								this.shaft.drillNew = false;
-								this.shaft.targetedLevel = pair.Key;
-								this.shaft.PauseDrilling();
+								shaft.drillNew = false;
+								shaft.targetedLevel = pair.Key;
+								shaft.PauseDrilling();
+								shaft.SyncConnectedMap();
 							}, MenuOptionPriority.Default, null, null, 0f, null, null));
 						}
 					}

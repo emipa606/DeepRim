@@ -23,13 +23,13 @@ namespace DeepRim
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look<int>(ref this.ChargeLevel, "ChargeLevel", 0, false);
-            Scribe_Values.Look<int>(ref this.mode, "mode", 0, false);
-            Scribe_Values.Look<int>(ref this.targetedLevel, "targetedLevel", 0, false);
-            Scribe_Values.Look<bool>(ref this.drillNew, "drillNew", true, false);
-            Scribe_References.Look<Map>(ref this.connectedMap, "m_ConnectedMap", false);
-            Scribe_References.Look<UndergroundMapParent>(ref this.connectedMapParent, "m_ConnectedMapParent", false);
-            Scribe_References.Look<Thing>(ref this.connectedLift, "m_ConnectedLift", false);
+            Scribe_Values.Look<int>(ref ChargeLevel, "ChargeLevel", 0, false);
+            Scribe_Values.Look<int>(ref mode, "mode", 0, false);
+            Scribe_Values.Look<int>(ref targetedLevel, "targetedLevel", 0, false);
+            Scribe_Values.Look<bool>(ref drillNew, "drillNew", true, false);
+            Scribe_References.Look<Map>(ref connectedMap, "m_ConnectedMap", false);
+            Scribe_References.Look<UndergroundMapParent>(ref connectedMapParent, "m_ConnectedMapParent", false);
+            Scribe_References.Look<Thing>(ref connectedLift, "m_ConnectedLift", false);
         }
 
         // Token: 0x06000003 RID: 3 RVA: 0x00002177 File Offset: 0x00000377
@@ -46,24 +46,24 @@ namespace DeepRim
             {
             };
             command.defaultLabel = "Change Target";
-            bool flag = this.drillNew;
+            bool flag = drillNew;
             if (flag)
             {
                 command.defaultDesc = "Toggle target between new layer and old layers. Currently, mining shaft is set to dig new layer.";
             }
             else
             {
-                command.defaultDesc = "Toggle target between new layer and old layers. Currently, mining shaft is set to old layer, depth:" + this.targetedLevel;
+                command.defaultDesc = "Toggle target between new layer and old layers. Currently, mining shaft is set to old layer, depth:" + targetedLevel;
             }
             command.icon = Building_MiningShaft.UI_Option;
             yield return command;
-            bool flag2 = this.mode == 0;
+            bool flag2 = mode == 0;
             if (flag2 && flag)
             {
                 Command_Action command_ActionStart = new Command_Action();
-                command_ActionStart.action = new Action(this.StartDrilling);
+                command_ActionStart.action = new Action(StartDrilling);
                 command_ActionStart.defaultLabel = "Start Drilling";
-                bool flag3 = this.drillNew;
+                bool flag3 = drillNew;
                 if (flag3)
                 {
                     command_ActionStart.defaultDesc = "Start drilling down to find a new suitable mining area.";
@@ -78,11 +78,11 @@ namespace DeepRim
             }
             else
             {
-                bool flag4 = this.mode == 1;
+                bool flag4 = mode == 1;
                 if (flag4)
                 {
                     Command_Action command_ActionPause = new Command_Action();
-                    command_ActionPause.action = new Action(this.PauseDrilling);
+                    command_ActionPause.action = new Action(PauseDrilling);
                     command_ActionPause.defaultLabel = "Pause Drilling";
                     command_ActionPause.defaultDesc = "Temporany pause drilling. Progress are kept.";
                     command_ActionPause.icon = Building_MiningShaft.UI_Pause;
@@ -91,11 +91,11 @@ namespace DeepRim
                 }
                 else
                 {
-                    bool flag5 = this.mode == 2;
-                    if (flag5 || (!flag && this.mode != 3))
+                    bool flag5 = mode == 2;
+                    if (flag5 || (!flag && mode != 3))
                     {
                         Command_Action command_ActionAbandon = new Command_Action();
-                        command_ActionAbandon.action = new Action(this.PrepareToAbandon);
+                        command_ActionAbandon.action = new Action(PrepareToAbandon);
                         command_ActionAbandon.defaultLabel = "Abandon Layer";
                         command_ActionAbandon.defaultDesc = "Abandon the layer. If there's no more shafts connected to it, all pawns and items in it is lost forever.";
                         command_ActionAbandon.icon = Building_MiningShaft.UI_Abandon;
@@ -104,11 +104,11 @@ namespace DeepRim
                     }
                     else
                     {
-                        bool flag6 = this.mode == 3;
+                        bool flag6 = mode == 3;
                         if (flag6)
                         {
                             Command_Action command_ActionAbandon2 = new Command_Action();
-                            command_ActionAbandon2.action = new Action(this.Abandon);
+                            command_ActionAbandon2.action = new Action(Abandon);
                             command_ActionAbandon2.defaultLabel = "Confirm Abandon";
                             command_ActionAbandon2.defaultDesc = "This action is irreversible!!! If this is the only shaft to it, everything currently on that layer shall be lost forever, without any way of getting them back.";
                             command_ActionAbandon2.icon = Building_MiningShaft.UI_Abandon;
@@ -122,13 +122,13 @@ namespace DeepRim
             if (isConnected)
             {
                 Command_Action send = new Command_Action();
-                send.action = new Action(this.Send);
+                send.action = new Action(Send);
                 send.defaultLabel = "Send Down";
                 send.defaultDesc = "Send everything on the elavator down the shaft";
                 send.icon = Building_MiningShaft.UI_Send;
                 yield return send;
                 Command_Action bringUp = new Command_Action();
-                bringUp.action = new Action(this.BringUp);
+                bringUp.action = new Action(BringUp);
                 bringUp.defaultLabel = "Bring Up";
                 bringUp.defaultDesc = "Bring everything on the elavator up to the surface";
                 bringUp.icon = Building_MiningShaft.UI_BringUp;
@@ -142,8 +142,8 @@ namespace DeepRim
         // Token: 0x06000004 RID: 4 RVA: 0x00002187 File Offset: 0x00000387
         public override void Destroy(DestroyMode mode = DestroyMode.Vanish)
         {
-            if (this.isConnected)
-                this.Abandon();
+            if (isConnected)
+                Abandon();
             base.Destroy(mode);
         }
 
@@ -151,7 +151,7 @@ namespace DeepRim
         public override string GetInspectString()
         {
             StringBuilder stringBuilder = new StringBuilder();
-            bool flag = this.drillNew;
+            bool flag = drillNew;
             if (flag)
             {
                 stringBuilder.AppendLine("Target: New layer");
@@ -161,17 +161,17 @@ namespace DeepRim
                 stringBuilder.AppendLine(string.Concat(new object[]
                 {
                     "Target: Layer at depth ",
-                    this.targetedLevel,
+                    targetedLevel,
                     "0m"
                 }));
             }
-            bool flag2 = this.mode < 2;
+            bool flag2 = mode < 2;
             if (flag2)
             {
                 stringBuilder.AppendLine(string.Concat(new object[]
                 {
                     "Progress: ",
-                    this.ChargeLevel,
+                    ChargeLevel,
                     "%"
                 }));
                 stringBuilder.Append(base.GetInspectString());
@@ -181,7 +181,7 @@ namespace DeepRim
                 stringBuilder.AppendLine(string.Concat(new object[]
                 {
                     "Drilling complete. Depth: ",
-                    this.connectedMapParent.depth
+                    connectedMapParent.depth
                 }));
                 stringBuilder.Append(base.GetInspectString());
             }
@@ -192,42 +192,42 @@ namespace DeepRim
         public override void SpawnSetup(Map map, bool respawningAfterLoad)
         {
             base.SpawnSetup(map, respawningAfterLoad);
-            this.m_Power = base.GetComp<CompPowerTrader>();
+            m_Power = base.GetComp<CompPowerTrader>();
         }
 
         // Token: 0x06000007 RID: 7 RVA: 0x000022A4 File Offset: 0x000004A4
         private void StartDrilling()
         {
-            this.mode = 1;
+            mode = 1;
         }
 
         // Token: 0x06000008 RID: 8 RVA: 0x000022A4 File Offset: 0x000004A4
         public void PauseDrilling()
         {
-            this.mode = 0;
+            mode = 0;
         }
 
         // Token: 0x06000009 RID: 9 RVA: 0x000022AE File Offset: 0x000004AE
         private void PrepareToAbandon()
         {
-            this.mode = 3;
+            mode = 3;
             Messages.Message("Click again to confirm. Once abandoned, everything in that layer is lost forever!", MessageTypeDefOf.RejectInput, true);
         }
 
         // Token: 0x0600000A RID: 10 RVA: 0x000022CC File Offset: 0x000004CC
         private void Abandon()
         {
-            this.mode = 0;
-            this.drillNew = true;
-            bool flag = this.connectedMapParent != null;
+            mode = 0;
+            drillNew = true;
+            bool flag = connectedMapParent != null;
             if (flag)
             {
-                this.connectedMapParent.abandonLift(this.connectedLift);
+                connectedMapParent.abandonLift(connectedLift);
             }
-            this.connectedLift.Destroy(DestroyMode.Vanish);
-            this.connectedMap = null;
-            this.connectedMapParent = null;
-            this.connectedLift = null;
+            connectedLift.Destroy(DestroyMode.Vanish);
+            connectedMap = null;
+            connectedMapParent = null;
+            connectedLift = null;
         }
 
         // Token: 0x0600000B RID: 11 RVA: 0x00002324 File Offset: 0x00000524
@@ -237,22 +237,22 @@ namespace DeepRim
             MapParent mapParent = (MapParent)WorldObjectMaker.MakeWorldObject(DefDatabase<WorldObjectDef>.GetNamed("UndergroundMapParent", true));
             mapParent.Tile = base.Tile;
             Find.WorldObjects.Add(mapParent);
-            this.connectedMapParent = (UndergroundMapParent)mapParent;
+            connectedMapParent = (UndergroundMapParent)mapParent;
             CellRect cellRect = this.OccupiedRect();
-            this.connectedMapParent.holeLocation = new IntVec3(cellRect.minX + 1, 0, cellRect.minZ + 1);
+            connectedMapParent.holeLocation = new IntVec3(cellRect.minX + 1, 0, cellRect.minZ + 1);
             string seedString = Find.World.info.seedString;
             Find.World.info.seedString = new System.Random().Next(0, 2147483646).ToString();
-            this.connectedMap = MapGenerator.GenerateMap(Find.World.info.initialMapSize, mapParent, mapParent.MapGeneratorDef, mapParent.ExtraGenStepDefs, null);
+            connectedMap = MapGenerator.GenerateMap(Find.World.info.initialMapSize, mapParent, mapParent.MapGeneratorDef, mapParent.ExtraGenStepDefs, null);
             Find.World.info.seedString = seedString;
-            this.connectedLift = GenSpawn.Spawn(ThingMaker.MakeThing(DefDatabase<ThingDef>.GetNamed("undergroundlift", true), base.Stuff), this.connectedMapParent.holeLocation, this.connectedMap, WipeMode.Vanish);
-            this.connectedLift.SetFaction(Faction.OfPlayer, null);
+            connectedLift = GenSpawn.Spawn(ThingMaker.MakeThing(DefDatabase<ThingDef>.GetNamed("undergroundlift", true), base.Stuff), connectedMapParent.holeLocation, connectedMap, WipeMode.Vanish);
+            connectedLift.SetFaction(Faction.OfPlayer, null);
             UndergroundManager undergroundManager = base.Map.components.Find((MapComponent item) => item is UndergroundManager) as UndergroundManager;
-            undergroundManager.insertLayer(this.connectedMapParent);
-            bool flag = this.connectedLift is Building_SpawnedLift;
+            undergroundManager.insertLayer(connectedMapParent);
+            bool flag = connectedLift is Building_SpawnedLift;
             if (flag)
             {
-                ((Building_SpawnedLift)this.connectedLift).depth = this.connectedMapParent.depth;
-                ((Building_SpawnedLift)this.connectedLift).surfaceMap = Map;
+                ((Building_SpawnedLift)connectedLift).depth = connectedMapParent.depth;
+                ((Building_SpawnedLift)connectedLift).surfaceMap = Map;
             }
             else
             {
@@ -263,14 +263,14 @@ namespace DeepRim
         // Token: 0x0600000C RID: 12 RVA: 0x000024E0 File Offset: 0x000006E0
         private void FinishedDrill()
         {
-            bool flag = this.drillNew;
+            bool flag = drillNew;
             if (flag)
             {
-                this.DrillNewLayer();
+                DrillNewLayer();
             }
             else
             {
-                this.DrillToOldLayer();
+                DrillToOldLayer();
             }
         }
 
@@ -278,18 +278,18 @@ namespace DeepRim
         private void DrillToOldLayer()
         {
             UndergroundManager undergroundManager = base.Map.components.Find((MapComponent item) => item is UndergroundManager) as UndergroundManager;
-            UndergroundMapParent undergroundMapParent = undergroundManager.layersState[this.targetedLevel];
-            this.connectedMapParent = undergroundMapParent;
-            this.connectedMap = undergroundMapParent.Map;
+            UndergroundMapParent undergroundMapParent = undergroundManager.layersState[targetedLevel];
+            connectedMapParent = undergroundMapParent;
+            connectedMap = undergroundMapParent.Map;
             CellRect cellRect = this.OccupiedRect();
             IntVec3 intVec = new IntVec3(cellRect.minX + 1, 0, cellRect.minZ + 1);
-            this.connectedLift = GenSpawn.Spawn(ThingMaker.MakeThing(DefDatabase<ThingDef>.GetNamed("undergroundlift", true), base.Stuff), intVec, this.connectedMap, WipeMode.Vanish);
-            this.connectedLift.SetFaction(Faction.OfPlayer, null);
-            FloodFillerFog.FloodUnfog(intVec, this.connectedMap);
-            bool flag = this.connectedLift is Building_SpawnedLift;
+            connectedLift = GenSpawn.Spawn(ThingMaker.MakeThing(DefDatabase<ThingDef>.GetNamed("undergroundlift", true), base.Stuff), intVec, connectedMap, WipeMode.Vanish);
+            connectedLift.SetFaction(Faction.OfPlayer, null);
+            FloodFillerFog.FloodUnfog(intVec, connectedMap);
+            bool flag = connectedLift is Building_SpawnedLift;
             if (flag)
             {
-                ((Building_SpawnedLift)this.connectedLift).depth = this.connectedMapParent.depth;
+                ((Building_SpawnedLift)connectedLift).depth = connectedMapParent.depth;
             }
             else
             {
@@ -300,7 +300,7 @@ namespace DeepRim
         // Token: 0x0600000E RID: 14 RVA: 0x0000261C File Offset: 0x0000081C
         private void Send()
         {
-            bool flag = !this.m_Power.PowerOn;
+            bool flag = !m_Power.PowerOn;
             if (flag)
             {
                 Messages.Message("No power", MessageTypeDefOf.RejectInput, true);
@@ -319,7 +319,7 @@ namespace DeepRim
                         {
                             Thing thing = thingList[i];
                             thing.DeSpawn(DestroyMode.Vanish);
-                            GenSpawn.Spawn(thing, intVec, this.connectedMap, WipeMode.Vanish);
+                            GenSpawn.Spawn(thing, intVec, connectedMap, WipeMode.Vanish);
                         }
                     }
                 }
@@ -329,7 +329,7 @@ namespace DeepRim
         // Token: 0x0600000F RID: 15 RVA: 0x00002748 File Offset: 0x00000948
         private void BringUp()
         {
-            bool flag = !this.m_Power.PowerOn;
+            bool flag = !m_Power.PowerOn;
             if (flag)
             {
                 Messages.Message("No power", MessageTypeDefOf.RejectInput, true);
@@ -337,10 +337,10 @@ namespace DeepRim
             else
             {
                 Messages.Message("Bringing Up", MessageTypeDefOf.PositiveEvent, true);
-                IEnumerable<IntVec3> cells = this.connectedLift.OccupiedRect().Cells;
+                IEnumerable<IntVec3> cells = connectedLift.OccupiedRect().Cells;
                 foreach (IntVec3 intVec in cells)
                 {
-                    List<Thing> thingList = intVec.GetThingList(this.connectedMap);
+                    List<Thing> thingList = intVec.GetThingList(connectedMap);
                     for (int i = 0; i < thingList.Count; i++)
                     {
                         //Log.Warning(string.Concat(new object[]
@@ -364,42 +364,50 @@ namespace DeepRim
             }
         }
 
+        public void SyncConnectedMap()
+        {
+            UndergroundManager undergroundManager = base.Map.components.Find((MapComponent item) => item is UndergroundManager) as UndergroundManager;
+            UndergroundMapParent undergroundMapParent = undergroundManager.layersState[targetedLevel];
+            connectedMapParent = undergroundMapParent;
+            connectedMap = undergroundMapParent.Map;
+        }
+
         // Token: 0x06000010 RID: 16 RVA: 0x000028B8 File Offset: 0x00000AB8
         public override void Tick()
         {
             base.Tick();
-            if (connectedLift != null && ((Building_SpawnedLift)this.connectedLift).surfaceMap == null)
+            if (connectedLift != null && ((Building_SpawnedLift)connectedLift).surfaceMap == null)
             {
-                ((Building_SpawnedLift)this.connectedLift).surfaceMap = Map;
+                ((Building_SpawnedLift)connectedLift).surfaceMap = Map;
             }
-            bool flag = this.mode == 1;
+            bool flag = mode == 1;
             if (flag)
             {
-                this.ticksCounter++;
+                ticksCounter++;
             }
-            bool flag2 = !this.m_Power.PowerOn;
+            bool flag2 = !m_Power.PowerOn;
             if (!flag2)
             {
-                bool flag3 = this.ticksCounter >= 50;
+                bool flag3 = ticksCounter >= 50;
                 if (flag3)
                 {
-                    MoteMaker.ThrowSmoke(this.DrawPos, base.Map, 1f);
-                    this.ticksCounter = 0;
+                    MoteMaker.ThrowSmoke(DrawPos, base.Map, 1f);
+                    ticksCounter = 0;
                     bool unlimitedPower = DebugSettings.unlimitedPower;
                     if (unlimitedPower)
                     {
-                        this.ChargeLevel += 20;
+                        ChargeLevel += 20;
                     }
                     else
                     {
-                        this.ChargeLevel++;
+                        ChargeLevel++;
                     }
-                    bool flag4 = this.ChargeLevel >= 100;
+                    bool flag4 = ChargeLevel >= 100;
                     if (flag4)
                     {
-                        this.ChargeLevel = 0;
-                        this.mode = 0;
-                        this.FinishedDrill();
+                        ChargeLevel = 0;
+                        mode = 0;
+                        FinishedDrill();
                     }
                 }
             }
@@ -422,7 +430,7 @@ namespace DeepRim
                     }
                     else
                     {
-                        result = this.connectedMap.wealthWatcher.WealthTotal;
+                        result = connectedMap.wealthWatcher.WealthTotal;
                     }
                 }
                 else
@@ -439,7 +447,7 @@ namespace DeepRim
         {
             get
             {
-                return this.connectedMap != null && this.connectedMapParent != null && this.connectedLift != null;
+                return connectedMap != null && connectedMapParent != null && connectedLift != null;
             }
         }
 
@@ -449,7 +457,7 @@ namespace DeepRim
         {
             get
             {
-                return this.mode;
+                return mode;
             }
         }
 
@@ -459,7 +467,7 @@ namespace DeepRim
         {
             get
             {
-                return this.connectedMapParent;
+                return connectedMapParent;
             }
         }
 

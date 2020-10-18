@@ -16,7 +16,7 @@ namespace DeepRim
 		public int getNextEmptyLayer(int starting = 1)
 		{
 			int num = starting;
-			while (this.layersState.ContainsKey(num))
+			while (layersState.ContainsKey(num))
 			{
 				num++;
 			}
@@ -27,7 +27,7 @@ namespace DeepRim
 		public int getNextLayer(int starting = 1)
 		{
 			int num = starting;
-			while (this.layersState.ContainsKey(num))
+			while (layersState.ContainsKey(num))
 			{
 				num++;
 			}
@@ -37,8 +37,8 @@ namespace DeepRim
 		// Token: 0x06000033 RID: 51 RVA: 0x00003068 File Offset: 0x00001268
 		public void insertLayer(UndergroundMapParent mp)
 		{
-			int nextEmptyLayer = this.getNextEmptyLayer(1);
-			this.layersState.Add(nextEmptyLayer, mp);
+			int nextEmptyLayer = getNextEmptyLayer(1);
+			layersState.Add(nextEmptyLayer, mp);
 			mp.depth = nextEmptyLayer;
 		}
 
@@ -46,7 +46,7 @@ namespace DeepRim
 		public void pinAllUnderground()
 		{
 			int num = 1;
-			foreach (Building building in this.map.listerBuildings.allBuildingsColonist)
+			foreach (Building building in map.listerBuildings.allBuildingsColonist)
 			{
 				Building_MiningShaft building_MiningShaft;
 				bool flag = (building_MiningShaft = (building as Building_MiningShaft)) != null && building_MiningShaft.isConnected;
@@ -56,11 +56,11 @@ namespace DeepRim
 					bool flag2 = linkedMapParent.depth == -1;
 					if (flag2)
 					{
-						while (this.layersState.ContainsKey(num))
+						while (layersState.ContainsKey(num))
 						{
 							num++;
 						}
-						this.layersState.Add(num, linkedMapParent);
+						layersState.Add(num, linkedMapParent);
 						linkedMapParent.depth = num;
 					}
 				}
@@ -76,29 +76,29 @@ namespace DeepRim
 			{
 				Log.Error("Destroyed layer doesn't have correct depth", false);
 			}
-			this.layersState[depth] = null;
+			layersState[depth] = null;
 		}
 
 		// Token: 0x06000036 RID: 54 RVA: 0x00003190 File Offset: 0x00001390
 		public override void ExposeData()
 		{
 			base.ExposeData();
-			Scribe_Values.Look<int>(ref this.spawned, "spawned", 0, false);
-			Scribe_Collections.Look<int, UndergroundMapParent>(ref this.layersState, "layers", LookMode.Value, LookMode.Reference, ref this.list2, ref this.list3);
-			Scribe_References.Look<Map>(ref this.map, "map", false);
+			Scribe_Values.Look<int>(ref spawned, "spawned", 0, false);
+			Scribe_Collections.Look<int, UndergroundMapParent>(ref layersState, "layers", LookMode.Value, LookMode.Reference, ref list2, ref list3);
+			Scribe_References.Look<Map>(ref map, "map", false);
 		}
 
 		// Token: 0x06000037 RID: 55 RVA: 0x000031EC File Offset: 0x000013EC
 		public override void MapComponentTick()
 		{
-			bool flag = 1 != this.spawned;
+			bool flag = 1 != spawned;
 			if (flag)
 			{
-				bool flag2 = this.spawned == 0;
+				bool flag2 = spawned == 0;
 				if (flag2)
 				{
-					this.pinAllUnderground();
-					this.spawned = 1;
+					pinAllUnderground();
+					spawned = 1;
 				}
 			}
 		}

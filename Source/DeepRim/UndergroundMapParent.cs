@@ -12,9 +12,9 @@ namespace DeepRim
 		public override void ExposeData()
 		{
 			base.ExposeData();
-			Scribe_Values.Look<IntVec3>(ref this.holeLocation, "holeLocation", default(IntVec3), false);
-			Scribe_Values.Look<int>(ref this.depth, "depth", -1, false);
-			Scribe_Values.Look<bool>(ref this.shouldRiver, "shouldRiver", true, false);
+			Scribe_Values.Look<IntVec3>(ref holeLocation, "holeLocation", default(IntVec3), false);
+			Scribe_Values.Look<int>(ref depth, "depth", -1, false);
+			Scribe_Values.Look<bool>(ref shouldRiver, "shouldRiver", true, false);
 		}
 
 		// Token: 0x06000020 RID: 32 RVA: 0x00002CDE File Offset: 0x00000EDE
@@ -50,14 +50,14 @@ namespace DeepRim
 					return;
 				}
 			}
-			this.abandon();
+			abandon();
 		}
 
 		// Token: 0x06000023 RID: 35 RVA: 0x00002D8C File Offset: 0x00000F8C
 		public void abandon()
 		{
 			Log.Message("Utter destruction of a layer. GG. Never going to get it back now XDD", false);
-			this.shouldBeDeleted = true;
+			shouldBeDeleted = true;
 		}
 
 		// Token: 0x06000024 RID: 36 RVA: 0x00002DA4 File Offset: 0x00000FA4
@@ -65,7 +65,7 @@ namespace DeepRim
 		{
 			alsoRemoveWorldObject = false;
 			bool result = false;
-			bool flag = this.shouldBeDeleted;
+			bool flag = shouldBeDeleted;
 			if (flag)
 			{
 				result = true;
