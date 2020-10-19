@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using RimWorld;
 using RimWorld.Planet;
@@ -15,21 +16,21 @@ namespace DeepRim
         // Token: 0x06000001 RID: 1 RVA: 0x00002050 File Offset: 0x00000250
         static Building_MiningShaft()
         {
-            Building_MiningShaft.UI_DrillDown = ContentFinder<Texture2D>.Get("UI/drilldown", true);
-            Building_MiningShaft.UI_Option = ContentFinder<Texture2D>.Get("UI/optionsIcon", true);
+            UI_DrillDown = ContentFinder<Texture2D>.Get("UI/drilldown", true);
+            UI_Option = ContentFinder<Texture2D>.Get("UI/optionsIcon", true);
         }
 
         // Token: 0x06000002 RID: 2 RVA: 0x000020E0 File Offset: 0x000002E0
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look<int>(ref ChargeLevel, "ChargeLevel", 0, false);
-            Scribe_Values.Look<int>(ref mode, "mode", 0, false);
-            Scribe_Values.Look<int>(ref targetedLevel, "targetedLevel", 0, false);
-            Scribe_Values.Look<bool>(ref drillNew, "drillNew", true, false);
-            Scribe_References.Look<Map>(ref connectedMap, "m_ConnectedMap", false);
-            Scribe_References.Look<UndergroundMapParent>(ref connectedMapParent, "m_ConnectedMapParent", false);
-            Scribe_References.Look<Thing>(ref connectedLift, "m_ConnectedLift", false);
+            Scribe_Values.Look(ref ChargeLevel, "ChargeLevel", 0, false);
+            Scribe_Values.Look(ref mode, "mode", 0, false);
+            Scribe_Values.Look(ref targetedLevel, "targetedLevel", 0, false);
+            Scribe_Values.Look(ref drillNew, "drillNew", true, false);
+            Scribe_References.Look(ref connectedMap, "m_ConnectedMap", false);
+            Scribe_References.Look(ref connectedMapParent, "m_ConnectedMapParent", false);
+            Scribe_References.Look(ref connectedLift, "m_ConnectedLift", false);
         }
 
         // Token: 0x06000003 RID: 3 RVA: 0x00002177 File Offset: 0x00000377
@@ -39,13 +40,15 @@ namespace DeepRim
             {
                 yield return current;
             }
-            Command_TargetLayer command = new Command_TargetLayer();
-            command.shaft = this;
-            command.manager = (base.Map.components.Find((MapComponent item) => item is UndergroundManager) as UndergroundManager);
-            command.action = delegate ()
+            Command_TargetLayer command = new Command_TargetLayer
             {
+                shaft = this,
+                manager = (Map.components.Find((MapComponent item) => item is UndergroundManager) as UndergroundManager),
+                action = delegate ()
+                {
+                },
+                defaultLabel = "Change Target"
             };
-            command.defaultLabel = "Change Target";
             bool flag = drillNew;
             if (flag)
             {
@@ -55,14 +58,16 @@ namespace DeepRim
             {
                 command.defaultDesc = "Toggle target between new layer and old layers. Currently, mining shaft is set to old layer, depth:" + targetedLevel;
             }
-            command.icon = Building_MiningShaft.UI_Option;
+            command.icon = UI_Option;
             yield return command;
             bool flag2 = mode == 0;
             if (flag2 && flag)
             {
-                Command_Action command_ActionStart = new Command_Action();
-                command_ActionStart.action = new Action(StartDrilling);
-                command_ActionStart.defaultLabel = "Start Drilling";
+                Command_Action command_ActionStart = new Command_Action
+                {
+                    action = new Action(StartDrilling),
+                    defaultLabel = "Start Drilling"
+                };
                 bool flag3 = drillNew;
                 if (flag3)
                 {
@@ -72,7 +77,7 @@ namespace DeepRim
                 {
                     command_ActionStart.defaultDesc = "Start drilling down towards existing mining area.";
                 }
-                command_ActionStart.icon = Building_MiningShaft.UI_Start;
+                command_ActionStart.icon = UI_Start;
                 yield return command_ActionStart;
                 command_ActionStart = null;
             }
@@ -81,11 +86,13 @@ namespace DeepRim
                 bool flag4 = mode == 1;
                 if (flag4)
                 {
-                    Command_Action command_ActionPause = new Command_Action();
-                    command_ActionPause.action = new Action(PauseDrilling);
-                    command_ActionPause.defaultLabel = "Pause Drilling";
-                    command_ActionPause.defaultDesc = "Temporany pause drilling. Progress are kept.";
-                    command_ActionPause.icon = Building_MiningShaft.UI_Pause;
+                    Command_Action command_ActionPause = new Command_Action
+                    {
+                        action = new Action(PauseDrilling),
+                        defaultLabel = "Pause Drilling",
+                        defaultDesc = "Temporany pause drilling. Progress are kept.",
+                        icon = UI_Pause
+                    };
                     yield return command_ActionPause;
                     command_ActionPause = null;
                 }
@@ -94,11 +101,13 @@ namespace DeepRim
                     bool flag5 = mode == 2;
                     if (flag5 || (!flag && mode != 3))
                     {
-                        Command_Action command_ActionAbandon = new Command_Action();
-                        command_ActionAbandon.action = new Action(PrepareToAbandon);
-                        command_ActionAbandon.defaultLabel = "Abandon Layer";
-                        command_ActionAbandon.defaultDesc = "Abandon the layer. If there's no more shafts connected to it, all pawns and items in it is lost forever.";
-                        command_ActionAbandon.icon = Building_MiningShaft.UI_Abandon;
+                        Command_Action command_ActionAbandon = new Command_Action
+                        {
+                            action = new Action(PrepareToAbandon),
+                            defaultLabel = "Abandon Layer",
+                            defaultDesc = "Abandon the layer. If there's no more shafts connected to it, all pawns and items in it is lost forever.",
+                            icon = UI_Abandon
+                        };
                         yield return command_ActionAbandon;
                         command_ActionAbandon = null;
                     }
@@ -107,31 +116,37 @@ namespace DeepRim
                         bool flag6 = mode == 3;
                         if (flag6)
                         {
-                            Command_Action command_ActionAbandon2 = new Command_Action();
-                            command_ActionAbandon2.action = new Action(Abandon);
-                            command_ActionAbandon2.defaultLabel = "Confirm Abandon";
-                            command_ActionAbandon2.defaultDesc = "This action is irreversible!!! If this is the only shaft to it, everything currently on that layer shall be lost forever, without any way of getting them back.";
-                            command_ActionAbandon2.icon = Building_MiningShaft.UI_Abandon;
+                            Command_Action command_ActionAbandon2 = new Command_Action
+                            {
+                                action = new Action(Abandon),
+                                defaultLabel = "Confirm Abandon",
+                                defaultDesc = "This action is irreversible!!! If this is the only shaft to it, everything currently on that layer shall be lost forever, without any way of getting them back.",
+                                icon = UI_Abandon
+                            };
                             yield return command_ActionAbandon2;
                             command_ActionAbandon2 = null;
                         }
                     }
                 }
             }
-            bool isConnected = this.isConnected;
+            bool isConnected = IsConnected;
             if (isConnected)
             {
-                Command_Action send = new Command_Action();
-                send.action = new Action(Send);
-                send.defaultLabel = "Send Down";
-                send.defaultDesc = "Send everything on the elavator down the shaft";
-                send.icon = Building_MiningShaft.UI_Send;
+                Command_Action send = new Command_Action
+                {
+                    action = new Action(Send),
+                    defaultLabel = "Send Down",
+                    defaultDesc = "Send everything on the elavator down the shaft",
+                    icon = UI_Send
+                };
                 yield return send;
-                Command_Action bringUp = new Command_Action();
-                bringUp.action = new Action(BringUp);
-                bringUp.defaultLabel = "Bring Up";
-                bringUp.defaultDesc = "Bring everything on the elavator up to the surface";
-                bringUp.icon = Building_MiningShaft.UI_BringUp;
+                Command_Action bringUp = new Command_Action
+                {
+                    action = new Action(BringUp),
+                    defaultLabel = "Bring Up",
+                    defaultDesc = "Bring everything on the elavator up to the surface",
+                    icon = UI_BringUp
+                };
                 yield return bringUp;
                 send = null;
                 bringUp = null;
@@ -142,7 +157,7 @@ namespace DeepRim
         // Token: 0x06000004 RID: 4 RVA: 0x00002187 File Offset: 0x00000387
         public override void Destroy(DestroyMode mode = DestroyMode.Vanish)
         {
-            if (isConnected)
+            if (IsConnected)
                 Abandon();
             base.Destroy(mode);
         }
@@ -192,7 +207,7 @@ namespace DeepRim
         public override void SpawnSetup(Map map, bool respawningAfterLoad)
         {
             base.SpawnSetup(map, respawningAfterLoad);
-            m_Power = base.GetComp<CompPowerTrader>();
+            m_Power = GetComp<CompPowerTrader>();
         }
 
         // Token: 0x06000007 RID: 7 RVA: 0x000022A4 File Offset: 0x000004A4
@@ -218,16 +233,18 @@ namespace DeepRim
         private void Abandon()
         {
             mode = 0;
-            drillNew = true;
-            bool flag = connectedMapParent != null;
-            if (flag)
+            SyncConnectedMap();
+            if (connectedMapParent != null)
             {
-                connectedMapParent.abandonLift(connectedLift);
+                connectedMapParent.AbandonLift(connectedLift);
             }
             connectedLift.Destroy(DestroyMode.Vanish);
+            UndergroundManager undergroundManager = Map.components.Find((MapComponent item) => item is UndergroundManager) as UndergroundManager;
+            undergroundManager.DestroyLayer(connectedMapParent);
             connectedMap = null;
             connectedMapParent = null;
             connectedLift = null;
+            drillNew = true;
         }
 
         // Token: 0x0600000B RID: 11 RVA: 0x00002324 File Offset: 0x00000524
@@ -235,7 +252,7 @@ namespace DeepRim
         {
             Messages.Message("Drilling complete", MessageTypeDefOf.PositiveEvent, true);
             MapParent mapParent = (MapParent)WorldObjectMaker.MakeWorldObject(DefDatabase<WorldObjectDef>.GetNamed("UndergroundMapParent", true));
-            mapParent.Tile = base.Tile;
+            mapParent.Tile = Tile;
             Find.WorldObjects.Add(mapParent);
             connectedMapParent = (UndergroundMapParent)mapParent;
             CellRect cellRect = this.OccupiedRect();
@@ -244,10 +261,10 @@ namespace DeepRim
             Find.World.info.seedString = new System.Random().Next(0, 2147483646).ToString();
             connectedMap = MapGenerator.GenerateMap(Find.World.info.initialMapSize, mapParent, mapParent.MapGeneratorDef, mapParent.ExtraGenStepDefs, null);
             Find.World.info.seedString = seedString;
-            connectedLift = GenSpawn.Spawn(ThingMaker.MakeThing(DefDatabase<ThingDef>.GetNamed("undergroundlift", true), base.Stuff), connectedMapParent.holeLocation, connectedMap, WipeMode.Vanish);
+            connectedLift = GenSpawn.Spawn(ThingMaker.MakeThing(DefDatabase<ThingDef>.GetNamed("undergroundlift", true), Stuff), connectedMapParent.holeLocation, connectedMap, WipeMode.Vanish);
             connectedLift.SetFaction(Faction.OfPlayer, null);
-            UndergroundManager undergroundManager = base.Map.components.Find((MapComponent item) => item is UndergroundManager) as UndergroundManager;
-            undergroundManager.insertLayer(connectedMapParent);
+            UndergroundManager undergroundManager = Map.components.Find((MapComponent item) => item is UndergroundManager) as UndergroundManager;
+            undergroundManager.InsertLayer(connectedMapParent);
             bool flag = connectedLift is Building_SpawnedLift;
             if (flag)
             {
@@ -277,13 +294,13 @@ namespace DeepRim
         // Token: 0x0600000D RID: 13 RVA: 0x0000250C File Offset: 0x0000070C
         private void DrillToOldLayer()
         {
-            UndergroundManager undergroundManager = base.Map.components.Find((MapComponent item) => item is UndergroundManager) as UndergroundManager;
+            UndergroundManager undergroundManager = Map.components.Find((MapComponent item) => item is UndergroundManager) as UndergroundManager;
             UndergroundMapParent undergroundMapParent = undergroundManager.layersState[targetedLevel];
             connectedMapParent = undergroundMapParent;
             connectedMap = undergroundMapParent.Map;
             CellRect cellRect = this.OccupiedRect();
             IntVec3 intVec = new IntVec3(cellRect.minX + 1, 0, cellRect.minZ + 1);
-            connectedLift = GenSpawn.Spawn(ThingMaker.MakeThing(DefDatabase<ThingDef>.GetNamed("undergroundlift", true), base.Stuff), intVec, connectedMap, WipeMode.Vanish);
+            connectedLift = GenSpawn.Spawn(ThingMaker.MakeThing(DefDatabase<ThingDef>.GetNamed("undergroundlift", true), Stuff), intVec, connectedMap, WipeMode.Vanish);
             connectedLift.SetFaction(Faction.OfPlayer, null);
             FloodFillerFog.FloodUnfog(intVec, connectedMap);
             bool flag = connectedLift is Building_SpawnedLift;
@@ -311,7 +328,7 @@ namespace DeepRim
                 IEnumerable<IntVec3> cells = this.OccupiedRect().Cells;
                 foreach (IntVec3 intVec in cells)
                 {
-                    List<Thing> thingList = intVec.GetThingList(base.Map);
+                    List<Thing> thingList = intVec.GetThingList(Map);
                     for (int i = 0; i < thingList.Count; i++)
                     {
                         bool flag2 = thingList[i] is Pawn || ((thingList[i] is ThingWithComps || thingList[i] is Thing) && !(thingList[i] is Building));
@@ -357,7 +374,7 @@ namespace DeepRim
                         {
                             Thing thing = thingList[i];
                             thing.DeSpawn(DestroyMode.Vanish);
-                            GenSpawn.Spawn(thing, intVec, base.Map, WipeMode.Vanish);
+                            GenSpawn.Spawn(thing, intVec, Map, WipeMode.Vanish);
                         }
                     }
                 }
@@ -366,10 +383,11 @@ namespace DeepRim
 
         public void SyncConnectedMap()
         {
-            UndergroundManager undergroundManager = base.Map.components.Find((MapComponent item) => item is UndergroundManager) as UndergroundManager;
+            UndergroundManager undergroundManager = Map.components.Find((MapComponent item) => item is UndergroundManager) as UndergroundManager;
             UndergroundMapParent undergroundMapParent = undergroundManager.layersState[targetedLevel];
             connectedMapParent = undergroundMapParent;
             connectedMap = undergroundMapParent.Map;
+            connectedLift = (from Building_SpawnedLift lift in connectedMap.listerBuildings.allBuildingsColonist where lift is Building_SpawnedLift select lift).FirstOrDefault();
         }
 
         // Token: 0x06000010 RID: 16 RVA: 0x000028B8 File Offset: 0x00000AB8
@@ -388,10 +406,10 @@ namespace DeepRim
             bool flag2 = !m_Power.PowerOn;
             if (!flag2)
             {
-                bool flag3 = ticksCounter >= 50;
+                bool flag3 = ticksCounter >= updateEveryXTicks;
                 if (flag3)
                 {
-                    MoteMaker.ThrowSmoke(DrawPos, base.Map, 1f);
+                    MoteMaker.ThrowSmoke(DrawPos, Map, 1f);
                     ticksCounter = 0;
                     bool unlimitedPower = DebugSettings.unlimitedPower;
                     if (unlimitedPower)
@@ -419,7 +437,7 @@ namespace DeepRim
         {
             get
             {
-                bool isConnected = this.isConnected;
+                bool isConnected = IsConnected;
                 float result;
                 if (isConnected)
                 {
@@ -443,7 +461,7 @@ namespace DeepRim
 
         // Token: 0x17000002 RID: 2
         // (get) Token: 0x06000012 RID: 18 RVA: 0x000029C0 File Offset: 0x00000BC0
-        public bool isConnected
+        public bool IsConnected
         {
             get
             {
@@ -453,7 +471,7 @@ namespace DeepRim
 
         // Token: 0x17000003 RID: 3
         // (get) Token: 0x06000013 RID: 19 RVA: 0x000029F0 File Offset: 0x00000BF0
-        public int curMode
+        public int CurMode
         {
             get
             {
@@ -463,7 +481,7 @@ namespace DeepRim
 
         // Token: 0x17000004 RID: 4
         // (get) Token: 0x06000014 RID: 20 RVA: 0x00002A08 File Offset: 0x00000C08
-        public UndergroundMapParent linkedMapParent
+        public UndergroundMapParent LinkedMapParent
         {
             get
             {
@@ -472,28 +490,28 @@ namespace DeepRim
         }
 
         // Token: 0x04000001 RID: 1
-        private static Texture2D UI_Send = ContentFinder<Texture2D>.Get("UI/sendDown", true);
+        private static readonly Texture2D UI_Send = ContentFinder<Texture2D>.Get("UI/sendDown", true);
 
         // Token: 0x04000002 RID: 2
         public static Texture2D UI_BringUp = ContentFinder<Texture2D>.Get("UI/bringUp", true);
 
         // Token: 0x04000003 RID: 3
-        private static Texture2D UI_Start = ContentFinder<Texture2D>.Get("UI/Start", true);
+        private static readonly Texture2D UI_Start = ContentFinder<Texture2D>.Get("UI/Start", true);
 
         // Token: 0x04000004 RID: 4
-        private static Texture2D UI_Pause = ContentFinder<Texture2D>.Get("UI/Pause", true);
+        private static readonly Texture2D UI_Pause = ContentFinder<Texture2D>.Get("UI/Pause", true);
 
         // Token: 0x04000005 RID: 5
-        private static Texture2D UI_Abandon = ContentFinder<Texture2D>.Get("UI/Abandon", true);
+        private static readonly Texture2D UI_Abandon = ContentFinder<Texture2D>.Get("UI/Abandon", true);
 
         // Token: 0x04000006 RID: 6
-        private static Texture2D UI_DrillDown;
+        private static readonly Texture2D UI_DrillDown;
 
         // Token: 0x04000007 RID: 7
-        private static Texture2D UI_DrillUp = ContentFinder<Texture2D>.Get("UI/drillup", true);
+        private static readonly Texture2D UI_DrillUp = ContentFinder<Texture2D>.Get("UI/drillup", true);
 
         // Token: 0x04000008 RID: 8
-        private static Texture2D UI_Option;
+        private static readonly Texture2D UI_Option;
 
         // Token: 0x04000009 RID: 9
         private const int updateEveryXTicks = 50;

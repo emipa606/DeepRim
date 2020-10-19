@@ -14,8 +14,8 @@ namespace DeepRim
 		{
 			var harmonyInstance = new Harmony("com.deeprim.rimworld.mod");
 			Log.Message("DeepRim: Adding Harmony patch ", false);
-			harmonyInstance.Patch(AccessTools.Property(typeof(Thing), "MarketValue").GetGetMethod(false), null, new HarmonyMethod(HarmonyPatches.patchType, "MarketValuePostfix", null), null);
-			harmonyInstance.Patch(AccessTools.Property(typeof(Map), "Biome").GetGetMethod(false), null, new HarmonyMethod(HarmonyPatches.patchType, "MapBiomePostfix", null), null);
+			harmonyInstance.Patch(AccessTools.Property(typeof(Thing), "MarketValue").GetGetMethod(false), null, new HarmonyMethod(patchType, "MarketValuePostfix", null), null);
+			harmonyInstance.Patch(AccessTools.Property(typeof(Map), "Biome").GetGetMethod(false), null, new HarmonyMethod(patchType, "MapBiomePostfix", null), null);
 		}
 
 		// Token: 0x06000028 RID: 40 RVA: 0x00002E90 File Offset: 0x00001090

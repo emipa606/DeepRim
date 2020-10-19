@@ -1,8 +1,6 @@
 ﻿using RimWorld;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using UnityEngine;
 using Verse;
 
 namespace DeepRim
@@ -14,7 +12,7 @@ namespace DeepRim
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look<int>(ref depth, "depth", 0, false);
+            Scribe_Values.Look(ref depth, "depth", 0, false);
         }
 
         // Token: 0x0600002C RID: 44 RVA: 0x00002F18 File Offset: 0x00001118
@@ -31,11 +29,13 @@ namespace DeepRim
         {
             if (surfaceMap != null)
             {
-                Command_Action bringUp = new Command_Action();
-                bringUp.action = new Action(BringUp);
-                bringUp.defaultLabel = "Bring Up";
-                bringUp.defaultDesc = "Bring everything on the elevator up to the surface";
-                bringUp.icon = Building_MiningShaft.UI_BringUp;
+                Command_Action bringUp = new Command_Action
+                {
+                    action = new Action(BringUp),
+                    defaultLabel = "Bring Up",
+                    defaultDesc = "Bring everything on the elevator up to the surface",
+                    icon = Building_MiningShaft.UI_BringUp
+                };
                 yield return bringUp;
                 bringUp = null;
                 yield break;

@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
 namespace DeepRim
 {
-	// Token: 0x0200000A RID: 10
-	public class Command_TargetLayer : Command_Action
+    // Token: 0x0200000A RID: 10
+    public class Command_TargetLayer : Command_Action
 	{
 		// Token: 0x06000039 RID: 57 RVA: 0x00003233 File Offset: 0x00001433
 		public override void ProcessInput(Event ev)
@@ -18,7 +17,7 @@ namespace DeepRim
 		private FloatMenu MakeMenu()
 		{
 			List<FloatMenuOption> list = new List<FloatMenuOption>();
-			bool flag = shaft.curMode != 1;
+			bool flag = shaft.CurMode != 1;
 			if (flag)
 			{
 				list.Add(new FloatMenuOption("New Layer", delegate()

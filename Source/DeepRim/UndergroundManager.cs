@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Verse;
 
 namespace DeepRim
 {
-	// Token: 0x02000009 RID: 9
-	public class UndergroundManager : MapComponent
+    // Token: 0x02000009 RID: 9
+    public class UndergroundManager : MapComponent
 	{
 		// Token: 0x06000030 RID: 48 RVA: 0x00002FEB File Offset: 0x000011EB
 		public UndergroundManager(Map map) : base(map)
@@ -13,7 +12,7 @@ namespace DeepRim
 		}
 
 		// Token: 0x06000031 RID: 49 RVA: 0x00003008 File Offset: 0x00001208
-		public int getNextEmptyLayer(int starting = 1)
+		public int GetNextEmptyLayer(int starting = 1)
 		{
 			int num = starting;
 			while (layersState.ContainsKey(num))
@@ -24,7 +23,7 @@ namespace DeepRim
 		}
 
 		// Token: 0x06000032 RID: 50 RVA: 0x00003038 File Offset: 0x00001238
-		public int getNextLayer(int starting = 1)
+		public int GetNextLayer(int starting = 1)
 		{
 			int num = starting;
 			while (layersState.ContainsKey(num))
@@ -35,24 +34,24 @@ namespace DeepRim
 		}
 
 		// Token: 0x06000033 RID: 51 RVA: 0x00003068 File Offset: 0x00001268
-		public void insertLayer(UndergroundMapParent mp)
+		public void InsertLayer(UndergroundMapParent mp)
 		{
-			int nextEmptyLayer = getNextEmptyLayer(1);
+			int nextEmptyLayer = GetNextEmptyLayer(1);
 			layersState.Add(nextEmptyLayer, mp);
 			mp.depth = nextEmptyLayer;
 		}
 
 		// Token: 0x06000034 RID: 52 RVA: 0x00003094 File Offset: 0x00001294
-		public void pinAllUnderground()
+		public void PinAllUnderground()
 		{
 			int num = 1;
 			foreach (Building building in map.listerBuildings.allBuildingsColonist)
 			{
 				Building_MiningShaft building_MiningShaft;
-				bool flag = (building_MiningShaft = (building as Building_MiningShaft)) != null && building_MiningShaft.isConnected;
+				bool flag = (building_MiningShaft = (building as Building_MiningShaft)) != null && building_MiningShaft.IsConnected;
 				if (flag)
 				{
-					UndergroundMapParent linkedMapParent = building_MiningShaft.linkedMapParent;
+					UndergroundMapParent linkedMapParent = building_MiningShaft.LinkedMapParent;
 					bool flag2 = linkedMapParent.depth == -1;
 					if (flag2)
 					{
@@ -68,7 +67,7 @@ namespace DeepRim
 		}
 
 		// Token: 0x06000035 RID: 53 RVA: 0x00003158 File Offset: 0x00001358
-		public void destroyLayer(UndergroundMapParent layer)
+		public void DestroyLayer(UndergroundMapParent layer)
 		{
 			int depth = layer.depth;
 			bool flag = depth == -1;
@@ -76,16 +75,16 @@ namespace DeepRim
 			{
 				Log.Error("Destroyed layer doesn't have correct depth", false);
 			}
-			layersState[depth] = null;
+			layersState.Remove(depth);
 		}
 
 		// Token: 0x06000036 RID: 54 RVA: 0x00003190 File Offset: 0x00001390
 		public override void ExposeData()
 		{
 			base.ExposeData();
-			Scribe_Values.Look<int>(ref spawned, "spawned", 0, false);
-			Scribe_Collections.Look<int, UndergroundMapParent>(ref layersState, "layers", LookMode.Value, LookMode.Reference, ref list2, ref list3);
-			Scribe_References.Look<Map>(ref map, "map", false);
+			Scribe_Values.Look(ref spawned, "spawned", 0, false);
+			Scribe_Collections.Look(ref layersState, "layers", LookMode.Value, LookMode.Reference, ref list2, ref list3);
+			Scribe_References.Look(ref map, "map", false);
 		}
 
 		// Token: 0x06000037 RID: 55 RVA: 0x000031EC File Offset: 0x000013EC
@@ -97,7 +96,7 @@ namespace DeepRim
 				bool flag2 = spawned == 0;
 				if (flag2)
 				{
-					pinAllUnderground();
+					PinAllUnderground();
 					spawned = 1;
 				}
 			}

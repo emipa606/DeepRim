@@ -1,11 +1,10 @@
-﻿using System;
-using RimWorld;
+﻿using RimWorld;
 using Verse;
 
 namespace DeepRim
 {
-	// Token: 0x02000004 RID: 4
-	public class GenStep_RocksFromGrid_Deep : GenStep
+    // Token: 0x02000004 RID: 4
+    public class GenStep_RocksFromGrid_Deep : GenStep
 	{
 		// Token: 0x17000006 RID: 6
 		// (get) Token: 0x0600001A RID: 26 RVA: 0x00002AC0 File Offset: 0x00000CC0
@@ -58,7 +57,7 @@ namespace DeepRim
 			GenStep_ScatterLumpsMineable genStep_ScatterLumpsMineable = new GenStep_ScatterLumpsMineable();
 			float num = 16f;
 			genStep_ScatterLumpsMineable.countPer10kCellsRange = new FloatRange(num, num);
-			genStep_ScatterLumpsMineable.Generate(map, default(GenStepParams));
+			genStep_ScatterLumpsMineable.Generate(map, default);
 			map.regionAndRoomUpdater.Enabled = true;
 		}
 

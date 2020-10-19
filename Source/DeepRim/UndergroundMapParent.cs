@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using RimWorld.Planet;
 using Verse;
 
@@ -12,9 +11,9 @@ namespace DeepRim
 		public override void ExposeData()
 		{
 			base.ExposeData();
-			Scribe_Values.Look<IntVec3>(ref holeLocation, "holeLocation", default(IntVec3), false);
-			Scribe_Values.Look<int>(ref depth, "depth", -1, false);
-			Scribe_Values.Look<bool>(ref shouldRiver, "shouldRiver", true, false);
+			Scribe_Values.Look(ref holeLocation, "holeLocation", default, false);
+			Scribe_Values.Look(ref depth, "depth", -1, false);
+			Scribe_Values.Look(ref shouldRiver, "shouldRiver", true, false);
 		}
 
 		// Token: 0x06000020 RID: 32 RVA: 0x00002CDE File Offset: 0x00000EDE
@@ -38,10 +37,10 @@ namespace DeepRim
 		}
 
 		// Token: 0x06000022 RID: 34 RVA: 0x00002D04 File Offset: 0x00000F04
-		public void abandonLift(Thing lift)
+		public void AbandonLift(Thing lift)
 		{
 			lift.DeSpawn(DestroyMode.Vanish);
-			foreach (Building building in base.Map.listerBuildings.allBuildingsColonist)
+			foreach (Building building in Map.listerBuildings.allBuildingsColonist)
 			{
 				bool flag = building is Building_SpawnedLift;
 				if (flag)
@@ -50,11 +49,11 @@ namespace DeepRim
 					return;
 				}
 			}
-			abandon();
+			Abandon();
 		}
 
 		// Token: 0x06000023 RID: 35 RVA: 0x00002D8C File Offset: 0x00000F8C
-		public void abandon()
+		public void Abandon()
 		{
 			Log.Message("Utter destruction of a layer. GG. Never going to get it back now XDD", false);
 			shouldBeDeleted = true;

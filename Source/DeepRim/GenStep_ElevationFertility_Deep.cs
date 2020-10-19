@@ -1,12 +1,11 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using Verse;
 using Verse.Noise;
 
 namespace DeepRim
 {
-	// Token: 0x0200000B RID: 11
-	public class GenStep_ElevationFertility_Deep : GenStep
+    // Token: 0x0200000B RID: 11
+    public class GenStep_ElevationFertility_Deep : GenStep
 	{
 		// Token: 0x17000008 RID: 8
 		// (get) Token: 0x0600003C RID: 60 RVA: 0x00003388 File Offset: 0x00001588

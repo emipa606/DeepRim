@@ -1,11 +1,10 @@
-﻿using System;
-using RimWorld;
+﻿using RimWorld;
 using Verse;
 
 namespace DeepRim
 {
-	// Token: 0x02000008 RID: 8
-	public class PlaceWorker_AboveGround : PlaceWorker
+    // Token: 0x02000008 RID: 8
+    public class PlaceWorker_AboveGround : PlaceWorker
 	{
 		// Token: 0x0600002D RID: 45 RVA: 0x00002F90 File Offset: 0x00001190
 		public virtual AcceptanceReport AllowsPlacing(BuildableDef checkingDef, IntVec3 loc, Rot4 rot, Map map, Thing thingToIgnore = null)

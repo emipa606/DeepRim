@@ -1,10 +1,9 @@
-﻿using System;
-using Verse;
+﻿using Verse;
 
 namespace DeepRim
 {
-	// Token: 0x02000003 RID: 3
-	public class GenStep_FindDrillLocation : GenStep
+    // Token: 0x02000003 RID: 3
+    public class GenStep_FindDrillLocation : GenStep
 	{
 		// Token: 0x17000005 RID: 5
 		// (get) Token: 0x06000017 RID: 23 RVA: 0x00002A64 File Offset: 0x00000C64
