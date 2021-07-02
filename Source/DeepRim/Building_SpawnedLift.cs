@@ -1,6 +1,5 @@
-﻿using RimWorld;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using RimWorld;
 using Verse;
 
 namespace DeepRim
@@ -8,11 +7,16 @@ namespace DeepRim
     // Token: 0x02000007 RID: 7
     public class Building_SpawnedLift : Building
     {
+        // Token: 0x04000019 RID: 25
+        public int depth;
+
+        public Map surfaceMap;
+
         // Token: 0x0600002B RID: 43 RVA: 0x00002EF9 File Offset: 0x000010F9
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look(ref depth, "depth", 0, false);
+            Scribe_Values.Look(ref depth, "depth");
         }
 
         // Token: 0x0600002C RID: 44 RVA: 0x00002F18 File Offset: 0x00001118
@@ -21,35 +25,38 @@ namespace DeepRim
             var returnString = $"Layer Depth: {depth}0m";
             var baseString = base.GetInspectString();
             if (!string.IsNullOrEmpty(baseString))
+            {
                 returnString += $"\n{baseString}";
+            }
+
             return returnString;
         }
 
         public override IEnumerable<Gizmo> GetGizmos()
         {
-            if (surfaceMap != null)
+            if (surfaceMap == null)
             {
-                Command_Action bringUp = new Command_Action
-                {
-                    action = new Action(BringUp),
-                    defaultLabel = "Bring Up",
-                    defaultDesc = "Bring everything on the elevator up to the surface",
-                    icon = Building_MiningShaft.UI_BringUp
-                };
-                yield return bringUp;
-                bringUp = null;
                 yield break;
             }
+
+            var bringUp = new Command_Action
+            {
+                action = BringUp,
+                defaultLabel = "Bring Up",
+                defaultDesc = "Bring everything on the elevator up to the surface",
+                icon = Building_MiningShaft.UI_BringUp
+            };
+            yield return bringUp;
         }
 
         private void BringUp()
         {
-            Messages.Message("Bringing Up", MessageTypeDefOf.PositiveEvent, true);
-            IEnumerable<IntVec3> cells = this.OccupiedRect().Cells;
-            foreach (IntVec3 intVec in cells)
+            Messages.Message("Bringing Up", MessageTypeDefOf.PositiveEvent);
+            var cells = this.OccupiedRect().Cells;
+            foreach (var intVec in cells)
             {
-                List<Thing> thingList = intVec.GetThingList(Map);
-                for (int i = 0; i < thingList.Count; i++)
+                var thingList = intVec.GetThingList(Map);
+                foreach (var thing1 in thingList)
                 {
                     //Log.Warning(string.Concat(new object[]
                     //{
@@ -58,20 +65,16 @@ namespace DeepRim
                     //	" ",
                     //	thingList[i]
                     //}), false);
-                    bool flag2 = thingList[i] is Pawn || ((thingList[i] is ThingWithComps || thingList[i] is Thing) && !(thingList[i] is Building));
-                    if (flag2)
+                    if (thing1 is not Pawn && (thing1 is not ThingWithComps && thing1 == null || thing1 is Building))
                     {
-                        Thing thing = thingList[i];
-                        thing.DeSpawn(DestroyMode.Vanish);
-                        GenSpawn.Spawn(thing, intVec, surfaceMap, WipeMode.Vanish);
+                        continue;
                     }
+
+                    var thing = thing1;
+                    thing.DeSpawn();
+                    GenSpawn.Spawn(thing, intVec, surfaceMap);
                 }
             }
         }
-
-        // Token: 0x04000019 RID: 25
-        public int depth;
-
-        public Map surfaceMap;
     }
 }

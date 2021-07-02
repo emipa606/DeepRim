@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
   <name>DeepRim (Continued)</name>
   <packageId>Mlie.DeepRim</packageId>
@@ -20,21 +20,25 @@
   <loadAfter>
     <li>brrainz.harmony</li>
   </loadAfter>
-  <description>Update of meowmeows mod
+  <description>[img]https://i.imgur.com/WAEzk68.png[/img]
+Update of meowmeows mod
 https://ludeon.com/forums/index.php?topic=39262.0
-
-[img]https://i.imgur.com/GYswkZ7.png[/img]
-
-Support-chat:
-https://invite.gg/mlie
-
-Non-steam version:
-https://github.com/emipa606/DeepRim
 
 - Added smoke to the drill when drilling
 - Added Send up-button to the underground drill
+- Added russian translation, thanks WolF8RocK
+
+[img]https://i.imgur.com/7Gzt3Rg.png[/img]
+
+[table]
+	[tr]
+		[td][url=https://invite.gg/Mlie][img]https://i.imgur.com/zdzzBrc.png[/img][/url][/td]
+		[td][url=https://github.com/emipa606/DeepRim][img]https://i.imgur.com/kTkpTOE.png[/img][/url][/td]
+	[/tr]
+[/table]
 	
---- Original Description ---
+[img]https://i.imgur.com/NOW7jU1.png[/img]
+
 Allows construction of mining shaft, which can drill down and bring you new maps to explore and mine for resource.  
 Never run out of ores! 
 Avoid the lazy Deep drill with this new revolutionary mining method!
@@ -67,5 +71,17 @@ Deeper layers will have different map generation method. For example, lava and h
 Author/Mod Team
 Me. Just me. I think, for now.
 Oh, wait. Asset by jabbamonkey is used.
+
+
+[img]https://i.imgur.com/Rs6T6cr.png[/img]
+[list]
+[*] See if the the error persists if you just have this mod and its requirements active.
+[*] If not, try adding your other mods until it happens again.
+[*] Post your error-log using [url=https://steamcommunity.com/workshop/filedetails/?id=818773962]HugsLib[/url] and command Ctrl+F12
+[*] For best support, please use the Discord-channel for error-reporting.
+[*] Do not report errors by making a discussion-thread, I get no notification of that.
+[*] If you have the solution for a problem, please post it to the GitHub repository.
+[/list]
 </description>
 </ModMetaData>
+

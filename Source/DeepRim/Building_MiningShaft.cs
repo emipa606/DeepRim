@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using RimWorld;
 using RimWorld.Planet;
 using UnityEngine;
 using Verse;
+using Random = System.Random;
 
 namespace DeepRim
 {
@@ -13,161 +13,239 @@ namespace DeepRim
     [StaticConstructorOnStartup]
     public class Building_MiningShaft : Building
     {
+        // Token: 0x04000009 RID: 9
+        private const int updateEveryXTicks = 50;
+
+        // Token: 0x04000001 RID: 1
+        private static readonly Texture2D UI_Send = ContentFinder<Texture2D>.Get("UI/sendDown");
+
+        // Token: 0x04000002 RID: 2
+        public static readonly Texture2D UI_BringUp = ContentFinder<Texture2D>.Get("UI/bringUp");
+
+        // Token: 0x04000003 RID: 3
+        private static readonly Texture2D UI_Start = ContentFinder<Texture2D>.Get("UI/Start");
+
+        // Token: 0x04000004 RID: 4
+        private static readonly Texture2D UI_Pause = ContentFinder<Texture2D>.Get("UI/Pause");
+
+        // Token: 0x04000005 RID: 5
+        private static readonly Texture2D UI_Abandon = ContentFinder<Texture2D>.Get("UI/Abandon");
+
+        // Token: 0x04000006 RID: 6
+        private static readonly Texture2D UI_DrillDown;
+
+        // Token: 0x04000007 RID: 7
+        private static readonly Texture2D UI_DrillUp = ContentFinder<Texture2D>.Get("UI/drillup");
+
+        // Token: 0x04000008 RID: 8
+        private static readonly Texture2D UI_Option;
+
+        // Token: 0x0400000F RID: 15
+        private int ChargeLevel;
+
+        // Token: 0x04000012 RID: 18
+        private Thing connectedLift;
+
+        // Token: 0x04000010 RID: 16
+        public Map connectedMap;
+
+        // Token: 0x04000011 RID: 17
+        private UndergroundMapParent connectedMapParent;
+
+        // Token: 0x0400000D RID: 13
+        public bool drillNew = true;
+
+        // Token: 0x0400000B RID: 11
+        private CompPowerTrader m_Power;
+
+        // Token: 0x0400000C RID: 12
+        private int mode;
+
+        // Token: 0x0400000E RID: 14
+        public int targetedLevel;
+
+        // Token: 0x0400000A RID: 10
+        private int ticksCounter;
+
         // Token: 0x06000001 RID: 1 RVA: 0x00002050 File Offset: 0x00000250
         static Building_MiningShaft()
         {
-            UI_DrillDown = ContentFinder<Texture2D>.Get("UI/drilldown", true);
-            UI_Option = ContentFinder<Texture2D>.Get("UI/optionsIcon", true);
+            UI_DrillDown = ContentFinder<Texture2D>.Get("UI/drilldown");
+            UI_Option = ContentFinder<Texture2D>.Get("UI/optionsIcon");
         }
+
+        // Token: 0x17000001 RID: 1
+        // (get) Token: 0x06000011 RID: 17 RVA: 0x00002970 File Offset: 0x00000B70
+        public float ConnectedMapMarketValue
+        {
+            get
+            {
+                float result;
+                if (IsConnected)
+                {
+                    result = Current.ProgramState != ProgramState.Playing ? 0f : connectedMap.wealthWatcher.WealthTotal;
+                }
+                else
+                {
+                    result = 0f;
+                }
+
+                return result;
+            }
+        }
+
+        // Token: 0x17000002 RID: 2
+        // (get) Token: 0x06000012 RID: 18 RVA: 0x000029C0 File Offset: 0x00000BC0
+        public bool IsConnected => connectedMap != null && connectedMapParent != null && connectedLift != null;
+
+        // Token: 0x17000003 RID: 3
+        // (get) Token: 0x06000013 RID: 19 RVA: 0x000029F0 File Offset: 0x00000BF0
+        public int CurMode => mode;
+
+        // Token: 0x17000004 RID: 4
+        // (get) Token: 0x06000014 RID: 20 RVA: 0x00002A08 File Offset: 0x00000C08
+        public UndergroundMapParent LinkedMapParent => connectedMapParent;
 
         // Token: 0x06000002 RID: 2 RVA: 0x000020E0 File Offset: 0x000002E0
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look(ref ChargeLevel, "ChargeLevel", 0, false);
-            Scribe_Values.Look(ref mode, "mode", 0, false);
-            Scribe_Values.Look(ref targetedLevel, "targetedLevel", 0, false);
-            Scribe_Values.Look(ref drillNew, "drillNew", true, false);
-            Scribe_References.Look(ref connectedMap, "m_ConnectedMap", false);
-            Scribe_References.Look(ref connectedMapParent, "m_ConnectedMapParent", false);
-            Scribe_References.Look(ref connectedLift, "m_ConnectedLift", false);
+            Scribe_Values.Look(ref ChargeLevel, "ChargeLevel");
+            Scribe_Values.Look(ref mode, "mode");
+            Scribe_Values.Look(ref targetedLevel, "targetedLevel");
+            Scribe_Values.Look(ref drillNew, "drillNew", true);
+            Scribe_References.Look(ref connectedMap, "m_ConnectedMap");
+            Scribe_References.Look(ref connectedMapParent, "m_ConnectedMapParent");
+            Scribe_References.Look(ref connectedLift, "m_ConnectedLift");
         }
 
         // Token: 0x06000003 RID: 3 RVA: 0x00002177 File Offset: 0x00000377
         public override IEnumerable<Gizmo> GetGizmos()
         {
-            foreach (Gizmo current in base.GetGizmos())
+            foreach (var current in base.GetGizmos())
             {
                 yield return current;
             }
-            Command_TargetLayer command = new Command_TargetLayer
+
+            var command = new Command_TargetLayer
             {
                 shaft = this,
-                manager = (Map.components.Find((MapComponent item) => item is UndergroundManager) as UndergroundManager),
-                action = delegate ()
-                {
-                },
+                manager = Map.components.Find(item => item is UndergroundManager) as UndergroundManager,
+                action = delegate { },
                 defaultLabel = "Change Target"
             };
-            bool flag = drillNew;
-            if (flag)
+            if (drillNew)
             {
-                command.defaultDesc = "Toggle target between new layer and old layers. Currently, mining shaft is set to dig new layer.";
+                command.defaultDesc =
+                    "Toggle target between new layer and old layers. Currently, mining shaft is set to dig new layer.";
             }
             else
             {
-                command.defaultDesc = "Toggle target between new layer and old layers. Currently, mining shaft is set to old layer, depth:" + targetedLevel;
+                command.defaultDesc =
+                    "Toggle target between new layer and old layers. Currently, mining shaft is set to old layer, depth:" +
+                    targetedLevel;
             }
+
             command.icon = UI_Option;
             yield return command;
-            bool flag2 = mode == 0;
-            if (flag2 && flag)
+            if (mode == 0 && drillNew)
             {
-                Command_Action command_ActionStart = new Command_Action
+                var command_ActionStart = new Command_Action
                 {
-                    action = new Action(StartDrilling),
-                    defaultLabel = "Start Drilling"
+                    action = StartDrilling,
+                    defaultLabel = "Start Drilling",
+                    defaultDesc = drillNew
+                        ? "Start drilling down to find a new suitable mining area."
+                        : "Start drilling down towards existing mining area.",
+                    icon = UI_Start
                 };
-                bool flag3 = drillNew;
-                if (flag3)
-                {
-                    command_ActionStart.defaultDesc = "Start drilling down to find a new suitable mining area.";
-                }
-                else
-                {
-                    command_ActionStart.defaultDesc = "Start drilling down towards existing mining area.";
-                }
-                command_ActionStart.icon = UI_Start;
+
                 yield return command_ActionStart;
-                command_ActionStart = null;
             }
             else
             {
-                bool flag4 = mode == 1;
-                if (flag4)
+                if (mode == 1)
                 {
-                    Command_Action command_ActionPause = new Command_Action
+                    var command_ActionPause = new Command_Action
                     {
-                        action = new Action(PauseDrilling),
+                        action = PauseDrilling,
                         defaultLabel = "Pause Drilling",
                         defaultDesc = "Temporany pause drilling. Progress are kept.",
                         icon = UI_Pause
                     };
                     yield return command_ActionPause;
-                    command_ActionPause = null;
                 }
                 else
                 {
-                    bool flag5 = mode == 2;
-                    if (flag5 || (!flag && mode != 3))
+                    if (mode == 2 || !drillNew && mode != 3)
                     {
-                        Command_Action command_ActionAbandon = new Command_Action
+                        var command_ActionAbandon = new Command_Action
                         {
-                            action = new Action(PrepareToAbandon),
+                            action = PrepareToAbandon,
                             defaultLabel = "Abandon Layer",
-                            defaultDesc = "Abandon the layer. If there's no more shafts connected to it, all pawns and items in it is lost forever.",
+                            defaultDesc =
+                                "Abandon the layer. If there's no more shafts connected to it, all pawns and items in it is lost forever.",
                             icon = UI_Abandon
                         };
                         yield return command_ActionAbandon;
-                        command_ActionAbandon = null;
                     }
                     else
                     {
-                        bool flag6 = mode == 3;
-                        if (flag6)
+                        if (mode == 3)
                         {
-                            Command_Action command_ActionAbandon2 = new Command_Action
+                            var command_ActionAbandon2 = new Command_Action
                             {
-                                action = new Action(Abandon),
+                                action = Abandon,
                                 defaultLabel = "Confirm Abandon",
-                                defaultDesc = "This action is irreversible!!! If this is the only shaft to it, everything currently on that layer shall be lost forever, without any way of getting them back.",
+                                defaultDesc =
+                                    "This action is irreversible!!! If this is the only shaft to it, everything currently on that layer shall be lost forever, without any way of getting them back.",
                                 icon = UI_Abandon
                             };
                             yield return command_ActionAbandon2;
-                            command_ActionAbandon2 = null;
                         }
                     }
                 }
             }
-            bool isConnected = IsConnected;
-            if (isConnected)
+
+            if (!IsConnected)
             {
-                Command_Action send = new Command_Action
-                {
-                    action = new Action(Send),
-                    defaultLabel = "Send Down",
-                    defaultDesc = "Send everything on the elavator down the shaft",
-                    icon = UI_Send
-                };
-                yield return send;
-                Command_Action bringUp = new Command_Action
-                {
-                    action = new Action(BringUp),
-                    defaultLabel = "Bring Up",
-                    defaultDesc = "Bring everything on the elavator up to the surface",
-                    icon = UI_BringUp
-                };
-                yield return bringUp;
-                send = null;
-                bringUp = null;
+                yield break;
             }
-            yield break;
+
+            var send = new Command_Action
+            {
+                action = Send,
+                defaultLabel = "Send Down",
+                defaultDesc = "Send everything on the elavator down the shaft",
+                icon = UI_Send
+            };
+            yield return send;
+            var bringUp = new Command_Action
+            {
+                action = BringUp,
+                defaultLabel = "Bring Up",
+                defaultDesc = "Bring everything on the elavator up to the surface",
+                icon = UI_BringUp
+            };
+            yield return bringUp;
         }
 
         // Token: 0x06000004 RID: 4 RVA: 0x00002187 File Offset: 0x00000387
         public override void Destroy(DestroyMode mode = DestroyMode.Vanish)
         {
             if (IsConnected)
+            {
                 Abandon();
+            }
+
             base.Destroy(mode);
         }
 
         // Token: 0x06000005 RID: 5 RVA: 0x0000219C File Offset: 0x0000039C
         public override string GetInspectString()
         {
-            StringBuilder stringBuilder = new StringBuilder();
-            bool flag = drillNew;
-            if (flag)
+            var stringBuilder = new StringBuilder();
+            if (drillNew)
             {
                 stringBuilder.AppendLine("Target: New layer");
             }
@@ -180,8 +258,8 @@ namespace DeepRim
                     "0m"
                 }));
             }
-            bool flag2 = mode < 2;
-            if (flag2)
+
+            if (mode < 2)
             {
                 stringBuilder.AppendLine(string.Concat(new object[]
                 {
@@ -200,6 +278,7 @@ namespace DeepRim
                 }));
                 stringBuilder.Append(base.GetInspectString());
             }
+
             return stringBuilder.ToString();
         }
 
@@ -226,7 +305,8 @@ namespace DeepRim
         private void PrepareToAbandon()
         {
             mode = 3;
-            Messages.Message("Click again to confirm. Once abandoned, everything in that layer is lost forever!", MessageTypeDefOf.RejectInput, true);
+            Messages.Message("Click again to confirm. Once abandoned, everything in that layer is lost forever!",
+                MessageTypeDefOf.RejectInput);
         }
 
         // Token: 0x0600000A RID: 10 RVA: 0x000022CC File Offset: 0x000004CC
@@ -234,13 +314,11 @@ namespace DeepRim
         {
             mode = 0;
             SyncConnectedMap();
-            if (connectedMapParent != null)
-            {
-                connectedMapParent.AbandonLift(connectedLift);
-            }
-            connectedLift.Destroy(DestroyMode.Vanish);
-            UndergroundManager undergroundManager = Map.components.Find((MapComponent item) => item is UndergroundManager) as UndergroundManager;
-            undergroundManager.DestroyLayer(connectedMapParent);
+            connectedMapParent?.AbandonLift(connectedLift);
+
+            connectedLift.Destroy();
+            var undergroundManager = Map.components.Find(item => item is UndergroundManager) as UndergroundManager;
+            undergroundManager?.DestroyLayer(connectedMapParent);
             connectedMap = null;
             connectedMapParent = null;
             connectedLift = null;
@@ -250,38 +328,42 @@ namespace DeepRim
         // Token: 0x0600000B RID: 11 RVA: 0x00002324 File Offset: 0x00000524
         private void DrillNewLayer()
         {
-            Messages.Message("Drilling complete", MessageTypeDefOf.PositiveEvent, true);
-            MapParent mapParent = (MapParent)WorldObjectMaker.MakeWorldObject(DefDatabase<WorldObjectDef>.GetNamed("UndergroundMapParent", true));
+            Messages.Message("Drilling complete", MessageTypeDefOf.PositiveEvent);
+            var mapParent =
+                (MapParent) WorldObjectMaker.MakeWorldObject(
+                    DefDatabase<WorldObjectDef>.GetNamed("UndergroundMapParent"));
             mapParent.Tile = Tile;
             Find.WorldObjects.Add(mapParent);
-            connectedMapParent = (UndergroundMapParent)mapParent;
-            CellRect cellRect = this.OccupiedRect();
+            connectedMapParent = (UndergroundMapParent) mapParent;
+            var cellRect = this.OccupiedRect();
             connectedMapParent.holeLocation = new IntVec3(cellRect.minX + 1, 0, cellRect.minZ + 1);
-            string seedString = Find.World.info.seedString;
-            Find.World.info.seedString = new System.Random().Next(0, 2147483646).ToString();
-            connectedMap = MapGenerator.GenerateMap(Find.World.info.initialMapSize, mapParent, mapParent.MapGeneratorDef, mapParent.ExtraGenStepDefs, null);
+            var seedString = Find.World.info.seedString;
+            Find.World.info.seedString = new Random().Next(0, 2147483646).ToString();
+            connectedMap = MapGenerator.GenerateMap(Find.World.info.initialMapSize, mapParent,
+                mapParent.MapGeneratorDef, mapParent.ExtraGenStepDefs);
             Find.World.info.seedString = seedString;
-            connectedLift = GenSpawn.Spawn(ThingMaker.MakeThing(DefDatabase<ThingDef>.GetNamed("undergroundlift", true), Stuff), connectedMapParent.holeLocation, connectedMap, WipeMode.Vanish);
-            connectedLift.SetFaction(Faction.OfPlayer, null);
-            UndergroundManager undergroundManager = Map.components.Find((MapComponent item) => item is UndergroundManager) as UndergroundManager;
-            undergroundManager.InsertLayer(connectedMapParent);
-            bool flag = connectedLift is Building_SpawnedLift;
-            if (flag)
+            connectedLift =
+                GenSpawn.Spawn(ThingMaker.MakeThing(DefDatabase<ThingDef>.GetNamed("undergroundlift"), Stuff),
+                    connectedMapParent.holeLocation, connectedMap);
+            connectedLift.SetFaction(Faction.OfPlayer);
+            var undergroundManager = Map.components.Find(item => item is UndergroundManager) as UndergroundManager;
+            undergroundManager?.InsertLayer(connectedMapParent);
+            if (connectedLift is Building_SpawnedLift lift)
             {
-                ((Building_SpawnedLift)connectedLift).depth = connectedMapParent.depth;
-                ((Building_SpawnedLift)connectedLift).surfaceMap = Map;
+                lift.depth = connectedMapParent.depth;
+                lift.surfaceMap = Map;
             }
             else
             {
-                Log.Warning("Spawned lift isn't deeprim's lift. Someone's editing this mod! And doing it badly!!! Very badly.", false);
+                Log.Warning(
+                    "Spawned lift isn't deeprim's lift. Someone's editing this mod! And doing it badly!!! Very badly.");
             }
         }
 
         // Token: 0x0600000C RID: 12 RVA: 0x000024E0 File Offset: 0x000006E0
         private void FinishedDrill()
         {
-            bool flag = drillNew;
-            if (flag)
+            if (drillNew)
             {
                 DrillNewLayer();
             }
@@ -294,50 +376,55 @@ namespace DeepRim
         // Token: 0x0600000D RID: 13 RVA: 0x0000250C File Offset: 0x0000070C
         private void DrillToOldLayer()
         {
-            UndergroundManager undergroundManager = Map.components.Find((MapComponent item) => item is UndergroundManager) as UndergroundManager;
-            UndergroundMapParent undergroundMapParent = undergroundManager.layersState[targetedLevel];
-            connectedMapParent = undergroundMapParent;
-            connectedMap = undergroundMapParent.Map;
-            CellRect cellRect = this.OccupiedRect();
-            IntVec3 intVec = new IntVec3(cellRect.minX + 1, 0, cellRect.minZ + 1);
-            connectedLift = GenSpawn.Spawn(ThingMaker.MakeThing(DefDatabase<ThingDef>.GetNamed("undergroundlift", true), Stuff), intVec, connectedMap, WipeMode.Vanish);
-            connectedLift.SetFaction(Faction.OfPlayer, null);
+            var undergroundManager = Map.components.Find(item => item is UndergroundManager) as UndergroundManager;
+            connectedMapParent = undergroundManager?.layersState[targetedLevel];
+            connectedMap = undergroundManager?.layersState[targetedLevel]?.Map;
+            var cellRect = this.OccupiedRect();
+            var intVec = new IntVec3(cellRect.minX + 1, 0, cellRect.minZ + 1);
+            connectedLift =
+                GenSpawn.Spawn(ThingMaker.MakeThing(DefDatabase<ThingDef>.GetNamed("undergroundlift"), Stuff), intVec,
+                    connectedMap);
+            connectedLift.SetFaction(Faction.OfPlayer);
             FloodFillerFog.FloodUnfog(intVec, connectedMap);
-            bool flag = connectedLift is Building_SpawnedLift;
-            if (flag)
+            if (connectedLift is Building_SpawnedLift lift)
             {
-                ((Building_SpawnedLift)connectedLift).depth = connectedMapParent.depth;
+                if (connectedMapParent != null)
+                {
+                    lift.depth = connectedMapParent.depth;
+                }
             }
             else
             {
-                Log.Warning("Spawned lift isn't deeprim's lift. Someone's editing this mod! And doing it badly!!! Very badly.", false);
+                Log.Warning(
+                    "Spawned lift isn't deeprim's lift. Someone's editing this mod! And doing it badly!!! Very badly.");
             }
         }
 
         // Token: 0x0600000E RID: 14 RVA: 0x0000261C File Offset: 0x0000081C
         private void Send()
         {
-            bool flag = !m_Power.PowerOn;
-            if (flag)
+            if (!m_Power.PowerOn)
             {
-                Messages.Message("No power", MessageTypeDefOf.RejectInput, true);
+                Messages.Message("No power", MessageTypeDefOf.RejectInput);
             }
             else
             {
-                Messages.Message("Sending down", MessageTypeDefOf.PositiveEvent, true);
-                IEnumerable<IntVec3> cells = this.OccupiedRect().Cells;
-                foreach (IntVec3 intVec in cells)
+                Messages.Message("Sending down", MessageTypeDefOf.PositiveEvent);
+                var cells = this.OccupiedRect().Cells;
+                foreach (var intVec in cells)
                 {
-                    List<Thing> thingList = intVec.GetThingList(Map);
-                    for (int i = 0; i < thingList.Count; i++)
+                    var thingList = intVec.GetThingList(Map);
+                    foreach (var thing1 in thingList)
                     {
-                        bool flag2 = thingList[i] is Pawn || ((thingList[i] is ThingWithComps || thingList[i] is Thing) && !(thingList[i] is Building));
-                        if (flag2)
+                        if (thing1 is not Pawn &&
+                            (thing1 is not ThingWithComps && thing1 == null || thing1 is Building))
                         {
-                            Thing thing = thingList[i];
-                            thing.DeSpawn(DestroyMode.Vanish);
-                            GenSpawn.Spawn(thing, intVec, connectedMap, WipeMode.Vanish);
+                            continue;
                         }
+
+                        var thing = thing1;
+                        thing.DeSpawn();
+                        GenSpawn.Spawn(thing, intVec, connectedMap);
                     }
                 }
             }
@@ -346,19 +433,18 @@ namespace DeepRim
         // Token: 0x0600000F RID: 15 RVA: 0x00002748 File Offset: 0x00000948
         private void BringUp()
         {
-            bool flag = !m_Power.PowerOn;
-            if (flag)
+            if (!m_Power.PowerOn)
             {
-                Messages.Message("No power", MessageTypeDefOf.RejectInput, true);
+                Messages.Message("No power", MessageTypeDefOf.RejectInput);
             }
             else
             {
-                Messages.Message("Bringing Up", MessageTypeDefOf.PositiveEvent, true);
-                IEnumerable<IntVec3> cells = connectedLift.OccupiedRect().Cells;
-                foreach (IntVec3 intVec in cells)
+                Messages.Message("Bringing Up", MessageTypeDefOf.PositiveEvent);
+                var cells = connectedLift.OccupiedRect().Cells;
+                foreach (var intVec in cells)
                 {
-                    List<Thing> thingList = intVec.GetThingList(connectedMap);
-                    for (int i = 0; i < thingList.Count; i++)
+                    var thingList = intVec.GetThingList(connectedMap);
+                    foreach (var thing1 in thingList)
                     {
                         //Log.Warning(string.Concat(new object[]
                         //{
@@ -369,13 +455,15 @@ namespace DeepRim
                         //    " ",
                         //    thingList[i].GetType()
                         //}), false);
-                        bool flag2 = thingList[i] is Pawn || ((thingList[i] is ThingWithComps || thingList[i] is Thing) && !(thingList[i] is Building));
-                        if (flag2)
+                        if (thing1 is not Pawn &&
+                            (thing1 is not ThingWithComps && thing1 is not Thing || thing1 is Building))
                         {
-                            Thing thing = thingList[i];
-                            thing.DeSpawn(DestroyMode.Vanish);
-                            GenSpawn.Spawn(thing, intVec, Map, WipeMode.Vanish);
+                            continue;
                         }
+
+                        var thing = thing1;
+                        thing.DeSpawn();
+                        GenSpawn.Spawn(thing, intVec, Map);
                     }
                 }
             }
@@ -383,164 +471,58 @@ namespace DeepRim
 
         public void SyncConnectedMap()
         {
-            UndergroundManager undergroundManager = Map.components.Find((MapComponent item) => item is UndergroundManager) as UndergroundManager;
-            UndergroundMapParent undergroundMapParent = undergroundManager.layersState[targetedLevel];
-            connectedMapParent = undergroundMapParent;
-            connectedMap = undergroundMapParent.Map;
-            connectedLift = (from Building_SpawnedLift lift in connectedMap.listerBuildings.allBuildingsColonist where lift is Building_SpawnedLift select lift).FirstOrDefault();
+            var undergroundManager = Map.components.Find(item => item is UndergroundManager) as UndergroundManager;
+            connectedMapParent = undergroundManager?.layersState[targetedLevel];
+            connectedMap = undergroundManager?.layersState[targetedLevel]?.Map;
+            connectedLift =
+                (from Building_SpawnedLift lift in connectedMap?.listerBuildings.allBuildingsColonist
+                    where lift != null
+                    select lift).FirstOrDefault();
         }
 
         // Token: 0x06000010 RID: 16 RVA: 0x000028B8 File Offset: 0x00000AB8
         public override void Tick()
         {
             base.Tick();
-            if (connectedLift != null && ((Building_SpawnedLift)connectedLift).surfaceMap == null)
+            if (connectedLift != null && ((Building_SpawnedLift) connectedLift).surfaceMap == null)
             {
-                ((Building_SpawnedLift)connectedLift).surfaceMap = Map;
+                ((Building_SpawnedLift) connectedLift).surfaceMap = Map;
             }
-            bool flag = mode == 1;
-            if (flag)
+
+            if (mode == 1)
             {
                 ticksCounter++;
             }
-            bool flag2 = !m_Power.PowerOn;
-            if (!flag2)
+
+            if (!m_Power.PowerOn)
             {
-                bool flag3 = ticksCounter >= updateEveryXTicks;
-                if (flag3)
-                {
-                    MoteMaker.ThrowSmoke(DrawPos, Map, 1f);
-                    ticksCounter = 0;
-                    bool unlimitedPower = DebugSettings.unlimitedPower;
-                    if (unlimitedPower)
-                    {
-                        ChargeLevel += 20;
-                    }
-                    else
-                    {
-                        ChargeLevel++;
-                    }
-                    bool flag4 = ChargeLevel >= 100;
-                    if (flag4)
-                    {
-                        ChargeLevel = 0;
-                        mode = 0;
-                        FinishedDrill();
-                    }
-                }
+                return;
             }
-        }
 
-        // Token: 0x17000001 RID: 1
-        // (get) Token: 0x06000011 RID: 17 RVA: 0x00002970 File Offset: 0x00000B70
-        public float ConnectedMapMarketValue
-        {
-            get
+            if (ticksCounter < updateEveryXTicks)
             {
-                bool isConnected = IsConnected;
-                float result;
-                if (isConnected)
-                {
-                    bool flag = Current.ProgramState != ProgramState.Playing;
-                    if (flag)
-                    {
-                        result = 0f;
-                    }
-                    else
-                    {
-                        result = connectedMap.wealthWatcher.WealthTotal;
-                    }
-                }
-                else
-                {
-                    result = 0f;
-                }
-                return result;
+                return;
             }
-        }
 
-        // Token: 0x17000002 RID: 2
-        // (get) Token: 0x06000012 RID: 18 RVA: 0x000029C0 File Offset: 0x00000BC0
-        public bool IsConnected
-        {
-            get
+            MoteMaker.ThrowSmoke(DrawPos, Map, 1f);
+            ticksCounter = 0;
+            if (DebugSettings.unlimitedPower)
             {
-                return connectedMap != null && connectedMapParent != null && connectedLift != null;
+                ChargeLevel += 20;
             }
-        }
-
-        // Token: 0x17000003 RID: 3
-        // (get) Token: 0x06000013 RID: 19 RVA: 0x000029F0 File Offset: 0x00000BF0
-        public int CurMode
-        {
-            get
+            else
             {
-                return mode;
+                ChargeLevel++;
             }
-        }
 
-        // Token: 0x17000004 RID: 4
-        // (get) Token: 0x06000014 RID: 20 RVA: 0x00002A08 File Offset: 0x00000C08
-        public UndergroundMapParent LinkedMapParent
-        {
-            get
+            if (ChargeLevel < 100)
             {
-                return connectedMapParent;
+                return;
             }
+
+            ChargeLevel = 0;
+            mode = 0;
+            FinishedDrill();
         }
-
-        // Token: 0x04000001 RID: 1
-        private static readonly Texture2D UI_Send = ContentFinder<Texture2D>.Get("UI/sendDown", true);
-
-        // Token: 0x04000002 RID: 2
-        public static Texture2D UI_BringUp = ContentFinder<Texture2D>.Get("UI/bringUp", true);
-
-        // Token: 0x04000003 RID: 3
-        private static readonly Texture2D UI_Start = ContentFinder<Texture2D>.Get("UI/Start", true);
-
-        // Token: 0x04000004 RID: 4
-        private static readonly Texture2D UI_Pause = ContentFinder<Texture2D>.Get("UI/Pause", true);
-
-        // Token: 0x04000005 RID: 5
-        private static readonly Texture2D UI_Abandon = ContentFinder<Texture2D>.Get("UI/Abandon", true);
-
-        // Token: 0x04000006 RID: 6
-        private static readonly Texture2D UI_DrillDown;
-
-        // Token: 0x04000007 RID: 7
-        private static readonly Texture2D UI_DrillUp = ContentFinder<Texture2D>.Get("UI/drillup", true);
-
-        // Token: 0x04000008 RID: 8
-        private static readonly Texture2D UI_Option;
-
-        // Token: 0x04000009 RID: 9
-        private const int updateEveryXTicks = 50;
-
-        // Token: 0x0400000A RID: 10
-        private int ticksCounter = 0;
-
-        // Token: 0x0400000B RID: 11
-        private CompPowerTrader m_Power;
-
-        // Token: 0x0400000C RID: 12
-        private int mode = 0;
-
-        // Token: 0x0400000D RID: 13
-        public bool drillNew = true;
-
-        // Token: 0x0400000E RID: 14
-        public int targetedLevel = 0;
-
-        // Token: 0x0400000F RID: 15
-        private int ChargeLevel;
-
-        // Token: 0x04000010 RID: 16
-        public Map connectedMap = null;
-
-        // Token: 0x04000011 RID: 17
-        private UndergroundMapParent connectedMapParent = null;
-
-        // Token: 0x04000012 RID: 18
-        private Thing connectedLift = null;
     }
 }
