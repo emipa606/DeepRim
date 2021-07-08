@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <MapGeneratorDef>
+    <defName>DeepMap</defName>
+    <!--<selectionWeight>0</selectionWeight>-->
+    <genSteps>
+      <li>ElevationFertilityDeep</li>
+      <li>RocksFromGridDeep</li>
+      <li>TerrainDeep</li>
+      <li>FindDrillLocation</li>
+      <li>FogDeep</li>
+    </genSteps>
+  </MapGeneratorDef>
+  <GenStepDef>
+    <defName>ElevationFertilityDeep</defName>
+    <!--<linkWithMapGenerator>DeepMap</linkWithMapGenerator>-->
+    <order>10</order>
+    <genStep Class="DeepRim.GenStep_ElevationFertility_Deep" />
+  </GenStepDef>
+  <GenStepDef>
+    <defName>RocksFromGridDeep</defName>
+    <!--<linkWithMapGenerator>DeepMap</linkWithMapGenerator>-->
+    <order>200</order>
+    <genStep Class="DeepRim.GenStep_RocksFromGrid_Deep" />
+  </GenStepDef>
+  <GenStepDef>
+    <defName>TerrainDeep</defName>
+    <!--<linkWithMapGenerator>DeepMap</linkWithMapGenerator>-->
+    <order>210</order>
+    <genStep Class="GenStep_Terrain" />
+  </GenStepDef>
+  <GenStepDef>
+    <defName>FindDrillLocation</defName>
+    <!--<linkWithMapGenerator>DeepMap</linkWithMapGenerator>-->
+    <order>600</order>
+    <genStep Class="DeepRim.GenStep_FindDrillLocation" />
+  </GenStepDef>
+  <GenStepDef>
+    <defName>FogDeep</defName>
+    <!--<linkWithMapGenerator>DeepMap</linkWithMapGenerator>-->
+    <order>1500</order>
+    <genStep Class="GenStep_Fog" />
+  </GenStepDef>
+</Defs>

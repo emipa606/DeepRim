@@ -504,7 +504,7 @@ namespace DeepRim
                 return;
             }
 
-            MoteMaker.ThrowSmoke(DrawPos, Map, 1f);
+            FleckMaker.ThrowSmoke(DrawPos, Map, 1f);
             ticksCounter = 0;
             if (DebugSettings.unlimitedPower)
             {
