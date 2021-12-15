@@ -1,47 +1,61 @@
-﻿using System;
+using System;
 using HarmonyLib;
 using RimWorld;
 using Verse;
 
-namespace DeepRim
+namespace DeepRim;
+
+[StaticConstructorOnStartup]
+public static class HarmonyPatches
 {
-    // Token: 0x02000006 RID: 6
-    [StaticConstructorOnStartup]
-    public static class HarmonyPatches
+    private static readonly Type patchType = typeof(HarmonyPatches);
+
+
+    public static readonly int[] mapSizes =
     {
-        // Token: 0x04000018 RID: 24
-        private static readonly Type patchType = typeof(HarmonyPatches);
+        0,
+        75,
+        200,
+        225,
+        250,
+        275,
+        300,
+        325
+    };
 
-        // Token: 0x06000027 RID: 39 RVA: 0x00002DF4 File Offset: 0x00000FF4
-        static HarmonyPatches()
+    static HarmonyPatches()
+    {
+        var harmonyInstance = new Harmony("com.deeprim.rimworld.mod");
+        Log.Message("DeepRim: Adding Harmony patch ");
+        harmonyInstance.Patch(AccessTools.Property(typeof(Thing), "MarketValue").GetGetMethod(false), null,
+            new HarmonyMethod(patchType, "MarketValuePostfix"));
+        harmonyInstance.Patch(AccessTools.Property(typeof(Map), "Biome").GetGetMethod(false), null,
+            new HarmonyMethod(patchType, "MapBiomePostfix"));
+    }
+
+    private static void MarketValuePostfix(Thing __instance, ref float __result)
+    {
+        if (__instance is not Building_MiningShaft buildingMiningShaft)
         {
-            var harmonyInstance = new Harmony("com.deeprim.rimworld.mod");
-            Log.Message("DeepRim: Adding Harmony patch ");
-            harmonyInstance.Patch(AccessTools.Property(typeof(Thing), "MarketValue").GetGetMethod(false), null,
-                new HarmonyMethod(patchType, "MarketValuePostfix"));
-            harmonyInstance.Patch(AccessTools.Property(typeof(Map), "Biome").GetGetMethod(false), null,
-                new HarmonyMethod(patchType, "MapBiomePostfix"));
+            return;
         }
 
-        // Token: 0x06000028 RID: 40 RVA: 0x00002E90 File Offset: 0x00001090
-        private static void MarketValuePostfix(Thing __instance, ref float __result)
-        {
-            if (__instance is not Building_MiningShaft)
-            {
-                return;
-            }
+        __result += buildingMiningShaft.ConnectedMapMarketValue;
+    }
 
-            var building_MiningShaft = (Building_MiningShaft) __instance;
-            __result += building_MiningShaft.ConnectedMapMarketValue;
-        }
-
-        // Token: 0x06000029 RID: 41 RVA: 0x00002EC0 File Offset: 0x000010C0
-        private static void MapBiomePostfix(Map __instance, ref BiomeDef __result)
+    private static void MapBiomePostfix(Map __instance, ref BiomeDef __result)
+    {
+        if (__instance.ParentHolder is UndergroundMapParent)
         {
-            if (__instance.ParentHolder is UndergroundMapParent)
-            {
-                __result = DefDatabase<BiomeDef>.GetNamed("Underground");
-            }
+            __result = DefDatabase<BiomeDef>.GetNamed("Underground");
         }
+    }
+
+    public static IntVec3 ConvertParentDrillLocation(IntVec3 parentLocation, IntVec3 parentSize, IntVec3 childSize)
+    {
+        var parentXPercent = (float)parentLocation.x / parentSize.x;
+        var parentZPercent = (float)parentLocation.z / parentSize.z;
+        return new IntVec3((int)Math.Round(childSize.x * parentXPercent), parentLocation.y,
+            (int)Math.Round(childSize.z * parentZPercent));
     }
 }

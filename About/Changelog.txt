@@ -1,5 +1,8 @@
 # Changelog for DeepRim
 
+1.0.10.0 - Added option for setting the generated layers size
+
+
 1.0.9.0 - Mod updated for 1.3 and passed autotests
 
 
