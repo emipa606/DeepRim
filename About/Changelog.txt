@@ -1,5 +1,8 @@
 # Changelog for DeepRim
 
+1.0.11.0 - Added low-tech setting, also the drill can be used without power (slowly)
+
+
 1.0.10.0 - Added option for setting the generated layers size
 
 

@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using HarmonyLib;
 using RimWorld;
 using Verse;
@@ -31,6 +33,7 @@ public static class HarmonyPatches
             new HarmonyMethod(patchType, "MarketValuePostfix"));
         harmonyInstance.Patch(AccessTools.Property(typeof(Map), "Biome").GetGetMethod(false), null,
             new HarmonyMethod(patchType, "MapBiomePostfix"));
+        RefreshDrillTechLevel();
     }
 
     private static void MarketValuePostfix(Thing __instance, ref float __result)
@@ -57,5 +60,40 @@ public static class HarmonyPatches
         var parentZPercent = (float)parentLocation.z / parentSize.z;
         return new IntVec3((int)Math.Round(childSize.x * parentXPercent), parentLocation.y,
             (int)Math.Round(childSize.z * parentZPercent));
+    }
+
+    public static void RefreshDrillTechLevel()
+    {
+        var shaftThingDef = DefDatabase<ThingDef>.GetNamedSilentFail("miningshaft");
+        if (shaftThingDef == null)
+        {
+            return;
+        }
+
+        if (DeepRimMod.instance.DeepRimSettings.LowTechMode)
+        {
+            if (shaftThingDef.HasComp(typeof(CompPowerTrader)))
+            {
+                var powerComp =
+                    shaftThingDef.comps.First(properties => properties.GetType() == typeof(CompProperties_Power));
+                shaftThingDef.comps.Remove(powerComp);
+            }
+
+            shaftThingDef.description = "Deeprim.NoPowerDesc".Translate();
+            shaftThingDef.costStuffCount = 300;
+            shaftThingDef.costList = null;
+            return;
+        }
+
+        if (!shaftThingDef.HasComp(typeof(CompPowerTrader)))
+        {
+            shaftThingDef.comps.Add(new CompProperties_Power
+                { compClass = typeof(CompPowerTrader), basePowerConsumption = 1200 });
+        }
+
+        shaftThingDef.description = "Deeprim.PowerDesc".Translate();
+        shaftThingDef.costStuffCount = 145;
+        shaftThingDef.costList = new List<ThingDefCountClass>(new List<ThingDefCountClass>
+            { new ThingDefCountClass(ThingDefOf.ComponentIndustrial, 5) });
     }
 }

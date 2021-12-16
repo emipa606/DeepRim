@@ -4,4 +4,8 @@
   <Deeprim.Inherited>Inherited</Deeprim.Inherited>
   <Deeprim.Same>Same as colony-map</Deeprim.Same>
   <Deeprim.Incident>Incident-size</Deeprim.Incident>
+  <Deeprim.NoPowerDesc>Allows digging deep into the planet for exploration and mining. Requires a miner.</Deeprim.NoPowerDesc>
+  <Deeprim.PowerDesc>Allows digging deep into the planet for exploration and mining. Requires power.</Deeprim.PowerDesc>
+  <Deeprim.Lowtech>Use low-tech drills</Deeprim.Lowtech>
+  <Deeprim.Lowtech.Tooltip>Changes the drill to use manually without power and changes the construction cost</Deeprim.Lowtech.Tooltip>
 </LanguageData>

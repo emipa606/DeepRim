@@ -7,6 +7,7 @@ namespace DeepRim;
 /// </summary>
 internal class DeepRimSettings : ModSettings
 {
+    public bool LowTechMode;
     public int SpawnedMapSize;
 
     /// <summary>
@@ -16,5 +17,6 @@ internal class DeepRimSettings : ModSettings
     {
         base.ExposeData();
         Scribe_Values.Look(ref SpawnedMapSize, "SpawnedMapSize");
+        Scribe_Values.Look(ref LowTechMode, "LowTechMode");
     }
 }

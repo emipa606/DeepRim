@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,7 +30,7 @@ public class Building_MiningShaft : Building
 
     private static readonly Texture2D UI_Option;
 
-    private int ChargeLevel;
+    public float ChargeLevel;
 
     private Thing connectedLift;
 
@@ -231,7 +232,7 @@ public class Building_MiningShaft : Building
             stringBuilder.AppendLine(string.Concat(new object[]
             {
                 "Progress: ",
-                ChargeLevel,
+                Math.Round(ChargeLevel),
                 "%"
             }));
             stringBuilder.Append(base.GetInspectString());
@@ -246,13 +247,16 @@ public class Building_MiningShaft : Building
             stringBuilder.Append(base.GetInspectString());
         }
 
-        return stringBuilder.ToString();
+        return stringBuilder.ToString().Trim();
     }
 
     public override void SpawnSetup(Map map, bool respawningAfterLoad)
     {
         base.SpawnSetup(map, respawningAfterLoad);
-        m_Power = GetComp<CompPowerTrader>();
+        if (def.HasComp(typeof(CompPowerTrader)))
+        {
+            m_Power = GetComp<CompPowerTrader>();
+        }
     }
 
     private void StartDrilling()
@@ -287,7 +291,7 @@ public class Building_MiningShaft : Building
         drillNew = true;
     }
 
-    // TODO: Add config
+
     private void DrillNewLayer()
     {
         Messages.Message("Drilling complete", MessageTypeDefOf.PositiveEvent);
@@ -372,7 +376,7 @@ public class Building_MiningShaft : Building
 
     private void Send()
     {
-        if (!m_Power.PowerOn)
+        if (m_Power is { PowerOn: false })
         {
             Messages.Message("No power", MessageTypeDefOf.RejectInput);
             return;
@@ -400,7 +404,7 @@ public class Building_MiningShaft : Building
 
     private void BringUp()
     {
-        if (!m_Power.PowerOn)
+        if (m_Power is { PowerOn: false })
         {
             Messages.Message("No power", MessageTypeDefOf.RejectInput);
             return;
@@ -454,14 +458,22 @@ public class Building_MiningShaft : Building
             ((Building_SpawnedLift)connectedLift).surfaceMap = Map;
         }
 
+        if (DeepRimMod.instance.DeepRimSettings.LowTechMode)
+        {
+            if (ChargeLevel < 100)
+            {
+                return;
+            }
+
+            ChargeLevel = 0;
+            mode = 0;
+            FinishedDrill();
+            return;
+        }
+
         if (mode == 1)
         {
             ticksCounter++;
-        }
-
-        if (!m_Power.PowerOn)
-        {
-            return;
         }
 
         if (ticksCounter < updateEveryXTicks)
@@ -469,8 +481,24 @@ public class Building_MiningShaft : Building
             return;
         }
 
-        FleckMaker.ThrowSmoke(DrawPos, Map, 1f);
-        ticksCounter = 0;
+        if (m_Power.PowerOn)
+        {
+            FleckMaker.ThrowSmoke(DrawPos, Map, 1f);
+            ticksCounter = 0;
+        }
+        else
+        {
+            if (ChargeLevel < 100)
+            {
+                return;
+            }
+
+            ChargeLevel = 0;
+            mode = 0;
+            FinishedDrill();
+            return;
+        }
+
         if (DebugSettings.unlimitedPower)
         {
             ChargeLevel += 20;

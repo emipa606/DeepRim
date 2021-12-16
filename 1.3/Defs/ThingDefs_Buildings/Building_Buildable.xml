@@ -15,7 +15,6 @@
     <castEdgeShadows>true</castEdgeShadows>
     <fillPercent>0.7</fillPercent>
     <canOverlapZones>true</canOverlapZones>
-    <hasInteractionCell>True</hasInteractionCell>
     <interactionCellOffset>(0,0,-2)</interactionCellOffset>
     <statBases>
       <WorkToBuild>12500</WorkToBuild>
@@ -58,6 +57,10 @@
     <leaveResourcesWhenKilled>false</leaveResourcesWhenKilled>
     <designationCategory>Production</designationCategory>
     <staticSunShadowHeight>0.6</staticSunShadowHeight>
+    <hasInteractionCell>false</hasInteractionCell>
+    <researchPrerequisites>
+      <li>Smithing</li>
+    </researchPrerequisites>
     <placeWorkers>
       <li>DeepRim.PlaceWorker_AboveGround</li>
     </placeWorkers>

@@ -61,6 +61,9 @@ internal class DeepRimMod : Mod
     {
         var listing_Standard = new Listing_Standard();
         listing_Standard.Begin(rect);
+        listing_Standard.CheckboxLabeled("Deeprim.Lowtech".Translate(), ref instance.DeepRimSettings.LowTechMode,
+            "Deeprim.Lowtech.Tooltip".Translate());
+        listing_Standard.Gap();
         listing_Standard.Label("Deeprim.MapSize".Translate());
         listing_Standard.Gap();
         foreach (var num in HarmonyPatches.mapSizes)
@@ -101,5 +104,11 @@ internal class DeepRimMod : Mod
         }
 
         listing_Standard.End();
+    }
+
+    public override void WriteSettings()
+    {
+        base.WriteSettings();
+        HarmonyPatches.RefreshDrillTechLevel();
     }
 }

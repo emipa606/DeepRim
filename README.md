@@ -8,6 +8,7 @@ https://ludeon.com/forums/index.php?topic=39262.0
 - Added smoke to the drill when drilling
 - Added Send up-button to the underground drill
 - Added russian translation, thanks WolF8RocK
+- Added mod-settings for changing the size of the generated map-layers
 
 ![Image](https://i.imgur.com/pufA0kM.png)
 
