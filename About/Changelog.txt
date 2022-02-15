@@ -1,5 +1,8 @@
 # Changelog for DeepRim
 
+1.3.1 - Added wood as valid material for the drill
+
+
 1.0.11.0 - Added low-tech setting, also the drill can be used without power (slowly)
 
 

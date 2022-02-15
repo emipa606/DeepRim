@@ -43,10 +43,12 @@
     <size>(3,3)</size>
     <stuffCategories>
       <li>Metallic</li>
+      <li>Woody</li>
     </stuffCategories>
-    <costStuffCount>145</costStuffCount>
+    <costStuffCount>45</costStuffCount>
     <costList>
       <ComponentIndustrial>5</ComponentIndustrial>
+      <Steel>100</Steel>
     </costList>
     <building>
       <deconstructible>true</deconstructible>

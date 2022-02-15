@@ -26,6 +26,7 @@
     <blockPlants>true</blockPlants>
     <stuffCategories>
       <li>Metallic</li>
+      <li>Woody</li>
     </stuffCategories>
     <building>
       <deconstructible>false</deconstructible>
