@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Defs>
-  <HugsLib.UpdateFeatureDef Abstract="true" Name="UpdateFeatureBase">
+  <HugsLib.UpdateFeatureDef Abstract="true" Name="DeepRim_UpdateFeatureBase">
     <modNameReadable>DeepRim</modNameReadable>
     <linkUrl>https://steamcommunity.com/sharedfiles/filedetails/?id=2164179860</linkUrl>
   </HugsLib.UpdateFeatureDef>
-  <HugsLib.UpdateFeatureDef ParentName="UpdateFeatureBase">
+  <HugsLib.UpdateFeatureDef ParentName="DeepRim_UpdateFeatureBase">
     <defName>DeepRim_1_0_10_0</defName>
     <assemblyVersion>1.0.10.0</assemblyVersion>
     <content>By request it is now possible to define how large the new layers drilled should be. Default is to inherit the colonys map-size but using the mod-settings this can for example be lowered to cause less of a performance impact.</content>
   </HugsLib.UpdateFeatureDef>
-  <HugsLib.UpdateFeatureDef ParentName="UpdateFeatureBase">
+  <HugsLib.UpdateFeatureDef ParentName="DeepRim_UpdateFeatureBase">
     <defName>DeepRim_1_0_11_0</defName>
     <assemblyVersion>1.0.11.0</assemblyVersion>
     <content>There is now a low-tech setting in the options. 
