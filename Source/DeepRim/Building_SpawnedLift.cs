@@ -52,21 +52,15 @@ public class Building_SpawnedLift : Building
         foreach (var intVec in cells)
         {
             var thingList = intVec.GetThingList(Map);
-            foreach (var thing1 in thingList)
+            // ReSharper disable once ForCanBeConvertedToForeach, Things despawn, cannot use foreach
+            for (var index = 0; index < thingList.Count; index++)
             {
-                //Log.Warning(string.Concat(new object[]
-                //{
-                //	"Test ",
-                //	i,
-                //	" ",
-                //	thingList[i]
-                //}), false);
-                if (thing1 is not Pawn && (thing1 is not ThingWithComps && thing1 == null || thing1 is Building))
+                var thing = thingList[index];
+                if (thing is not Pawn && (thing is not ThingWithComps && thing == null || thing is Building))
                 {
                     continue;
                 }
 
-                var thing = thing1;
                 thing.DeSpawn();
                 GenSpawn.Spawn(thing, intVec, surfaceMap);
             }

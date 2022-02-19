@@ -1,6 +1,9 @@
 # Changelog for DeepRim
 
-1.3.2 - More unique defname for the HugLib-news base-definition, to avoid conflicts with other mods. Also added logging-option
+1.3.3 - Fixed an iterator causing issues if pawns were on the same tile as an item when trying to send down/up
+
+
+1.3.2 - More unique defname for the HugLib-news base-definition, to avoid conflicts with other mods.
 
 
 1.3.1 - Added wood as valid material for the drill
