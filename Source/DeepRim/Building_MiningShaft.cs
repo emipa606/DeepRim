@@ -29,6 +29,7 @@ public class Building_MiningShaft : Building
     private static readonly Texture2D UI_DrillUp = ContentFinder<Texture2D>.Get("UI/drillup");
 
     private static readonly Texture2D UI_Option;
+    private static readonly Texture2D UI_Transfer;
 
     public float ChargeLevel;
 
@@ -37,6 +38,7 @@ public class Building_MiningShaft : Building
     public Map connectedMap;
 
     private UndergroundMapParent connectedMapParent;
+    private HashSet<Building_Storage> connectedStorages = new HashSet<Building_Storage>();
 
     public bool drillNew = true;
 
@@ -44,14 +46,19 @@ public class Building_MiningShaft : Building
 
     private int mode;
 
+    private HashSet<Building_Storage> nearbyStorages = new HashSet<Building_Storage>();
+
     public int targetedLevel;
 
     private int ticksCounter;
+
+    public int transferLevel;
 
     static Building_MiningShaft()
     {
         UI_DrillDown = ContentFinder<Texture2D>.Get("UI/drilldown");
         UI_Option = ContentFinder<Texture2D>.Get("UI/optionsIcon");
+        UI_Transfer = ContentFinder<Texture2D>.Get("UI/transferIcon");
     }
 
     public float ConnectedMapMarketValue
@@ -84,6 +91,7 @@ public class Building_MiningShaft : Building
         Scribe_Values.Look(ref ChargeLevel, "ChargeLevel");
         Scribe_Values.Look(ref mode, "mode");
         Scribe_Values.Look(ref targetedLevel, "targetedLevel");
+        Scribe_Values.Look(ref transferLevel, "transferLevel");
         Scribe_Values.Look(ref drillNew, "drillNew", true);
         Scribe_References.Look(ref connectedMap, "m_ConnectedMap");
         Scribe_References.Look(ref connectedMapParent, "m_ConnectedMapParent");
@@ -118,6 +126,21 @@ public class Building_MiningShaft : Building
 
         command.icon = UI_Option;
         yield return command;
+        if (nearbyStorages.Any())
+        {
+            var transferCommand = new Command_TransferLayer
+            {
+                shaft = this,
+                manager = Map.components.Find(item => item is UndergroundManager) as UndergroundManager,
+                action = delegate { },
+                defaultLabel = "Change Transfer Target",
+                defaultDesc = "Toggle target for nearby storages. Currently, transfer is set to depth:" +
+                              transferLevel,
+                icon = UI_Transfer
+            };
+            yield return transferCommand;
+        }
+
         if (mode == 0 && drillNew)
         {
             var command_ActionStart = new Command_Action
@@ -223,6 +246,16 @@ public class Building_MiningShaft : Building
             {
                 "Target: Layer at depth ",
                 targetedLevel,
+                "0m"
+            }));
+        }
+
+        if (transferLevel > 0 && nearbyStorages.Any())
+        {
+            stringBuilder.AppendLine(string.Concat(new object[]
+            {
+                "Transfertarget: Layer at depth ",
+                transferLevel,
                 "0m"
             }));
         }
@@ -386,6 +419,8 @@ public class Building_MiningShaft : Building
         var cells = this.OccupiedRect().Cells;
         foreach (var intVec in cells)
         {
+            var convertedLocation = HarmonyPatches.ConvertParentDrillLocation(
+                intVec, Map.Size, connectedMap.Size);
             var thingList = intVec.GetThingList(Map);
             // ReSharper disable once ForCanBeConvertedToForeach, Things despawn, cannot use foreach
             for (var index = 0; index < thingList.Count; index++)
@@ -398,7 +433,50 @@ public class Building_MiningShaft : Building
                 }
 
                 thing.DeSpawn();
-                GenSpawn.Spawn(thing, intVec, connectedMap);
+                GenSpawn.Spawn(thing, convertedLocation, connectedMap);
+            }
+        }
+    }
+
+    private void Transfer(Map connectedTransferMap, Building_SpawnedLift transferLift)
+    {
+        foreach (var storage in nearbyStorages)
+        {
+            var items = storage.GetSlotGroup().HeldThings;
+            if (items == null || items.Any() == false)
+            {
+                continue;
+            }
+
+            var itemList = items.ToList();
+            var convertedLocation = HarmonyPatches.ConvertParentDrillLocation(
+                PositionHeld, Map.Size, connectedTransferMap.Size);
+            // ReSharper disable once ForCanBeConvertedToForeach, Things despawn, cannot use foreach
+            for (var index = 0; index < itemList.Count; index++)
+            {
+                var thing = itemList[index];
+                thing.DeSpawn();
+                GenSpawn.Spawn(thing, convertedLocation, connectedTransferMap);
+            }
+        }
+
+        foreach (var storage in connectedStorages)
+        {
+            var items = storage.GetSlotGroup().HeldThings;
+            if (items == null || items.Any() == false)
+            {
+                continue;
+            }
+
+            var itemList = items.ToList();
+            var convertedLocation = HarmonyPatches.ConvertParentDrillLocation(
+                transferLift.PositionHeld, Map.Size, connectedTransferMap.Size);
+            // ReSharper disable once ForCanBeConvertedToForeach, Things despawn, cannot use foreach
+            for (var index = 0; index < itemList.Count; index++)
+            {
+                var thing = itemList[index];
+                thing.DeSpawn();
+                GenSpawn.Spawn(thing, convertedLocation, Map);
             }
         }
     }
@@ -416,6 +494,8 @@ public class Building_MiningShaft : Building
         foreach (var intVec in cells)
         {
             var thingList = intVec.GetThingList(connectedMap);
+            var convertedLocation = HarmonyPatches.ConvertParentDrillLocation(
+                intVec, Map.Size, connectedMap.Size);
             // ReSharper disable once ForCanBeConvertedToForeach, Things despawn, cannot use foreach
             for (var index = 0; index < thingList.Count; index++)
             {
@@ -427,7 +507,7 @@ public class Building_MiningShaft : Building
                 }
 
                 thing.DeSpawn();
-                GenSpawn.Spawn(thing, intVec, Map);
+                GenSpawn.Spawn(thing, convertedLocation, Map);
             }
         }
     }
@@ -449,6 +529,58 @@ public class Building_MiningShaft : Building
         if (connectedLift != null && ((Building_SpawnedLift)connectedLift).surfaceMap == null)
         {
             ((Building_SpawnedLift)connectedLift).surfaceMap = Map;
+        }
+
+        if (GenTicks.TicksGame % GenTicks.TickRareInterval == 0)
+        {
+            nearbyStorages = new HashSet<Building_Storage>();
+            foreach (var cell in this.OccupiedRect().AdjacentCells)
+            {
+                var building = cell.GetFirstBuilding(Map);
+                switch (building)
+                {
+                    case null:
+                        continue;
+                    case Building_Storage storage:
+                        nearbyStorages.Add(storage);
+                        break;
+                }
+            }
+
+            var undergroundManager = Map.components.Find(item => item is UndergroundManager) as UndergroundManager;
+            if (undergroundManager?.layersState.ContainsKey(transferLevel) == true)
+            {
+                var connectedTransferMap = undergroundManager.layersState[transferLevel]?.Map;
+                if (connectedTransferMap != null)
+                {
+                    connectedStorages = new HashSet<Building_Storage>();
+                    var transferLift =
+                        (from Building_SpawnedLift lift in connectedTransferMap.listerBuildings?.allBuildingsColonist
+                            where lift != null
+                            select lift).FirstOrDefault();
+                    var adjacentCells = transferLift?.OccupiedRect().AdjacentCells;
+                    if (adjacentCells != null)
+                    {
+                        foreach (var cell in adjacentCells)
+                        {
+                            var building = cell.GetFirstBuilding(connectedTransferMap);
+                            switch (building)
+                            {
+                                case null:
+                                    continue;
+                                case Building_Storage storage:
+                                    connectedStorages.Add(storage);
+                                    break;
+                            }
+                        }
+                    }
+
+                    if (transferLevel > 0 && m_Power is not { PowerOn: false })
+                    {
+                        Transfer(connectedTransferMap, transferLift);
+                    }
+                }
+            }
         }
 
         if (DeepRimMod.instance.DeepRimSettings.LowTechMode)

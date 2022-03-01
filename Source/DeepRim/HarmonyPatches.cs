@@ -58,8 +58,8 @@ public static class HarmonyPatches
     {
         var parentXPercent = (float)parentLocation.x / parentSize.x;
         var parentZPercent = (float)parentLocation.z / parentSize.z;
-        return new IntVec3((int)Math.Round(childSize.x * parentXPercent), parentLocation.y,
-            (int)Math.Round(childSize.z * parentZPercent));
+        return new IntVec3((int)Math.Floor(childSize.x * parentXPercent), parentLocation.y,
+            (int)Math.Floor(childSize.z * parentZPercent));
     }
 
     public static void RefreshDrillTechLevel()

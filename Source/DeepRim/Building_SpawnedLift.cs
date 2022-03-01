@@ -52,6 +52,8 @@ public class Building_SpawnedLift : Building
         foreach (var intVec in cells)
         {
             var thingList = intVec.GetThingList(Map);
+            var convertedLocation = HarmonyPatches.ConvertParentDrillLocation(
+                intVec, Map.Size, surfaceMap.Size);
             // ReSharper disable once ForCanBeConvertedToForeach, Things despawn, cannot use foreach
             for (var index = 0; index < thingList.Count; index++)
             {
@@ -62,7 +64,7 @@ public class Building_SpawnedLift : Building
                 }
 
                 thing.DeSpawn();
-                GenSpawn.Spawn(thing, intVec, surfaceMap);
+                GenSpawn.Spawn(thing, convertedLocation, surfaceMap);
             }
         }
     }

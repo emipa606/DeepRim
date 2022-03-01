@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Defs>
   <HugsLib.UpdateFeatureDef Abstract="true" Name="DeepRim_UpdateFeatureBase">
     <modNameReadable>DeepRim</modNameReadable>
@@ -20,4 +20,10 @@ Manual drilling takes a long time.
 
 When the mode is changed in the mod-options you need to reload the save if you have already built drills for the drills to change.</content>
   </HugsLib.UpdateFeatureDef>
+	<HugsLib.UpdateFeatureDef ParentName="DeepRim_UpdateFeatureBase">
+		<defName>DeepRim_1_3_4</defName>
+		<assemblyVersion>1.3.4</assemblyVersion>
+		<content>Transfer items between layers automatically.
+If there are any storage-buildings built next to the mine-shaft you can now select to automatically transfer items from these to a layer and reverse.</content>
+	</HugsLib.UpdateFeatureDef>
 </Defs>
