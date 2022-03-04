@@ -1,5 +1,8 @@
 # Changelog for DeepRim
 
+1.3.6 - Added some extra logging
+
+
 1.3.5 - Added verbose logging option for debugging issues
 
 

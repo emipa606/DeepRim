@@ -560,36 +560,44 @@ public class Building_MiningShaft : Building
                 if (connectedTransferMap != null)
                 {
                     connectedStorages = new HashSet<Building_Storage>();
-                    var transferLift =
-                        (from Building_SpawnedLift lift in connectedTransferMap.listerBuildings?.allBuildingsColonist
-                            where lift != null
-                            select lift).FirstOrDefault();
-                    var adjacentCells = transferLift?.OccupiedRect().AdjacentCells;
-                    if (adjacentCells != null)
+                    var transferLifts =
+                        from Building_SpawnedLift lift in connectedTransferMap.listerBuildings?.allBuildingsColonist
+                        where lift != null
+                        select lift;
+                    if (!transferLifts.Any())
                     {
-                        foreach (var cell in adjacentCells)
-                        {
-                            var building = cell.GetFirstBuilding(connectedTransferMap);
-                            switch (building)
-                            {
-                                case null:
-                                    continue;
-                                case Building_Storage storage:
-                                    connectedStorages.Add(storage);
-                                    break;
-                            }
-                        }
-                    }
-
-                    DeepRimMod.LogMessage($"Found {connectedStorages.Count} storages near underground shaft");
-
-                    if (transferLevel > 0 && m_Power is not { PowerOn: false })
-                    {
-                        Transfer(connectedTransferMap, transferLift);
+                        DeepRimMod.LogMessage("Found no spawned lift in targeted layer");
                     }
                     else
                     {
-                        DeepRimMod.LogMessage("Either shaft is not powered or no target-layer selected");
+                        var transferLift = transferLifts.FirstOrDefault();
+                        var adjacentCells = transferLift?.OccupiedRect().AdjacentCells;
+                        if (adjacentCells != null)
+                        {
+                            foreach (var cell in adjacentCells)
+                            {
+                                var building = cell.GetFirstBuilding(connectedTransferMap);
+                                switch (building)
+                                {
+                                    case null:
+                                        continue;
+                                    case Building_Storage storage:
+                                        connectedStorages.Add(storage);
+                                        break;
+                                }
+                            }
+                        }
+
+                        DeepRimMod.LogMessage($"Found {connectedStorages.Count} storages near underground shaft");
+
+                        if (transferLevel > 0 && m_Power is not { PowerOn: false })
+                        {
+                            Transfer(connectedTransferMap, transferLift);
+                        }
+                        else
+                        {
+                            DeepRimMod.LogMessage("Either shaft is not powered or no target-layer selected");
+                        }
                     }
                 }
                 else
