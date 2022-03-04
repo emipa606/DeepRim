@@ -438,7 +438,7 @@ public class Building_MiningShaft : Building
         }
     }
 
-    private void Transfer(Map connectedTransferMap, Building_SpawnedLift transferLift)
+    private void Transfer(Map connectedTransferMap, IEnumerable<Building> transferLifts)
     {
         foreach (var storage in nearbyStorages)
         {
@@ -451,14 +451,12 @@ public class Building_MiningShaft : Building
 
             var itemList = items.ToList();
             DeepRimMod.LogMessage($"{storage} has {itemList.Count} items, transfering underground");
-            var convertedLocation = HarmonyPatches.ConvertParentDrillLocation(
-                PositionHeld, Map.Size, connectedTransferMap.Size);
             // ReSharper disable once ForCanBeConvertedToForeach, Things despawn, cannot use foreach
             for (var index = 0; index < itemList.Count; index++)
             {
                 var thing = itemList[index];
                 thing.DeSpawn();
-                GenSpawn.Spawn(thing, convertedLocation, connectedTransferMap);
+                GenSpawn.Spawn(thing, transferLifts.First().PositionHeld, connectedTransferMap);
             }
         }
 
@@ -473,14 +471,12 @@ public class Building_MiningShaft : Building
 
             var itemList = items.ToList();
             DeepRimMod.LogMessage($"{storage} has {itemList.Count} items, transfering to surface");
-            var convertedLocation = HarmonyPatches.ConvertParentDrillLocation(
-                transferLift.PositionHeld, Map.Size, connectedTransferMap.Size);
             // ReSharper disable once ForCanBeConvertedToForeach, Things despawn, cannot use foreach
             for (var index = 0; index < itemList.Count; index++)
             {
                 var thing = itemList[index];
                 thing.DeSpawn();
-                GenSpawn.Spawn(thing, convertedLocation, Map);
+                GenSpawn.Spawn(thing, PositionHeld, Map);
             }
         }
     }
@@ -561,19 +557,22 @@ public class Building_MiningShaft : Building
                 {
                     connectedStorages = new HashSet<Building_Storage>();
                     var transferLifts =
-                        from Building_SpawnedLift lift in connectedTransferMap.listerBuildings?.allBuildingsColonist
-                        where lift != null
-                        select lift;
+                        connectedTransferMap.listerBuildings.AllBuildingsColonistOfDef(
+                            ThingDef.Named("undergroundlift"));
                     if (!transferLifts.Any())
                     {
                         DeepRimMod.LogMessage("Found no spawned lift in targeted layer");
                     }
                     else
                     {
-                        var transferLift = transferLifts.FirstOrDefault();
-                        var adjacentCells = transferLift?.OccupiedRect().AdjacentCells;
-                        if (adjacentCells != null)
+                        foreach (var buildingSpawnedLift in transferLifts)
                         {
+                            var adjacentCells = buildingSpawnedLift?.OccupiedRect().AdjacentCells;
+                            if (adjacentCells == null)
+                            {
+                                continue;
+                            }
+
                             foreach (var cell in adjacentCells)
                             {
                                 var building = cell.GetFirstBuilding(connectedTransferMap);
@@ -588,11 +587,12 @@ public class Building_MiningShaft : Building
                             }
                         }
 
+
                         DeepRimMod.LogMessage($"Found {connectedStorages.Count} storages near underground shaft");
 
                         if (transferLevel > 0 && m_Power is not { PowerOn: false })
                         {
-                            Transfer(connectedTransferMap, transferLift);
+                            Transfer(connectedTransferMap, transferLifts);
                         }
                         else
                         {
