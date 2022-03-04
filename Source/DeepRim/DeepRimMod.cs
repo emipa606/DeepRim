@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Mlie;
+using UnityEngine;
 using Verse;
 
 namespace DeepRim;
@@ -10,6 +11,8 @@ internal class DeepRimMod : Mod
     ///     The instance of the deepRimSettings to be read by the mod
     /// </summary>
     public static DeepRimMod instance;
+
+    private static string currentVersion;
 
 
     /// <summary>
@@ -24,6 +27,8 @@ internal class DeepRimMod : Mod
     public DeepRimMod(ModContentPack content) : base(content)
     {
         instance = this;
+        currentVersion =
+            VersionFromManifest.GetVersionFromModMetaData(ModLister.GetActiveModWithIdentifier("Mlie.DeepRim"));
     }
 
     /// <summary>
@@ -64,6 +69,10 @@ internal class DeepRimMod : Mod
         listing_Standard.CheckboxLabeled("Deeprim.Lowtech".Translate(), ref instance.DeepRimSettings.LowTechMode,
             "Deeprim.Lowtech.Tooltip".Translate());
         listing_Standard.Gap();
+        listing_Standard.CheckboxLabeled("Deeprim.VerboseLogging".Translate(),
+            ref instance.DeepRimSettings.VerboseLogging,
+            "Deeprim.VerboseLogging.Tooltip".Translate());
+        listing_Standard.Gap();
         listing_Standard.Label("Deeprim.MapSize".Translate());
         listing_Standard.Gap();
         foreach (var num in HarmonyPatches.mapSizes)
@@ -72,28 +81,27 @@ internal class DeepRimMod : Mod
             switch (num)
             {
                 case < 75:
-                    listing_Standard.Label("Deeprim.Inherited".Translate());
-                    label = "Deeprim.Same".Translate();
+                    label = $"{"Deeprim.Inherited".Translate()} - {"Deeprim.Same".Translate()}";
                     break;
                 case < 200:
                     listing_Standard.Gap(10f);
-                    listing_Standard.Label("Deeprim.Incident".Translate());
+                    label += $" - {"Deeprim.Incident".Translate()}";
                     break;
                 case < 250:
                     listing_Standard.Gap(10f);
-                    listing_Standard.Label("MapSizeSmall".Translate());
+                    label += $" - {"MapSizeSmall".Translate()}";
                     break;
                 case < 300:
                     listing_Standard.Gap(10f);
-                    listing_Standard.Label("MapSizeMedium".Translate());
+                    label += $" - {"MapSizeMedium".Translate()}";
                     break;
                 case < 350:
                     listing_Standard.Gap(10f);
-                    listing_Standard.Label("MapSizeLarge".Translate());
+                    label += $" - {"MapSizeLarge".Translate()}";
                     break;
                 default:
                     listing_Standard.Gap(10f);
-                    listing_Standard.Label("MapSizeExtreme".Translate());
+                    label += $" - {"MapSizeExtreme".Translate()}";
                     break;
             }
 
@@ -103,6 +111,14 @@ internal class DeepRimMod : Mod
             }
         }
 
+        if (currentVersion != null)
+        {
+            listing_Standard.Gap();
+            GUI.contentColor = Color.gray;
+            listing_Standard.Label("Deeprim.CurrentModVersion".Translate(currentVersion));
+            GUI.contentColor = Color.white;
+        }
+
         listing_Standard.End();
     }
 
@@ -110,5 +126,15 @@ internal class DeepRimMod : Mod
     {
         base.WriteSettings();
         HarmonyPatches.RefreshDrillTechLevel();
+    }
+
+    public static void LogMessage(string message, bool force = false)
+    {
+        if (!force && !instance.DeepRimSettings.VerboseLogging)
+        {
+            return;
+        }
+
+        Log.Message($"[DeepRim]: {message}");
     }
 }

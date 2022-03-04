@@ -445,10 +445,12 @@ public class Building_MiningShaft : Building
             var items = storage.GetSlotGroup().HeldThings;
             if (items == null || items.Any() == false)
             {
+                DeepRimMod.LogMessage($"{storage} on surface has no items");
                 continue;
             }
 
             var itemList = items.ToList();
+            DeepRimMod.LogMessage($"{storage} has {itemList.Count} items, transfering underground");
             var convertedLocation = HarmonyPatches.ConvertParentDrillLocation(
                 PositionHeld, Map.Size, connectedTransferMap.Size);
             // ReSharper disable once ForCanBeConvertedToForeach, Things despawn, cannot use foreach
@@ -465,10 +467,12 @@ public class Building_MiningShaft : Building
             var items = storage.GetSlotGroup().HeldThings;
             if (items == null || items.Any() == false)
             {
+                DeepRimMod.LogMessage($"{storage} in underground layer has no items");
                 continue;
             }
 
             var itemList = items.ToList();
+            DeepRimMod.LogMessage($"{storage} has {itemList.Count} items, transfering to surface");
             var convertedLocation = HarmonyPatches.ConvertParentDrillLocation(
                 transferLift.PositionHeld, Map.Size, connectedTransferMap.Size);
             // ReSharper disable once ForCanBeConvertedToForeach, Things despawn, cannot use foreach
@@ -547,6 +551,8 @@ public class Building_MiningShaft : Building
                 }
             }
 
+            DeepRimMod.LogMessage($"Found {nearbyStorages.Count} storages near surface shaft");
+
             var undergroundManager = Map.components.Find(item => item is UndergroundManager) as UndergroundManager;
             if (undergroundManager?.layersState.ContainsKey(transferLevel) == true)
             {
@@ -575,11 +581,25 @@ public class Building_MiningShaft : Building
                         }
                     }
 
+                    DeepRimMod.LogMessage($"Found {connectedStorages.Count} storages near underground shaft");
+
                     if (transferLevel > 0 && m_Power is not { PowerOn: false })
                     {
                         Transfer(connectedTransferMap, transferLift);
                     }
+                    else
+                    {
+                        DeepRimMod.LogMessage("Either shaft is not powered or no target-layer selected");
+                    }
                 }
+                else
+                {
+                    DeepRimMod.LogMessage("Found no connected map to transfer to");
+                }
+            }
+            else
+            {
+                DeepRimMod.LogMessage("The selected target-layer does not exist");
             }
         }
 

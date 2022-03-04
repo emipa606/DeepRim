@@ -1,5 +1,8 @@
 # Changelog for DeepRim
 
+1.3.5 - Added verbose logging option for debugging issues
+
+
 1.3.4 - Added possibility to automatically transfer items from nearby storages between layers.
 
 
