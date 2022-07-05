@@ -29,6 +29,7 @@
       <li>Woody</li>
     </stuffCategories>
     <building>
+      <ai_neverTrashThis>true</ai_neverTrashThis>
       <deconstructible>false</deconstructible>
     </building>
     <destroyable>true</destroyable>

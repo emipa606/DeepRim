@@ -51,6 +51,7 @@
       <Steel>100</Steel>
     </costList>
     <building>
+      <ai_neverTrashThis>true</ai_neverTrashThis>
       <deconstructible>true</deconstructible>
     </building>
     <killedLeavings>
