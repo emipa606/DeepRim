@@ -13,6 +13,7 @@
     <altitudeLayer>Building</altitudeLayer>
     <passability>Standable</passability>
     <castEdgeShadows>true</castEdgeShadows>
+    <holdsRoof>true</holdsRoof>
     <fillPercent>0.7</fillPercent>
     <canOverlapZones>true</canOverlapZones>
     <tickerType>Normal</tickerType>
