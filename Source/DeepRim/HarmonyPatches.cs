@@ -31,6 +31,9 @@ public static class HarmonyPatches
         Log.Message("DeepRim: Adding Harmony patch ");
         harmonyInstance.Patch(AccessTools.Property(typeof(Thing), "MarketValue").GetGetMethod(false), null,
             new HarmonyMethod(patchType, "MarketValuePostfix"));
+        harmonyInstance.Patch(
+            AccessTools.Property(typeof(CompHeatPusherPowered), "ShouldPushHeatNow").GetGetMethod(true), null,
+            new HarmonyMethod(patchType, "HeatPusherPoweredPostfix"));
         harmonyInstance.Patch(AccessTools.Property(typeof(Map), "Biome").GetGetMethod(false), null,
             new HarmonyMethod(patchType, "MapBiomePostfix"));
         RefreshDrillTechLevel();
@@ -44,6 +47,26 @@ public static class HarmonyPatches
         }
 
         __result += buildingMiningShaft.ConnectedMapMarketValue;
+    }
+
+    private static void HeatPusherPoweredPostfix(CompHeatPusherPowered __instance, ref bool __result)
+    {
+        if (!__result)
+        {
+            return;
+        }
+
+        if (__instance.parent is not Building_MiningShaft shaft)
+        {
+            return;
+        }
+
+        if (shaft.CurMode == 1)
+        {
+            return;
+        }
+
+        __result = false;
     }
 
     private static void MapBiomePostfix(Map __instance, ref BiomeDef __result)

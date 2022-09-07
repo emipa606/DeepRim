@@ -15,15 +15,7 @@ internal class JobDriver_DrillDown : JobDriver
 
     protected override IEnumerable<Toil> MakeNewToils()
     {
-        this.FailOn(() =>
-        {
-            if (MiningShaft.CurMode == 1)
-            {
-                return false;
-            }
-
-            return true;
-        });
+        this.FailOn(() => MiningShaft.CurMode != 1);
         yield return Toils_Reserve.Reserve(TargetIndex.A).FailOnDespawnedNullOrForbidden(TargetIndex.A);
         yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.Touch)
             .FailOnDespawnedNullOrForbidden(TargetIndex.A);

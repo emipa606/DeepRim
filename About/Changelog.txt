@@ -1,5 +1,8 @@
 # Changelog for DeepRim
 
+1.3.10 - Drill should now only produce heat when drilling
+
+
 1.3.9 - The lower shaft now holds up roof, not sure why it didnt from the start
 
 
