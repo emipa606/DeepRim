@@ -61,6 +61,12 @@ public static class HarmonyPatches
             return;
         }
 
+        if (DeepRimMod.instance.DeepRimSettings.LowTechMode)
+        {
+            __result = false;
+            return;
+        }
+
         if (shaft.CurMode == 1)
         {
             return;

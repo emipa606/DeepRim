@@ -28,8 +28,6 @@ internal class JobDriver_DrillDown : JobDriver
             var mineActor = mine.actor;
             var chargeIncrease = mineActor.GetStatValue(StatDefOf.MiningSpeed) / 1000;
             MiningShaft.ChargeLevel += chargeIncrease;
-            //Log.Message(
-            //    $"Increasing charge by {chargeIncrease} with mining skill {mineActor.GetStatValue(StatDefOf.MiningSpeed)}");
             mineActor.skills.Learn(SkillDefOf.Mining, 0.125f);
             if (!(MiningShaft.ChargeLevel >= 100f))
             {

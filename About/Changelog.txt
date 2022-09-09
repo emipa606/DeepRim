@@ -1,5 +1,8 @@
 # Changelog for DeepRim
 
+1.3.11 - Should no longer generate heat in low tech mode
+
+
 1.3.10 - Drill should now only produce heat when drilling
 
 
