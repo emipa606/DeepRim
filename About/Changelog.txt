@@ -1,5 +1,9 @@
 # Changelog for DeepRim
 
+1.4.1 - Mod updated for 1.4 and passed autotests.
+LanguageData Used DeepL to update translations for Russian
+
+
 1.3.11 - Should no longer generate heat in low tech mode
 
 

@@ -10,7 +10,7 @@ https://ludeon.com/forums/index.php?topic=39262.0
 - Added Russian translation, thanks WolF8RocK
 - Added mod-settings for changing the size of the generated map-layers
 - Added mod-setting for low-tech mode where the drill is operated manually and don't require power
-- Added option for transfering items between layers automatically if they are in nearby built storages
+- Added option for transfering items between layers automatically if they are in nearby built storages. You need storage-buildings built both on the top level as well as on a lower level, next to the shaft. You will then get an added option on the shaft to automatically transfer items between them. 
 
 ![Image](https://i.imgur.com/pufA0kM.png)
 

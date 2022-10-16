@@ -29,7 +29,7 @@ public class GenStep_RocksFromGrid_Deep : GenStep
             return thingDef;
         }
 
-        Log.ErrorOnce("Did not get rock def to generate at " + c, 50812);
+        Log.ErrorOnce($"Did not get rock def to generate at {c}", 50812);
         thingDef = ThingDefOf.Sandstone;
 
         return thingDef;

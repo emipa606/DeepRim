@@ -120,8 +120,7 @@ public class Building_MiningShaft : Building
         else
         {
             command.defaultDesc =
-                "Toggle target between new layer and old layers. Currently, mining shaft is set to old layer, depth:" +
-                targetedLevel;
+                $"Toggle target between new layer and old layers. Currently, mining shaft is set to old layer, depth:{targetedLevel}";
         }
 
         command.icon = UI_Option;
@@ -134,8 +133,7 @@ public class Building_MiningShaft : Building
                 manager = Map.components.Find(item => item is UndergroundManager) as UndergroundManager,
                 action = delegate { },
                 defaultLabel = "Change Transfer Target",
-                defaultDesc = "Toggle target for nearby storages. Currently, transfer is set to depth:" +
-                              transferLevel,
+                defaultDesc = $"Toggle target for nearby storages. Currently, transfer is set to depth:{transferLevel}",
                 icon = UI_Transfer
             };
             yield return transferCommand;

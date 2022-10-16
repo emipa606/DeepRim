@@ -116,8 +116,9 @@ public static class HarmonyPatches
 
         if (!shaftThingDef.HasComp(typeof(CompPowerTrader)))
         {
-            shaftThingDef.comps.Add(new CompProperties_Power
-                { compClass = typeof(CompPowerTrader), basePowerConsumption = 1200 });
+            var powerComp = new CompProperties_Power { compClass = typeof(CompPowerTrader) };
+            typeof(CompProperties_Power).GetField("basePowerConsumption").SetValue(powerComp, 1200);
+            shaftThingDef.comps.Add(powerComp);
         }
 
         shaftThingDef.description = "Deeprim.PowerDesc".Translate();

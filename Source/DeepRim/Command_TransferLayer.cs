@@ -27,7 +27,7 @@ public class Command_TransferLayer : Command_Action
             var pair = enumerator.Current;
             if (pair.Value != null)
             {
-                list.Add(new FloatMenuOption("Layer at Depth:" + pair.Key + "0m",
+                list.Add(new FloatMenuOption($"Layer at Depth:{pair.Key}0m",
                     delegate { shaft.transferLevel = pair.Key; }));
             }
         }

@@ -31,7 +31,7 @@ public class Command_TargetLayer : Command_Action
                 var pair = enumerator.Current;
                 if (pair.Value != null)
                 {
-                    list.Add(new FloatMenuOption("Layer at Depth:" + pair.Key + "0m", delegate
+                    list.Add(new FloatMenuOption($"Layer at Depth:{pair.Key}0m", delegate
                     {
                         shaft.drillNew = false;
                         shaft.targetedLevel = pair.Key;
