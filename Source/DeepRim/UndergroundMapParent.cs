@@ -14,7 +14,7 @@ public class UndergroundMapParent : MapParent
 
     public bool shouldRiver = true;
 
-    protected override bool UseGenericEnterMapFloatMenuOption => false;
+    public override bool UseGenericEnterMapFloatMenuOption => false;
 
     public override void ExposeData()
     {

@@ -93,37 +93,44 @@ public static class HarmonyPatches
 
     public static void RefreshDrillTechLevel()
     {
-        var shaftThingDef = DefDatabase<ThingDef>.GetNamedSilentFail("miningshaft");
-        if (shaftThingDef == null)
+        try
         {
-            return;
-        }
-
-        if (DeepRimMod.instance.DeepRimSettings.LowTechMode)
-        {
-            if (shaftThingDef.HasComp(typeof(CompPowerTrader)))
+            var shaftThingDef = DefDatabase<ThingDef>.GetNamedSilentFail("miningshaft");
+            if (shaftThingDef == null)
             {
-                var powerComp =
-                    shaftThingDef.comps.First(properties => properties.GetType() == typeof(CompProperties_Power));
-                shaftThingDef.comps.Remove(powerComp);
+                return;
             }
 
-            shaftThingDef.description = "Deeprim.NoPowerDesc".Translate();
-            shaftThingDef.costStuffCount = 300;
-            shaftThingDef.costList = null;
-            return;
-        }
+            if (DeepRimMod.instance.DeepRimSettings.LowTechMode)
+            {
+                if (shaftThingDef.HasComp(typeof(CompPowerTrader)))
+                {
+                    var powerComp =
+                        shaftThingDef.comps.First(properties => properties.GetType() == typeof(CompProperties_Power));
+                    shaftThingDef.comps.Remove(powerComp);
+                }
 
-        if (!shaftThingDef.HasComp(typeof(CompPowerTrader)))
+                shaftThingDef.description = "Deeprim.NoPowerDesc".Translate();
+                shaftThingDef.costStuffCount = 300;
+                shaftThingDef.costList = null;
+                return;
+            }
+
+            if (!shaftThingDef.HasComp(typeof(CompPowerTrader)))
+            {
+                var powerComp = new CompProperties_Power
+                    { compClass = typeof(CompPowerTrader), basePowerConsumption = 1200 };
+                shaftThingDef.comps.Add(powerComp);
+            }
+
+            shaftThingDef.description = "Deeprim.PowerDesc".Translate();
+            shaftThingDef.costStuffCount = 145;
+            shaftThingDef.costList = new List<ThingDefCountClass>
+                { new ThingDefCountClass(ThingDefOf.ComponentIndustrial, 5) };
+        }
+        catch (Exception exception)
         {
-            var powerComp = new CompProperties_Power { compClass = typeof(CompPowerTrader) };
-            typeof(CompProperties_Power).GetField("basePowerConsumption").SetValue(powerComp, 1200);
-            shaftThingDef.comps.Add(powerComp);
+            Log.Message($"[DeepRim]: Failed to update the shaft def: {exception}");
         }
-
-        shaftThingDef.description = "Deeprim.PowerDesc".Translate();
-        shaftThingDef.costStuffCount = 145;
-        shaftThingDef.costList = new List<ThingDefCountClass>(new List<ThingDefCountClass>
-            { new ThingDefCountClass(ThingDefOf.ComponentIndustrial, 5) });
     }
 }

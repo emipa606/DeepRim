@@ -18,7 +18,7 @@ internal class DeepRimMod : Mod
     /// <summary>
     ///     The private deepRimSettings
     /// </summary>
-    private DeepRimSettings deepRimSettings;
+    public readonly DeepRimSettings DeepRimSettings;
 
     /// <summary>
     ///     Constructor
@@ -27,25 +27,10 @@ internal class DeepRimMod : Mod
     public DeepRimMod(ModContentPack content) : base(content)
     {
         instance = this;
+
         currentVersion =
-            VersionFromManifest.GetVersionFromModMetaData(ModLister.GetActiveModWithIdentifier("Mlie.DeepRim"));
-    }
-
-    /// <summary>
-    ///     The instance-deepRimSettings for the mod
-    /// </summary>
-    internal DeepRimSettings DeepRimSettings
-    {
-        get
-        {
-            if (deepRimSettings == null)
-            {
-                deepRimSettings = GetSettings<DeepRimSettings>();
-            }
-
-            return deepRimSettings;
-        }
-        set => deepRimSettings = value;
+            VersionFromManifest.GetVersionFromModMetaData(content.ModMetaData);
+        DeepRimSettings = GetSettings<DeepRimSettings>();
     }
 
     /// <summary>
