@@ -14,6 +14,9 @@ public class Building_MiningShaft : Building
 {
     private const int updateEveryXTicks = 50;
 
+    private const float defaultPowerNeeded = 1200;
+    private const float idlePowerNeeded = 200;
+
     private static readonly Texture2D UI_Send = ContentFinder<Texture2D>.Get("UI/sendDown");
 
     public static readonly Texture2D UI_BringUp = ContentFinder<Texture2D>.Get("UI/bringUp");
@@ -21,6 +24,10 @@ public class Building_MiningShaft : Building
     private static readonly Texture2D UI_Start = ContentFinder<Texture2D>.Get("UI/Start");
 
     private static readonly Texture2D UI_Pause = ContentFinder<Texture2D>.Get("UI/Pause");
+
+    private static readonly Texture2D UI_IncreasePower = ContentFinder<Texture2D>.Get("UI/IncreasePower");
+
+    private static readonly Texture2D UI_DecreasePower = ContentFinder<Texture2D>.Get("UI/DecreasePower");
 
     private static readonly Texture2D UI_Abandon = ContentFinder<Texture2D>.Get("UI/Abandon");
 
@@ -41,6 +48,8 @@ public class Building_MiningShaft : Building
     private HashSet<Building_Storage> connectedStorages = new HashSet<Building_Storage>();
 
     public bool drillNew = true;
+
+    private float extraPower;
 
     private CompPowerTrader m_Power;
 
@@ -90,6 +99,7 @@ public class Building_MiningShaft : Building
         base.ExposeData();
         Scribe_Values.Look(ref ChargeLevel, "ChargeLevel");
         Scribe_Values.Look(ref mode, "mode");
+        Scribe_Values.Look(ref extraPower, "extraPower");
         Scribe_Values.Look(ref targetedLevel, "targetedLevel");
         Scribe_Values.Look(ref transferLevel, "transferLevel");
         Scribe_Values.Look(ref drillNew, "drillNew", true);
@@ -110,20 +120,13 @@ public class Building_MiningShaft : Building
             shaft = this,
             manager = Map.components.Find(item => item is UndergroundManager) as UndergroundManager,
             action = delegate { },
-            defaultLabel = "Change Target"
+            defaultLabel = "Deeprim.ChangeTarget".Translate(),
+            defaultDesc = drillNew
+                ? "Deeprim.ChangeTargetNewTT".Translate()
+                : "Deeprim.ChangeTargetExistingTT".Translate(targetedLevel),
+            icon = UI_Option
         };
-        if (drillNew)
-        {
-            command.defaultDesc =
-                "Toggle target between new layer and old layers. Currently, mining shaft is set to dig new layer.";
-        }
-        else
-        {
-            command.defaultDesc =
-                $"Toggle target between new layer and old layers. Currently, mining shaft is set to old layer, depth:{targetedLevel}";
-        }
 
-        command.icon = UI_Option;
         yield return command;
         if (nearbyStorages.Any())
         {
@@ -132,50 +135,51 @@ public class Building_MiningShaft : Building
                 shaft = this,
                 manager = Map.components.Find(item => item is UndergroundManager) as UndergroundManager,
                 action = delegate { },
-                defaultLabel = "Change Transfer Target",
-                defaultDesc = $"Toggle target for nearby storages. Currently, transfer is set to depth:{transferLevel}",
+                defaultLabel = "Deeprim.ChangeTransferTarget".Translate(),
+                defaultDesc = "Deeprim.ChangeTransferTargetTT".Translate(transferLevel),
                 icon = UI_Transfer
             };
             yield return transferCommand;
         }
 
-        if (mode == 0 && drillNew)
+        switch (mode)
         {
-            var command_ActionStart = new Command_Action
+            case 0 when drillNew:
             {
-                action = StartDrilling,
-                defaultLabel = "Start Drilling",
-                defaultDesc = drillNew
-                    ? "Start drilling down to find a new suitable mining area."
-                    : "Start drilling down towards existing mining area.",
-                icon = UI_Start
-            };
+                var command_ActionStart = new Command_Action
+                {
+                    action = StartDrilling,
+                    defaultLabel = "Deeprim.StartDrilling".Translate(),
+                    defaultDesc = drillNew
+                        ? "Deeprim.StartDrillingNewTT".Translate()
+                        : "Deeprim.StartDrillingExistingTT".Translate(),
+                    icon = UI_Start
+                };
 
-            yield return command_ActionStart;
-        }
-        else
-        {
-            if (mode == 1)
+                yield return command_ActionStart;
+                break;
+            }
+            case 1:
             {
                 var command_ActionPause = new Command_Action
                 {
                     action = PauseDrilling,
-                    defaultLabel = "Pause Drilling",
-                    defaultDesc = "Temporany pause drilling. Progress are kept.",
+                    defaultLabel = "Deeprim.PauseDrilling".Translate(),
+                    defaultDesc = "PauseDrillingTT".Translate(),
                     icon = UI_Pause
                 };
                 yield return command_ActionPause;
+                break;
             }
-            else
+            default:
             {
                 if (mode == 2 || !drillNew && mode != 3)
                 {
                     var command_ActionAbandon = new Command_Action
                     {
                         action = PrepareToAbandon,
-                        defaultLabel = "Abandon Layer",
-                        defaultDesc =
-                            "Abandon the layer. If there's no more shafts connected to it, all pawns and items in it is lost forever.",
+                        defaultLabel = "Deeprim.Abandon".Translate(),
+                        defaultDesc = "Deeprim.AbandonTT".Translate(),
                         icon = UI_Abandon
                     };
                     yield return command_ActionAbandon;
@@ -187,14 +191,15 @@ public class Building_MiningShaft : Building
                         var command_ActionAbandon2 = new Command_Action
                         {
                             action = Abandon,
-                            defaultLabel = "Confirm Abandon",
-                            defaultDesc =
-                                "This action is irreversible!!! If this is the only shaft to it, everything currently on that layer shall be lost forever, without any way of getting them back.",
+                            defaultLabel = "Deeprim.ConfirmAbandon".Translate(),
+                            defaultDesc = "Deeprim.ConfirmAbandonTT".Translate(),
                             icon = UI_Abandon
                         };
                         yield return command_ActionAbandon2;
                     }
                 }
+
+                break;
             }
         }
 
@@ -206,19 +211,45 @@ public class Building_MiningShaft : Building
         var send = new Command_Action
         {
             action = Send,
-            defaultLabel = "Send Down",
-            defaultDesc = "Send everything on the elavator down the shaft",
+            defaultLabel = "Deeprim.SendDown".Translate(),
+            defaultDesc = "Deeprim.SendDownTT".Translate(),
             icon = UI_Send
         };
         yield return send;
         var bringUp = new Command_Action
         {
             action = BringUp,
-            defaultLabel = "Bring Up",
-            defaultDesc = "Bring everything on the elavator up to the surface",
+            defaultLabel = "Deeprim.BringUp".Translate(),
+            defaultDesc = "Deeprim.BringUpTT".Translate(),
             icon = UI_BringUp
         };
         yield return bringUp;
+
+        if (DeepRimMod.instance.DeepRimSettings.LowTechMode)
+        {
+            yield break;
+        }
+
+        if (extraPower > 0)
+        {
+            var decreasePower = new Command_Action
+            {
+                action = () => extraPower -= 100,
+                defaultLabel = "Deeprim.DecreasePower".Translate(),
+                defaultDesc = "Deeprim.DecreasePowerTT".Translate(extraPower - 100),
+                icon = UI_DecreasePower
+            };
+            yield return decreasePower;
+        }
+
+        var increasePower = new Command_Action
+        {
+            action = () => extraPower += 100,
+            defaultLabel = "Deeprim.IncreasePower".Translate(),
+            defaultDesc = "Deeprim.IncreasePowerTT".Translate(extraPower + 100),
+            icon = UI_IncreasePower
+        };
+        yield return increasePower;
     }
 
     public override void Destroy(DestroyMode mode = DestroyMode.Vanish)
@@ -234,47 +265,32 @@ public class Building_MiningShaft : Building
     public override string GetInspectString()
     {
         var stringBuilder = new StringBuilder();
-        if (drillNew)
-        {
-            stringBuilder.AppendLine("Target: New layer");
-        }
-        else
-        {
-            stringBuilder.AppendLine(string.Concat(new object[]
-            {
-                "Target: Layer at depth ",
-                targetedLevel,
-                "0m"
-            }));
-        }
+        stringBuilder.AppendLine(drillNew
+            ? "Deeprim.TargetNewLayer".Translate()
+            : "Deeprim.TargetLayerAt".Translate(targetedLevel));
 
         if (transferLevel > 0 && nearbyStorages.Any())
         {
-            stringBuilder.AppendLine(string.Concat(new object[]
+            stringBuilder.AppendLine("Deeprim.TransferTargetAt".Translate(transferLevel));
+        }
+
+        if (!DeepRimMod.instance.DeepRimSettings.LowTechMode)
+        {
+            var powerSent = PowerAvailable();
+            if (powerSent < 0)
             {
-                "Transfertarget: Layer at depth ",
-                transferLevel,
-                "0m"
-            }));
+                stringBuilder.AppendLine("Deeprim.ExtraPowerSent".Translate(-powerSent));
+            }
         }
 
         if (mode < 2)
         {
-            stringBuilder.AppendLine(string.Concat(new object[]
-            {
-                "Progress: ",
-                Math.Round(ChargeLevel),
-                "%"
-            }));
+            stringBuilder.AppendLine("Deeprim.Progress".Translate(Math.Round(ChargeLevel)));
             stringBuilder.Append(base.GetInspectString());
         }
         else
         {
-            stringBuilder.AppendLine(string.Concat(new object[]
-            {
-                "Drilling complete. Depth: ",
-                connectedMapParent.depth
-            }));
+            stringBuilder.AppendLine("Deeprim.DrillingComplete".Translate(connectedMapParent.depth));
             stringBuilder.Append(base.GetInspectString());
         }
 
@@ -300,11 +316,42 @@ public class Building_MiningShaft : Building
         mode = 0;
     }
 
+    public float PowerAvailable()
+    {
+        if (m_Power?.PowerOn == false)
+        {
+            return 0;
+        }
+
+        if (Map.components.Find(item => item is UndergroundManager) is not UndergroundManager manager)
+        {
+            return 0;
+        }
+
+        var currentActiveLayers = manager.layersState.Count;
+        if (currentActiveLayers == 0)
+        {
+            return 0;
+        }
+
+        var powerAvailable = extraPower;
+        if (mode != 1)
+        {
+            powerAvailable += defaultPowerNeeded - idlePowerNeeded;
+        }
+
+        if (powerAvailable < 0)
+        {
+            return 0;
+        }
+
+        return -(float)Math.Round(powerAvailable / currentActiveLayers);
+    }
+
     private void PrepareToAbandon()
     {
         mode = 3;
-        Messages.Message("Click again to confirm. Once abandoned, everything in that layer is lost forever!",
-            MessageTypeDefOf.RejectInput);
+        Messages.Message("Deeprim.ConfirmAbandonAgain".Translate(), MessageTypeDefOf.RejectInput);
     }
 
     private void Abandon()
@@ -322,10 +369,9 @@ public class Building_MiningShaft : Building
         drillNew = true;
     }
 
-
     private void DrillNewLayer()
     {
-        Messages.Message("Drilling complete", MessageTypeDefOf.PositiveEvent);
+        Messages.Message("Deeprim.DrillingCompleteTT".Translate(), MessageTypeDefOf.PositiveEvent);
         var mapParent =
             (MapParent)WorldObjectMaker.MakeWorldObject(
                 DefDatabase<WorldObjectDef>.GetNamed("UndergroundMapParent"));
@@ -359,6 +405,7 @@ public class Building_MiningShaft : Building
         {
             lift.depth = connectedMapParent.depth;
             lift.surfaceMap = Map;
+            lift.parentDrill = this;
         }
         else
         {
@@ -409,11 +456,11 @@ public class Building_MiningShaft : Building
     {
         if (m_Power is { PowerOn: false })
         {
-            Messages.Message("No power", MessageTypeDefOf.RejectInput);
+            Messages.Message("Deeprim.NoPower".Translate(), MessageTypeDefOf.RejectInput);
             return;
         }
 
-        Messages.Message("Sending down", MessageTypeDefOf.PositiveEvent);
+        Messages.Message("Deeprim.SendingDown".Translate(), MessageTypeDefOf.PositiveEvent);
         var cells = this.OccupiedRect().Cells;
         foreach (var intVec in cells)
         {
@@ -483,11 +530,11 @@ public class Building_MiningShaft : Building
     {
         if (m_Power is { PowerOn: false })
         {
-            Messages.Message("No power", MessageTypeDefOf.RejectInput);
+            Messages.Message("Deeprim.NoPower".Translate(), MessageTypeDefOf.RejectInput);
             return;
         }
 
-        Messages.Message("Bringing Up", MessageTypeDefOf.PositiveEvent);
+        Messages.Message("Deeprim.BringingUp".Translate(), MessageTypeDefOf.PositiveEvent);
         var cells = connectedLift.OccupiedRect().Cells;
         foreach (var intVec in cells)
         {
@@ -529,6 +576,11 @@ public class Building_MiningShaft : Building
             ((Building_SpawnedLift)connectedLift).surfaceMap = Map;
         }
 
+        if (!DeepRimMod.instance.DeepRimSettings.LowTechMode)
+        {
+            m_Power.Props.basePowerConsumption = defaultPowerNeeded + extraPower;
+        }
+
         if (GenTicks.TicksGame % GenTicks.TickRareInterval == 0)
         {
             nearbyStorages = new HashSet<Building_Storage>();
@@ -546,74 +598,82 @@ public class Building_MiningShaft : Building
             }
 
             DeepRimMod.LogMessage($"Found {nearbyStorages.Count} storages near surface shaft");
-
-            var undergroundManager = Map.components.Find(item => item is UndergroundManager) as UndergroundManager;
-            if (undergroundManager?.layersState.ContainsKey(transferLevel) == true)
+            if (transferLevel > 0)
             {
-                var connectedTransferMap = undergroundManager.layersState[transferLevel]?.Map;
-                if (connectedTransferMap != null)
+                var undergroundManager = Map.components.Find(item => item is UndergroundManager) as UndergroundManager;
+
+                if (undergroundManager?.layersState.ContainsKey(transferLevel) == true)
                 {
-                    connectedStorages = new HashSet<Building_Storage>();
-                    var transferLifts =
-                        connectedTransferMap.listerBuildings.AllBuildingsColonistOfDef(
-                            ThingDef.Named("undergroundlift"));
-                    if (!transferLifts.Any())
+                    var connectedTransferMap = undergroundManager.layersState[transferLevel]?.Map;
+                    if (connectedTransferMap != null)
                     {
-                        DeepRimMod.LogMessage("Found no spawned lift in targeted layer");
-                    }
-                    else
-                    {
-                        foreach (var buildingSpawnedLift in transferLifts)
+                        connectedStorages = new HashSet<Building_Storage>();
+                        var transferLifts =
+                            connectedTransferMap.listerBuildings.AllBuildingsColonistOfDef(
+                                ThingDef.Named("undergroundlift"));
+                        if (!transferLifts.Any())
                         {
-                            var adjacentCells = buildingSpawnedLift?.OccupiedRect().AdjacentCells;
-                            if (adjacentCells == null)
-                            {
-                                continue;
-                            }
-
-                            foreach (var cell in adjacentCells)
-                            {
-                                var building = cell.GetFirstBuilding(connectedTransferMap);
-                                switch (building)
-                                {
-                                    case null:
-                                        continue;
-                                    case Building_Storage storage:
-                                        connectedStorages.Add(storage);
-                                        break;
-                                }
-                            }
-                        }
-
-
-                        DeepRimMod.LogMessage($"Found {connectedStorages.Count} storages near underground shaft");
-
-                        if (transferLevel > 0 && m_Power is not { PowerOn: false })
-                        {
-                            Transfer(connectedTransferMap, transferLifts);
+                            DeepRimMod.LogMessage("Found no spawned lift in targeted layer");
                         }
                         else
                         {
-                            DeepRimMod.LogMessage("Either shaft is not powered or no target-layer selected");
+                            foreach (var buildingSpawnedLift in transferLifts)
+                            {
+                                var adjacentCells = buildingSpawnedLift?.OccupiedRect().AdjacentCells;
+                                if (adjacentCells == null)
+                                {
+                                    continue;
+                                }
+
+                                foreach (var cell in adjacentCells)
+                                {
+                                    var building = cell.GetFirstBuilding(connectedTransferMap);
+                                    switch (building)
+                                    {
+                                        case null:
+                                            continue;
+                                        case Building_Storage storage:
+                                            connectedStorages.Add(storage);
+                                            break;
+                                    }
+                                }
+                            }
+
+
+                            DeepRimMod.LogMessage($"Found {connectedStorages.Count} storages near underground shaft");
+
+                            if (transferLevel > 0 && m_Power is not { PowerOn: false })
+                            {
+                                Transfer(connectedTransferMap, transferLifts);
+                            }
+                            else
+                            {
+                                DeepRimMod.LogMessage("Either shaft is not powered or no target-layer selected");
+                            }
                         }
+                    }
+                    else
+                    {
+                        DeepRimMod.LogMessage("Found no connected map to transfer to");
                     }
                 }
                 else
                 {
-                    DeepRimMod.LogMessage("Found no connected map to transfer to");
+                    DeepRimMod.LogMessage("The selected target-layer does not exist");
                 }
-            }
-            else
-            {
-                DeepRimMod.LogMessage("The selected target-layer does not exist");
             }
         }
 
         if (DeepRimMod.instance.DeepRimSettings.LowTechMode)
         {
-            if (ChargeLevel < 100)
+            switch (ChargeLevel)
             {
-                return;
+                case < 100:
+                    return;
+                case < 200:
+                    Messages.Message("Deeprim.GeneratingMap".Translate(), MessageTypeDefOf.PositiveEvent);
+                    ChargeLevel = 200;
+                    return;
             }
 
             ChargeLevel = 0;
@@ -639,9 +699,14 @@ public class Building_MiningShaft : Building
         }
         else
         {
-            if (ChargeLevel < 100)
+            switch (ChargeLevel)
             {
-                return;
+                case < 100:
+                    return;
+                case < 200:
+                    Messages.Message("Deeprim.GeneratingMap".Translate(), MessageTypeDefOf.PositiveEvent);
+                    ChargeLevel = 200;
+                    return;
             }
 
             ChargeLevel = 0;
@@ -659,9 +724,14 @@ public class Building_MiningShaft : Building
             ChargeLevel++;
         }
 
-        if (ChargeLevel < 100)
+        switch (ChargeLevel)
         {
-            return;
+            case < 100:
+                return;
+            case < 200:
+                Messages.Message("Deeprim.GeneratingMap".Translate(), MessageTypeDefOf.PositiveEvent);
+                ChargeLevel = 200;
+                return;
         }
 
         ChargeLevel = 0;

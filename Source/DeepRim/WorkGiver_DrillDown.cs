@@ -51,7 +51,7 @@ public class WorkGiver_DrillDown : WorkGiver_Scanner
             return false;
         }
 
-        if (!(t is Building building))
+        if (t is not Building building)
         {
             return false;
         }

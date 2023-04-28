@@ -12,4 +12,44 @@
   <Deeprim.PowerDesc>Permet de creuser profondément dans la planète pour l'exploration et l'exploitation minière. Nécessite de l'énergie.</Deeprim.PowerDesc>
   <Deeprim.Lowtech>Utiliser des exercices de faible technicité</Deeprim.Lowtech>
   <Deeprim.Lowtech.Tooltip>Modifie la perceuse pour qu'elle puisse être utilisée manuellement sans électricité et modifie le coût de la construction.</Deeprim.Lowtech.Tooltip>
+  <Deeprim.BringingUp>L'éducation des enfants</Deeprim.BringingUp>
+  <Deeprim.LayerDepth>Profondeur de la couche : {0}0m</Deeprim.LayerDepth>
+  <Deeprim.TargetNewLayer>Cible : Nouvelle couche</Deeprim.TargetNewLayer>
+  <Deeprim.TargetLayerAt>Cible : Couche à la profondeur {0}0m</Deeprim.TargetLayerAt>
+  <Deeprim.TransferTargetAt>Cible de transfert : Couche à la profondeur {0}0m</Deeprim.TransferTargetAt>
+  <Deeprim.Progress>Progrès : {0}%</Deeprim.Progress>
+  <Deeprim.DrillingComplete>Forage terminé. Profondeur : {0}0m</Deeprim.DrillingComplete>
+  <Deeprim.DrillingCompleteTT>Forage terminé</Deeprim.DrillingCompleteTT>
+  <Deeprim.NoPower>Pas de puissance</Deeprim.NoPower>
+  <Deeprim.SendingDown>Envoi vers le bas</Deeprim.SendingDown>
+  <Deeprim.NewLayer>Nouveau calque</Deeprim.NewLayer>
+  <Deeprim.SelectLayerAt>Couche en profondeur : [0}0m</Deeprim.SelectLayerAt>
+  <Deeprim.NotWhileDrilling>Impossible de changer de cible pendant le forage</Deeprim.NotWhileDrilling>
+  <Deeprim.None>Aucun</Deeprim.None>
+  <Deeprim.GeneratingMap>Le forage est terminé, la nouvelle carte est générée. Cela peut prendre un certain temps en fonction de la taille de la carte utilisée.</Deeprim.GeneratingMap>
+  <Deeprim.AboveGround>Doit être placé au-dessus du sol.</Deeprim.AboveGround>
+  <Deeprim.ExtraPowerSent>Transfère {0}W de puissance à chaque couche</Deeprim.ExtraPowerSent>
+  <Deeprim.DecreasePower>Diminuer la puissance supplémentaire</Deeprim.DecreasePower>
+  <Deeprim.DecreasePowerTT>Réduit la puissance supplémentaire transférée aux couches inférieures à {0}W. Ceci sans compter les 1000W transférés lorsque la foreuse n'est pas en train de forer. La puissance est répartie de manière égale entre les couches connectées.</Deeprim.DecreasePowerTT>
+  <Deeprim.IncreasePower>Augmenter la puissance</Deeprim.IncreasePower>
+  <Deeprim.IncreasePowerTT>Augmente la puissance supplémentaire transférée aux couches inférieures à {0}W. Ceci sans compter les 1000W transférés lorsque la foreuse n'est pas en train de forer. La puissance est répartie de manière égale entre les couches connectées.</Deeprim.IncreasePowerTT>
+  <Deeprim.SendDown>Envoyer vers le bas</Deeprim.SendDown>
+  <Deeprim.SendDownTT>Envoyer tout ce qui se trouve dans l'ascenseur dans le puits</Deeprim.SendDownTT>
+  <Deeprim.BringUp>Apporter</Deeprim.BringUp>
+  <Deeprim.BringUpTT>Faire remonter tout ce qui se trouve dans l'ascenseur à la surface</Deeprim.BringUpTT>
+  <Deeprim.ConfirmAbandonAgain>Cliquez à nouveau pour confirmer. Une fois abandonné, tout ce qui se trouve dans ce calque est perdu à jamais !</Deeprim.ConfirmAbandonAgain>
+  <Deeprim.ConfirmAbandon>Confirmer l'abandon</Deeprim.ConfirmAbandon>
+  <Deeprim.ConfirmAbandonTT>Cette action est irréversible ! !! Si c'est le seul moyen d'y parvenir, tout ce qui se trouve actuellement sur cette couche sera perdu à jamais, sans qu'il soit possible de le récupérer.</Deeprim.ConfirmAbandonTT>
+  <Deeprim.Abandon>Abandon de la couche</Deeprim.Abandon>
+  <Deeprim.AbandonTT>Abandonnez la couche. S'il n'y a plus de puits connectés, tous les pions et objets qui s'y trouvent sont perdus à jamais.</Deeprim.AbandonTT>
+  <Deeprim.PauseDrilling>Pause forage</Deeprim.PauseDrilling>
+  <Deeprim.PauseDrillingTT>Pause temporaire du forage. Les progrès sont conservés.</Deeprim.PauseDrillingTT>
+  <Deeprim.StartDrilling>Commencer le forage</Deeprim.StartDrilling>
+  <Deeprim.StartDrillingNewTT>Commencez à forer pour trouver une nouvelle zone minière appropriée.</Deeprim.StartDrillingNewTT>
+  <Deeprim.StartDrillingExistingTT>Commencer à forer en direction de la zone minière existante.</Deeprim.StartDrillingExistingTT>
+  <Deeprim.ChangeTransferTarget>Modifier l'objectif de transfert</Deeprim.ChangeTransferTarget>
+  <Deeprim.ChangeTransferTargetTT>Basculer la cible pour le stockage à proximité. Actuellement, le transfert est défini sur la profondeur : {0}</Deeprim.ChangeTransferTargetTT>
+  <Deeprim.ChangeTarget>Modifier l'objectif</Deeprim.ChangeTarget>
+  <Deeprim.ChangeTargetNewTT>Basculer la cible entre la nouvelle couche et les anciennes couches. Actuellement, le puits d'extraction est réglé pour creuser la nouvelle couche.</Deeprim.ChangeTargetNewTT>
+  <Deeprim.ChangeTargetExistingTT>Basculer la cible entre la nouvelle et l'ancienne couche. Actuellement, le puits d'extraction est défini sur l'ancienne couche, profondeur : {0}</Deeprim.ChangeTargetExistingTT>
 </LanguageData>

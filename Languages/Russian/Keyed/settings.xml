@@ -12,4 +12,44 @@
   <Deeprim.PowerDesc>Позволяет копать вглубь планеты для исследования и добычи полезных ископаемых. Требуется энергия.</Deeprim.PowerDesc>
   <Deeprim.Lowtech>Используйте низкотехнологичные дрели</Deeprim.Lowtech>
   <Deeprim.Lowtech.Tooltip>Изменяет дрель для использования вручную без питания и изменяет стоимость конструкции</Deeprim.Lowtech.Tooltip>
+  <Deeprim.BringingUp>Воспитание</Deeprim.BringingUp>
+  <Deeprim.LayerDepth>Глубина слоя: {0}0м</Deeprim.LayerDepth>
+  <Deeprim.TargetNewLayer>Цель: Новый слой</Deeprim.TargetNewLayer>
+  <Deeprim.TargetLayerAt>Цель: Слой на глубине {0}0 м</Deeprim.TargetLayerAt>
+  <Deeprim.TransferTargetAt>Цель переноса: Слой на глубине {0}0 м</Deeprim.TransferTargetAt>
+  <Deeprim.Progress>Прогресс: {0}%</Deeprim.Progress>
+  <Deeprim.DrillingComplete>Бурение завершено. Глубина: {0}0 м</Deeprim.DrillingComplete>
+  <Deeprim.DrillingCompleteTT>Бурение завершено</Deeprim.DrillingCompleteTT>
+  <Deeprim.NoPower>Нет энергии</Deeprim.NoPower>
+  <Deeprim.SendingDown>Отправка вниз</Deeprim.SendingDown>
+  <Deeprim.NewLayer>Новый слой</Deeprim.NewLayer>
+  <Deeprim.SelectLayerAt>Слой на глубине: [0}0м</Deeprim.SelectLayerAt>
+  <Deeprim.NotWhileDrilling>Невозможно изменить цель во время бурения</Deeprim.NotWhileDrilling>
+  <Deeprim.None>Нет</Deeprim.None>
+  <Deeprim.GeneratingMap>Бурение завершено, генерируется новая карта. Это может занять некоторое время в зависимости от размера используемой карты.</Deeprim.GeneratingMap>
+  <Deeprim.AboveGround>Должны быть размещены над землей.</Deeprim.AboveGround>
+  <Deeprim.ExtraPowerSent>Передает {0} Вт мощности на каждый слой</Deeprim.ExtraPowerSent>
+  <Deeprim.DecreasePower>Уменьшить дополнительную мощность</Deeprim.DecreasePower>
+  <Deeprim.DecreasePowerTT>Снижает дополнительную мощность, передаваемую в нижние слои, до {0} Вт. При этом не учитывается 1000 Вт, передаваемых, когда бур не бурит. Мощность распределяется поровну между подключенными слоями.</Deeprim.DecreasePowerTT>
+  <Deeprim.IncreasePower>Увеличение дополнительной мощности</Deeprim.IncreasePower>
+  <Deeprim.IncreasePowerTT>Увеличивает дополнительную мощность, передаваемую в нижние слои, до {0} Вт. Это не считая 1000 Вт, передаваемых, когда бур не бурит в данный момент. Мощность распределяется поровну между подключенными слоями.</Deeprim.IncreasePowerTT>
+  <Deeprim.SendDown>Отправить</Deeprim.SendDown>
+  <Deeprim.SendDownTT>Отправить все на лифте в шахту</Deeprim.SendDownTT>
+  <Deeprim.BringUp>Поднимайте</Deeprim.BringUp>
+  <Deeprim.BringUpTT>Поднимите все на лифте на поверхность</Deeprim.BringUpTT>
+  <Deeprim.ConfirmAbandonAgain>Нажмите еще раз, чтобы подтвердить. После отказа все, что было в этом слое, будет потеряно навсегда!</Deeprim.ConfirmAbandonAgain>
+  <Deeprim.ConfirmAbandon>Подтвердить отказ</Deeprim.ConfirmAbandon>
+  <Deeprim.ConfirmAbandonTT>Это действие необратимо!!! Если это единственный вал, то все, что сейчас находится на этом слое, будет потеряно навсегда, без возможности вернуть их обратно.</Deeprim.ConfirmAbandonTT>
+  <Deeprim.Abandon>Отказ от слоя</Deeprim.Abandon>
+  <Deeprim.AbandonTT>Покиньте слой. Если к нему больше не подключены шахты, все пешки и предметы в нем будут потеряны навсегда.</Deeprim.AbandonTT>
+  <Deeprim.PauseDrilling>Бурение с паузой</Deeprim.PauseDrilling>
+  <Deeprim.PauseDrillingTT>Временная пауза в бурении. Прогресс сохраняется.</Deeprim.PauseDrillingTT>
+  <Deeprim.StartDrilling>Начать бурение</Deeprim.StartDrilling>
+  <Deeprim.StartDrillingNewTT>Начните бурение вниз, чтобы найти новую подходящую область добычи.</Deeprim.StartDrillingNewTT>
+  <Deeprim.StartDrillingExistingTT>Начать бурение в направлении существующей зоны добычи.</Deeprim.StartDrillingExistingTT>
+  <Deeprim.ChangeTransferTarget>Цель передачи изменений</Deeprim.ChangeTransferTarget>
+  <Deeprim.ChangeTransferTargetTT>Переключение цели для близлежащего хранилища. В настоящее время передача установлена на глубину: {0}</Deeprim.ChangeTransferTargetTT>
+  <Deeprim.ChangeTarget>Цель изменения</Deeprim.ChangeTarget>
+  <Deeprim.ChangeTargetNewTT>Переключение цели между новым и старым слоями. В настоящее время шахта настроена на копание нового слоя.</Deeprim.ChangeTargetNewTT>
+  <Deeprim.ChangeTargetExistingTT>Переключение цели между новым и старым слоями. В настоящее время шахта установлена на старый слой, глубина: {0}</Deeprim.ChangeTargetExistingTT>
 </LanguageData>

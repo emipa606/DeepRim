@@ -12,4 +12,44 @@
   <Deeprim.PowerDesc>Ermöglicht das tiefe Eindringen in den Planeten zur Erkundung und zum Abbau. Benötigt Energie.</Deeprim.PowerDesc>
   <Deeprim.Lowtech>Einsatz von Low-Tech-Bohrern</Deeprim.Lowtech>
   <Deeprim.Lowtech.Tooltip>Ändert die Bohrmaschine zu verwenden manuell ohne Strom und ändert die Baukosten</Deeprim.Lowtech.Tooltip>
+  <Deeprim.BringingUp>Heranziehen</Deeprim.BringingUp>
+  <Deeprim.LayerDepth>Schichttiefe: {0}0m</Deeprim.LayerDepth>
+  <Deeprim.TargetNewLayer>Ziel: Neue Ebene</Deeprim.TargetNewLayer>
+  <Deeprim.TargetLayerAt>Ziel: Schicht in Tiefe {0}0m</Deeprim.TargetLayerAt>
+  <Deeprim.TransferTargetAt>Ziel übertragen: Schicht in Tiefe {0}0m</Deeprim.TransferTargetAt>
+  <Deeprim.Progress>Fortschritt: {0}%</Deeprim.Progress>
+  <Deeprim.DrillingComplete>Bohrung abgeschlossen. Tiefe: {0}0m</Deeprim.DrillingComplete>
+  <Deeprim.DrillingCompleteTT>Bohrung abgeschlossen</Deeprim.DrillingCompleteTT>
+  <Deeprim.NoPower>Keine Leistung</Deeprim.NoPower>
+  <Deeprim.SendingDown>Abwärts senden</Deeprim.SendingDown>
+  <Deeprim.NewLayer>Neue Ebene</Deeprim.NewLayer>
+  <Deeprim.SelectLayerAt>Schicht in der Tiefe: [0}0m</Deeprim.SelectLayerAt>
+  <Deeprim.NotWhileDrilling>Ziel kann beim Bohren nicht geändert werden</Deeprim.NotWhileDrilling>
+  <Deeprim.None>Keine</Deeprim.None>
+  <Deeprim.GeneratingMap>Die Bohrung ist abgeschlossen, die neue Karte wird erstellt. Dies kann je nach Größe der verwendeten Karte eine Weile dauern.</Deeprim.GeneratingMap>
+  <Deeprim.AboveGround>Muss oberirdisch angebracht werden.</Deeprim.AboveGround>
+  <Deeprim.ExtraPowerSent>Überträgt {0}W Leistung an jede Schicht</Deeprim.ExtraPowerSent>
+  <Deeprim.DecreasePower>Verringern Sie die zusätzliche Leistung</Deeprim.DecreasePower>
+  <Deeprim.DecreasePowerTT>Verringert die auf die unteren Schichten übertragene zusätzliche Leistung auf {0}W. Dabei werden die 1000 W nicht mitgezählt, die übertragen werden, wenn der Bohrer gerade nicht bohrt. Die Leistung wird gleichmäßig auf die angeschlossenen Schichten verteilt.</Deeprim.DecreasePowerTT>
+  <Deeprim.IncreasePower>Zusätzliche Leistung erhöhen</Deeprim.IncreasePower>
+  <Deeprim.IncreasePowerTT>Erhöht die auf die unteren Schichten übertragene zusätzliche Leistung auf {0}W. Dabei werden die 1000 W nicht mitgezählt, die übertragen werden, wenn der Bohrer gerade nicht bohrt. Die Leistung wird gleichmäßig auf die angeschlossenen Schichten verteilt.</Deeprim.IncreasePowerTT>
+  <Deeprim.SendDown>Abschicken</Deeprim.SendDown>
+  <Deeprim.SendDownTT>Schickt alles im Aufzug in den Schacht</Deeprim.SendDownTT>
+  <Deeprim.BringUp>Nach oben bringen</Deeprim.BringUp>
+  <Deeprim.BringUpTT>Bringt alles aus dem Aufzug an die Oberfläche</Deeprim.BringUpTT>
+  <Deeprim.ConfirmAbandonAgain>Klicken Sie erneut, um zu bestätigen. Sobald die Ebene verlassen wird, ist alles in dieser Ebene für immer verloren!</Deeprim.ConfirmAbandonAgain>
+  <Deeprim.ConfirmAbandon>Bestätigen Sie den Abbruch</Deeprim.ConfirmAbandon>
+  <Deeprim.ConfirmAbandonTT>Diese Aktion ist unumkehrbar!!! Wenn dies die einzige Welle ist, wird alles, was sich auf dieser Ebene befindet, für immer verloren sein, ohne dass es eine Möglichkeit gibt, es zurückzubekommen.</Deeprim.ConfirmAbandonTT>
+  <Deeprim.Abandon>Schicht aufgeben</Deeprim.Abandon>
+  <Deeprim.AbandonTT>Verlassen Sie die Ebene. Wenn es keine Schächte mehr gibt, die mit ihr verbunden sind, sind alle Bauern und Gegenstände in ihr für immer verloren.</Deeprim.AbandonTT>
+  <Deeprim.PauseDrilling>Pause Bohren</Deeprim.PauseDrilling>
+  <Deeprim.PauseDrillingTT>Vorübergehende Bohrpause. Fortschritte werden festgehalten.</Deeprim.PauseDrillingTT>
+  <Deeprim.StartDrilling>Bohren beginnen</Deeprim.StartDrilling>
+  <Deeprim.StartDrillingNewTT>Bohren Sie nach unten, um ein neues geeignetes Abbaugebiet zu finden.</Deeprim.StartDrillingNewTT>
+  <Deeprim.StartDrillingExistingTT>Beginn der Bohrungen in Richtung des bestehenden Abbaugebiets.</Deeprim.StartDrillingExistingTT>
+  <Deeprim.ChangeTransferTarget>Übertragungsziel ändern</Deeprim.ChangeTransferTarget>
+  <Deeprim.ChangeTransferTargetTT>Ziel für nahegelegene Speicherung umschalten. Derzeit ist die Übertragung auf Tiefe: {0} eingestellt.</Deeprim.ChangeTransferTargetTT>
+  <Deeprim.ChangeTarget>Ziel ändern</Deeprim.ChangeTarget>
+  <Deeprim.ChangeTargetNewTT>Ziel zwischen neuer Schicht und alten Schichten umschalten. Derzeit ist der Schacht so eingestellt, dass die neue Schicht gegraben wird.</Deeprim.ChangeTargetNewTT>
+  <Deeprim.ChangeTargetExistingTT>Schaltet das Ziel zwischen neuer und alter Ebene um. Derzeit ist der Bergbauschacht auf die alte Schicht eingestellt, Tiefe: {0}</Deeprim.ChangeTargetExistingTT>
 </LanguageData>

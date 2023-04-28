@@ -19,7 +19,7 @@ public class Command_TransferLayer : Command_Action
     {
         var list = new List<FloatMenuOption>
         {
-            new FloatMenuOption("None", delegate { shaft.transferLevel = 0; })
+            new FloatMenuOption("Deeprim.None".Translate(), delegate { shaft.transferLevel = 0; })
         };
         using var enumerator = manager.layersState.GetEnumerator();
         while (enumerator.MoveNext())
@@ -27,7 +27,7 @@ public class Command_TransferLayer : Command_Action
             var pair = enumerator.Current;
             if (pair.Value != null)
             {
-                list.Add(new FloatMenuOption($"Layer at Depth:{pair.Key}0m",
+                list.Add(new FloatMenuOption("Deeprim.SelectLayerAt".Translate(pair.Key),
                     delegate { shaft.transferLevel = pair.Key; }));
             }
         }

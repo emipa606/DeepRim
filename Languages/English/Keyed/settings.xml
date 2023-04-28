@@ -11,4 +11,44 @@
   <Deeprim.PowerDesc>Allows digging deep into the planet for exploration and mining. Requires power.</Deeprim.PowerDesc>
   <Deeprim.Lowtech>Use low-tech drills</Deeprim.Lowtech>
   <Deeprim.Lowtech.Tooltip>Changes the drill to use manually without power and changes the construction cost</Deeprim.Lowtech.Tooltip>
+  <Deeprim.BringingUp>Bringing Up</Deeprim.BringingUp>
+  <Deeprim.LayerDepth>Layer Depth: {0}0m</Deeprim.LayerDepth>
+  <Deeprim.TargetNewLayer>Target: New layer</Deeprim.TargetNewLayer>
+  <Deeprim.TargetLayerAt>Target: Layer at depth {0}0m</Deeprim.TargetLayerAt>
+  <Deeprim.TransferTargetAt>Transfer target: Layer at depth {0}0m</Deeprim.TransferTargetAt>
+  <Deeprim.Progress>Progress: {0}%</Deeprim.Progress>
+  <Deeprim.DrillingComplete>Drilling complete. Depth: {0}0m</Deeprim.DrillingComplete>
+  <Deeprim.DrillingCompleteTT>Drilling complete</Deeprim.DrillingCompleteTT>
+  <Deeprim.NoPower>No power</Deeprim.NoPower>
+  <Deeprim.SendingDown>Sending down</Deeprim.SendingDown>
+  <Deeprim.NewLayer>New Layer</Deeprim.NewLayer>
+  <Deeprim.SelectLayerAt>Layer at Depth: [0}0m</Deeprim.SelectLayerAt>
+  <Deeprim.NotWhileDrilling>Can't change target while drilling</Deeprim.NotWhileDrilling>
+  <Deeprim.None>None</Deeprim.None>
+  <Deeprim.GeneratingMap>Drilling is complete, generating new map. This may take a while depending on the map-size used.</Deeprim.GeneratingMap>
+  <Deeprim.AboveGround>Must be placed above ground.</Deeprim.AboveGround>
+  <Deeprim.ExtraPowerSent>Transfers {0}W power to each layer</Deeprim.ExtraPowerSent>
+  <Deeprim.DecreasePower>Decrease extra power</Deeprim.DecreasePower>
+  <Deeprim.DecreasePowerTT>Lowers the extra power transferred to lower layers to {0}W. This is not counting the 1000W transferred when the drill is not currently drilling. Power is split equal between connected layers.</Deeprim.DecreasePowerTT>
+  <Deeprim.IncreasePower>Increase extra power</Deeprim.IncreasePower>
+  <Deeprim.IncreasePowerTT>Increases the extra power transferred to lower layers to {0}W. This is not counting the 1000W transferred when the drill is not currently drilling. Power is split equal between connected layers.</Deeprim.IncreasePowerTT>
+  <Deeprim.SendDown>Send down</Deeprim.SendDown>
+  <Deeprim.SendDownTT>Send everything on the elevator down the shaft</Deeprim.SendDownTT>
+  <Deeprim.BringUp>Bring up</Deeprim.BringUp>
+  <Deeprim.BringUpTT>Bring everything on the elevator up to the surface</Deeprim.BringUpTT>
+  <Deeprim.ConfirmAbandonAgain>Click again to confirm. Once abandoned, everything in that layer is lost forever!</Deeprim.ConfirmAbandonAgain>
+  <Deeprim.ConfirmAbandon>Confirm abandon</Deeprim.ConfirmAbandon>
+  <Deeprim.ConfirmAbandonTT>This action is irreversible!!! If this is the only shaft to it, everything currently on that layer shall be lost forever, without any way of getting them back.</Deeprim.ConfirmAbandonTT>
+  <Deeprim.Abandon>Abandon layer</Deeprim.Abandon>
+  <Deeprim.AbandonTT>Abandon the layer. If there's no more shafts connected to it, all pawns and items in it is lost forever.</Deeprim.AbandonTT>
+  <Deeprim.PauseDrilling>Pause drilling</Deeprim.PauseDrilling>
+  <Deeprim.PauseDrillingTT>Temporary pause drilling. Progress are kept.</Deeprim.PauseDrillingTT>
+  <Deeprim.StartDrilling>Start drilling</Deeprim.StartDrilling>
+  <Deeprim.StartDrillingNewTT>Start drilling down to find a new suitable mining area.</Deeprim.StartDrillingNewTT>
+  <Deeprim.StartDrillingExistingTT>Start drilling down towards existing mining area.</Deeprim.StartDrillingExistingTT>
+  <Deeprim.ChangeTransferTarget>Change transfer target</Deeprim.ChangeTransferTarget>
+  <Deeprim.ChangeTransferTargetTT>Toggle target for nearby storage. Currently, transfer is set to depth: {0}</Deeprim.ChangeTransferTargetTT>
+  <Deeprim.ChangeTarget>Change target</Deeprim.ChangeTarget>
+  <Deeprim.ChangeTargetNewTT>Toggle target between new layer and old layers. Currently, mining shaft is set to dig new layer.</Deeprim.ChangeTargetNewTT>
+  <Deeprim.ChangeTargetExistingTT>Toggle target between new layer and old layers. Currently, mining shaft is set to old layer, depth: {0}</Deeprim.ChangeTargetExistingTT>
 </LanguageData>

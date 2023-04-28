@@ -1,5 +1,11 @@
 # Changelog for DeepRim
 
+1.4.3 - Added power transfer between layers
+Opened all strings for translation
+Fixed missing gizmos on the lower shafts.
+Used DeepL to update translations for ChineseSimplified, French, German, Russian
+
+
 1.4.2 - Fixed switching between low-tech and normal drill.
 Used DeepL to update translations for ChineseSimplified, French, German
 

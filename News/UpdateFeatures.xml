@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Defs>
   <HugsLib.UpdateFeatureDef Abstract="true" Name="DeepRim_UpdateFeatureBase">
     <modNameReadable>DeepRim</modNameReadable>
@@ -26,4 +26,12 @@ When the mode is changed in the mod-options you need to reload the save if you h
     <content>Transfer items between layers automatically.
 If there are any storage-buildings built next to the mine-shaft you can now select to automatically transfer items from these to a layer and reverse.</content>
   </HugsLib.UpdateFeatureDef>
+	<HugsLib.UpdateFeatureDef ParentName="DeepRim_UpdateFeatureBase">
+		<defName>DeepRim_1_4_3</defName>
+		<assemblyVersion>1.4.3</assemblyVersion>
+		<content>This update adds a highly requested feature, power-transfer between layers.
+The drill on the top layer will now be able to send a set amount of power, splitted equally between the lower layers.
+If the drill is not currently drilling it will send 1000W of its 1200W power-demand to the lower layers.
+There is also possible to set an extra amount that should be sent, changed in 100W steps via gizmos on the drill.</content>
+	</HugsLib.UpdateFeatureDef>
 </Defs>

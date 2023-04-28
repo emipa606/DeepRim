@@ -101,8 +101,21 @@ public static class HarmonyPatches
                 return;
             }
 
+            var liftThingDef = DefDatabase<ThingDef>.GetNamedSilentFail("undergroundlift");
+            if (liftThingDef == null)
+            {
+                return;
+            }
+
             if (DeepRimMod.instance.DeepRimSettings.LowTechMode)
             {
+                if (liftThingDef.HasComp(typeof(CompPowerPlant)))
+                {
+                    var powerComp =
+                        shaftThingDef.comps.First(properties => properties.GetType() == typeof(CompProperties_Power));
+                    liftThingDef.comps.Remove(powerComp);
+                }
+
                 if (shaftThingDef.HasComp(typeof(CompPowerTrader)))
                 {
                     var powerComp =
@@ -114,6 +127,13 @@ public static class HarmonyPatches
                 shaftThingDef.costStuffCount = 300;
                 shaftThingDef.costList = null;
                 return;
+            }
+
+            if (!liftThingDef.HasComp(typeof(CompPowerPlant)))
+            {
+                var powerComp = new CompProperties_Power
+                    { compClass = typeof(CompPowerPlant), basePowerConsumption = 0, transmitsPower = true };
+                liftThingDef.comps.Add(powerComp);
             }
 
             if (!shaftThingDef.HasComp(typeof(CompPowerTrader)))

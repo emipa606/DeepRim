@@ -12,4 +12,44 @@
   <Deeprim.PowerDesc>允许挖到星球深处进行探索和采矿。需要动力。</Deeprim.PowerDesc>
   <Deeprim.Lowtech>使用低技术含量的演习</Deeprim.Lowtech>
   <Deeprim.Lowtech.Tooltip>改变了钻头的使用方式，可以在没有电源的情况下手动使用，改变了建筑成本。</Deeprim.Lowtech.Tooltip>
+  <Deeprim.BringingUp>抚养孩子</Deeprim.BringingUp>
+  <Deeprim.LayerDepth>层深度: {0}0m</Deeprim.LayerDepth>
+  <Deeprim.TargetNewLayer>目标：新层</Deeprim.TargetNewLayer>
+  <Deeprim.TargetLayerAt>目标：深度{0}0米处的层</Deeprim.TargetLayerAt>
+  <Deeprim.TransferTargetAt>转移目标：深度{0}0米处的层</Deeprim.TransferTargetAt>
+  <Deeprim.Progress>进展：{0}%</Deeprim.Progress>
+  <Deeprim.DrillingComplete>钻探完成。深度：{0}0米</Deeprim.DrillingComplete>
+  <Deeprim.DrillingCompleteTT>钻探完成</Deeprim.DrillingCompleteTT>
+  <Deeprim.NoPower>没有权力</Deeprim.NoPower>
+  <Deeprim.SendingDown>下发</Deeprim.SendingDown>
+  <Deeprim.NewLayer>新层</Deeprim.NewLayer>
+  <Deeprim.SelectLayerAt>深度层：[0}0m</Deeprim.SelectLayerAt>
+  <Deeprim.NotWhileDrilling>钻探时不能改变目标</Deeprim.NotWhileDrilling>
+  <Deeprim.None>无</Deeprim.None>
+  <Deeprim.GeneratingMap>钻探完成，生成新地图。这可能需要一些时间，取决于所使用的地图大小。</Deeprim.GeneratingMap>
+  <Deeprim.AboveGround>必须放置在地面上。</Deeprim.AboveGround>
+  <Deeprim.ExtraPowerSent>将{0}W的功率转移到每一层</Deeprim.ExtraPowerSent>
+  <Deeprim.DecreasePower>减少额外功率</Deeprim.DecreasePower>
+  <Deeprim.DecreasePowerTT>将转移到低层的额外功率降低到{0}W。这还不包括当钻头目前没有钻孔时传输的1000W。功率在连接的层之间平均分配。</Deeprim.DecreasePowerTT>
+  <Deeprim.IncreasePower>增加额外动力</Deeprim.IncreasePower>
+  <Deeprim.IncreasePowerTT>将转移到低层的额外功率增加到{0}W。这还不包括当钻头目前没有钻孔时传输的1000W。功率在连接的层之间平均分配。</Deeprim.IncreasePowerTT>
+  <Deeprim.SendDown>下发</Deeprim.SendDown>
+  <Deeprim.SendDownTT>把电梯上的所有东西都送到井下</Deeprim.SendDownTT>
+  <Deeprim.BringUp>提起</Deeprim.BringUp>
+  <Deeprim.BringUpTT>把电梯上的所有东西都带到地面上来</Deeprim.BringUpTT>
+  <Deeprim.ConfirmAbandonAgain>再次点击确认。一旦放弃，该层中的所有东西就会永远失去！！</Deeprim.ConfirmAbandonAgain>
+  <Deeprim.ConfirmAbandon>确认放弃</Deeprim.ConfirmAbandon>
+  <Deeprim.ConfirmAbandonTT>这个动作是不可逆的！！！！如果这是对它的唯一轴，目前在该层上的所有东西将永远失去，没有任何办法让它们恢复。</Deeprim.ConfirmAbandonTT>
+  <Deeprim.Abandon>放弃层</Deeprim.Abandon>
+  <Deeprim.AbandonTT>放弃该层。如果没有更多的竖井与之相连，其中的所有棋子和物品将永远失去。</Deeprim.AbandonTT>
+  <Deeprim.PauseDrilling>暂停钻探</Deeprim.PauseDrilling>
+  <Deeprim.PauseDrillingTT>暂时暂停钻探。进度保持。</Deeprim.PauseDrillingTT>
+  <Deeprim.StartDrilling>开始钻孔</Deeprim.StartDrilling>
+  <Deeprim.StartDrillingNewTT>开始向下钻探，寻找新的合适的采矿区。</Deeprim.StartDrillingNewTT>
+  <Deeprim.StartDrillingExistingTT>开始向现有的采矿区钻探。</Deeprim.StartDrillingExistingTT>
+  <Deeprim.ChangeTransferTarget>改变转移目标</Deeprim.ChangeTransferTarget>
+  <Deeprim.ChangeTransferTargetTT>切换附近存储的目标。目前，转移被设置为深度：{0}。</Deeprim.ChangeTransferTargetTT>
+  <Deeprim.ChangeTarget>改变目标</Deeprim.ChangeTarget>
+  <Deeprim.ChangeTargetNewTT>在新层和旧层之间切换目标。目前，采矿井被设定为挖掘新层。</Deeprim.ChangeTargetNewTT>
+  <Deeprim.ChangeTargetExistingTT>在新层和旧层之间切换目标。目前，采矿井被设置为旧层，深度：{0}。</Deeprim.ChangeTargetExistingTT>
 </LanguageData>

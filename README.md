@@ -11,6 +11,8 @@ https://ludeon.com/forums/index.php?topic=39262.0
 - Added mod-settings for changing the size of the generated map-layers
 - Added mod-setting for low-tech mode where the drill is operated manually and don't require power
 - Added option for transfering items between layers automatically if they are in nearby built storages. You need storage-buildings built both on the top level as well as on a lower level, next to the shaft. You will then get an added option on the shaft to automatically transfer items between them. 
+- Added power-transfer from the top layer to the lower layers. A set amount of power is split equally to each layer.
+- sk4p3g04t made retexture for this mod: https://steamcommunity.com/sharedfiles/filedetails/?id=2965262893]DeepRim Retexture
 
 ![Image](https://i.imgur.com/pufA0kM.png)
 
@@ -64,6 +66,4 @@ Oh, wait. Asset by jabbamonkey is used.
 -  If you have the solution for a problem, please post it to the GitHub repository.
 
 
-
-
-https://steamcommunity.com/sharedfiles/filedetails/changelog/2164179860]Last updated 2023-04-12
+https://steamcommunity.com/sharedfiles/filedetails/changelog/2164179860]Last updated 2023-04-28

@@ -15,7 +15,6 @@
     <castEdgeShadows>true</castEdgeShadows>
     <fillPercent>0.7</fillPercent>
     <canOverlapZones>true</canOverlapZones>
-    <interactionCellOffset>(0,0,-2)</interactionCellOffset>
     <statBases>
       <WorkToBuild>12500</WorkToBuild>
       <MaxHitPoints>300</MaxHitPoints>

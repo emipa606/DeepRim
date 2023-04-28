@@ -11,7 +11,7 @@ public class PlaceWorker_AboveGround : PlaceWorker
         AcceptanceReport result;
         if (map.ParentHolder is UndergroundMapParent)
         {
-            result = "Must be placed above ground.";
+            result = "Deeprim.AboveGround".Translate();
         }
         else
         {

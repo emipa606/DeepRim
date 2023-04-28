@@ -20,7 +20,7 @@ public class Command_TargetLayer : Command_Action
         var list = new List<FloatMenuOption>();
         if (shaft.CurMode != 1)
         {
-            list.Add(new FloatMenuOption("New Layer", delegate
+            list.Add(new FloatMenuOption("Deeprim.NewLayer".Translate(), delegate
             {
                 shaft.drillNew = true;
                 shaft.PauseDrilling();
@@ -31,7 +31,7 @@ public class Command_TargetLayer : Command_Action
                 var pair = enumerator.Current;
                 if (pair.Value != null)
                 {
-                    list.Add(new FloatMenuOption($"Layer at Depth:{pair.Key}0m", delegate
+                    list.Add(new FloatMenuOption("Deeprim.SelectLayerAt".Translate(pair.Key), delegate
                     {
                         shaft.drillNew = false;
                         shaft.targetedLevel = pair.Key;
@@ -43,7 +43,7 @@ public class Command_TargetLayer : Command_Action
         }
         else
         {
-            list.Add(new FloatMenuOption("Can't change target while drilling", null));
+            list.Add(new FloatMenuOption("Deeprim.NotWhileDrilling".Translate(), null));
         }
 
         return new FloatMenu(list);
