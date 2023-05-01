@@ -165,7 +165,7 @@ public class Building_MiningShaft : Building
                 {
                     action = PauseDrilling,
                     defaultLabel = "Deeprim.PauseDrilling".Translate(),
-                    defaultDesc = "PauseDrillingTT".Translate(),
+                    defaultDesc = "Deeprim.PauseDrillingTT".Translate(),
                     icon = UI_Pause
                 };
                 yield return command_ActionPause;

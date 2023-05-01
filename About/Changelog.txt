@@ -1,5 +1,8 @@
 # Changelog for DeepRim
 
+1.4.4 - Fixed missing translation-string
+
+
 1.4.3 - Added power transfer between layers
 Opened all strings for translation
 Fixed missing gizmos on the lower shafts.

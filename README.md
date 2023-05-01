@@ -66,4 +66,4 @@ Oh, wait. Asset by jabbamonkey is used.
 -  If you have the solution for a problem, please post it to the GitHub repository.
 
 
-https://steamcommunity.com/sharedfiles/filedetails/changelog/2164179860]Last updated 2023-04-28
+https://steamcommunity.com/sharedfiles/filedetails/changelog/2164179860]Last updated 2023-05-01
