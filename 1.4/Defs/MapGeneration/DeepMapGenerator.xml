@@ -11,6 +11,19 @@
       <li>FogDeep</li>
     </genSteps>
   </MapGeneratorDef>
+  <MapGeneratorDef Name="Deep_MapCommonBase" Abstract="True">
+    <genSteps>
+      <li>ElevationFertilityDeep</li>
+      <li>RocksFromGridDeep</li>
+      <li>TerrainDeep</li>
+      <li>FindDrillLocation</li>
+      <li>RockChunks</li>
+      <li>ScenParts</li>
+      <li>Plants</li>
+      <li>Animals</li>
+      <li>FogDeep</li>
+    </genSteps>
+  </MapGeneratorDef>
   <GenStepDef>
     <defName>ElevationFertilityDeep</defName>
     <!--<linkWithMapGenerator>DeepMap</linkWithMapGenerator>-->

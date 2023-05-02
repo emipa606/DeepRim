@@ -38,10 +38,17 @@ public class GenStep_RocksFromGrid_Deep : GenStep
     public override void Generate(Map map, GenStepParams parms)
     {
         map.regionAndRoomUpdater.Enabled = false;
+        var amountOfOpenTerrain = 0.25f;
+        if (map.Biome.defName != "Underground")
+        {
+            amountOfOpenTerrain = 0.5f;
+        }
+
         foreach (var intVec in map.AllCells)
         {
             var rockDefAt = GenStep_RocksFromGrid.RockDefAt(intVec);
-            if (((UndergroundMapParent)map.info.parent).holeLocation.DistanceTo(intVec) > 5f)
+            if (((UndergroundMapParent)map.info.parent).holeLocation.DistanceTo(intVec) > 5f &&
+                Rand.Value > amountOfOpenTerrain)
             {
                 GenSpawn.Spawn(rockDefAt, intVec, map);
             }

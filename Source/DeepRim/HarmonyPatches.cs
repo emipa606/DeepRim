@@ -25,8 +25,34 @@ public static class HarmonyPatches
         325
     };
 
+    public static List<BiomeDef> PossibleBiomeDefs;
+
     static HarmonyPatches()
     {
+        PossibleBiomeDefs = new List<BiomeDef>
+        {
+            BiomeDef.Named("Underground")
+        };
+        if (DefDatabase<BiomeDef>.GetNamedSilentFail("BMT_CrystalCaverns") != null)
+        {
+            PossibleBiomeDefs.Add(BiomeDef.Named("BMT_CrystalCaverns"));
+        }
+
+        if (DefDatabase<BiomeDef>.GetNamedSilentFail("BMT_EarthenDepths") != null)
+        {
+            PossibleBiomeDefs.Add(BiomeDef.Named("BMT_EarthenDepths"));
+        }
+
+        if (DefDatabase<BiomeDef>.GetNamedSilentFail("BMT_FungalForest") != null)
+        {
+            PossibleBiomeDefs.Add(BiomeDef.Named("BMT_FungalForest"));
+        }
+
+        if (DefDatabase<BiomeDef>.GetNamedSilentFail("Cave") != null)
+        {
+            PossibleBiomeDefs.Add(BiomeDef.Named("Cave"));
+        }
+
         var harmonyInstance = new Harmony("com.deeprim.rimworld.mod");
         Log.Message("DeepRim: Adding Harmony patch ");
         harmonyInstance.Patch(AccessTools.Property(typeof(Thing), "MarketValue").GetGetMethod(false), null,
@@ -77,9 +103,9 @@ public static class HarmonyPatches
 
     private static void MapBiomePostfix(Map __instance, ref BiomeDef __result)
     {
-        if (__instance.ParentHolder is UndergroundMapParent)
+        if (__instance.ParentHolder is UndergroundMapParent mapParent)
         {
-            __result = DefDatabase<BiomeDef>.GetNamed("Underground");
+            __result = BiomeDef.Named(mapParent.biome);
         }
     }
 

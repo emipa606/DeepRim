@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+  <Operation Class="PatchOperationConditional">
+    <xpath>/Defs/BiomeDef[defName="BMT_CrystalCaverns"]</xpath>
+    <success>Always</success>
+    <match Class="PatchOperationAdd">
+      <xpath>/Defs</xpath>
+      <value>
+        <MapGeneratorDef ParentName="Deep_MapCommonBase">
+          <defName>DeepCrystalCaverns</defName>
+          <genSteps>
+            <li>BMT_CrystalsGenerator</li>
+          </genSteps>
+        </MapGeneratorDef>
+        <MapGeneratorDef ParentName="Deep_MapCommonBase">
+          <defName>DeepEarthenDepths</defName>
+          <genSteps>
+            <li>BMT_ScatterStalagmiteGenerator</li>
+          </genSteps>
+        </MapGeneratorDef>
+        <MapGeneratorDef ParentName="Deep_MapCommonBase">
+          <defName>DeepFungalForest</defName>
+        </MapGeneratorDef>
+      </value>
+    </match>
+  </Operation>
+</Patch>

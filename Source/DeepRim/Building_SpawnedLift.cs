@@ -92,11 +92,6 @@ public class Building_SpawnedLift : Building
         if (m_Power != null && parentDrill != null)
         {
             m_Power.Props.basePowerConsumption = parentDrill.PowerAvailable();
-            DeepRimMod.LogMessage($"Setting power to {m_Power.Props.basePowerConsumption}");
-        }
-        else
-        {
-            DeepRimMod.LogMessage($"m_Power: {m_Power}, parentDrill {parentDrill}");
         }
     }
 

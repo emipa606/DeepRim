@@ -392,8 +392,30 @@ public class Building_MiningShaft : Building
             new IntVec3(cellRect.minX + 1, 0, cellRect.minZ + 1), Map.Size,
             mapSize);
 
-        connectedMap = MapGenerator.GenerateMap(mapSize, mapParent,
-            mapParent.MapGeneratorDef, mapParent.ExtraGenStepDefs);
+        var mapGenerator = mapParent.MapGeneratorDef;
+        var biomeToGenerate = HarmonyPatches.PossibleBiomeDefs.RandomElement();
+        connectedMapParent.biome = biomeToGenerate.defName;
+        switch (biomeToGenerate.defName)
+        {
+            case "BMT_CrystalCaverns":
+                mapGenerator = DefDatabase<MapGeneratorDef>.GetNamedSilentFail("DeepCrystalCaverns");
+                DeepRimMod.LogMessage("Generating DeepCrystalCaverns");
+                break;
+            case "BMT_EarthenDepths":
+                mapGenerator = DefDatabase<MapGeneratorDef>.GetNamedSilentFail("DeepEarthenDepths");
+                DeepRimMod.LogMessage("Generating DeepEarthenDepths");
+                break;
+            case "BMT_FungalForest":
+                mapGenerator = DefDatabase<MapGeneratorDef>.GetNamedSilentFail("DeepFungalForest");
+                DeepRimMod.LogMessage("Generating DeepFungalForest");
+                break;
+            case "Cave":
+                mapGenerator = DefDatabase<MapGeneratorDef>.GetNamedSilentFail("DeepCave");
+                DeepRimMod.LogMessage("Generating DeepCave");
+                break;
+        }
+
+        connectedMap = MapGenerator.GenerateMap(mapSize, mapParent, mapGenerator, mapParent.ExtraGenStepDefs);
         Find.World.info.seedString = seedString;
         connectedLift =
             GenSpawn.Spawn(ThingMaker.MakeThing(DefDatabase<ThingDef>.GetNamed("undergroundlift"), Stuff),
@@ -597,7 +619,6 @@ public class Building_MiningShaft : Building
                 }
             }
 
-            DeepRimMod.LogMessage($"Found {nearbyStorages.Count} storages near surface shaft");
             if (transferLevel > 0)
             {
                 var undergroundManager = Map.components.Find(item => item is UndergroundManager) as UndergroundManager;
