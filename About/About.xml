@@ -35,6 +35,8 @@ https://ludeon.com/forums/index.php?topic=39262.0
 - Added power-transfer from the top layer to the lower layers. A set amount of power is split equally to each layer.
 - sk4p3g04t made retexture for this mod: [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2965262893]DeepRim Retexture[/url]
 
+Will now generate versions of cave biomes in [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2969748433]Biomes! Caverns[/url] and [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2259124387]CaveBiome[/url] if loaded. The biome will be selected randomly. The amount of rock in these biomes will be about 50% while in the original underground biome it is now about 25%.
+
 [img]https://i.imgur.com/pufA0kM.png[/img]
 
 [table]
@@ -93,5 +95,5 @@ Oh, wait. Asset by jabbamonkey is used.
 [*] Do not report errors by making a discussion-thread, I get no notification of that.
 [*] If you have the solution for a problem, please post it to the GitHub repository.
 [/list]
-[url=https://steamcommunity.com/sharedfiles/filedetails/changelog/2164179860]Last updated 2023-05-02[/url]</description>
+[url=https://steamcommunity.com/sharedfiles/filedetails/changelog/2164179860]Last updated 2023-05-10[/url]</description>
 </ModMetaData>

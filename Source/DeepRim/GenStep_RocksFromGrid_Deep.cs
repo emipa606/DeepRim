@@ -38,7 +38,7 @@ public class GenStep_RocksFromGrid_Deep : GenStep
     public override void Generate(Map map, GenStepParams parms)
     {
         map.regionAndRoomUpdater.Enabled = false;
-        var amountOfOpenTerrain = 0.25f;
+        var amountOfOpenTerrain = 0f;
         if (map.Biome.defName != "Underground")
         {
             amountOfOpenTerrain = 0.5f;
