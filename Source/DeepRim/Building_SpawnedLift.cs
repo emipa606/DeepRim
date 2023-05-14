@@ -47,7 +47,7 @@ public class Building_SpawnedLift : Building
             action = BringUp,
             defaultLabel = "Deeprim.BringUp".Translate(),
             defaultDesc = "Deeprim.BringUpTT".Translate(),
-            icon = Building_MiningShaft.UI_BringUp
+            icon = HarmonyPatches.UI_BringUp
         };
         yield return bringUp;
     }
@@ -102,7 +102,7 @@ public class Building_SpawnedLift : Building
         {
             surfaceMap = Find.Maps
                 .FirstOrDefault(parentMap =>
-                    parentMap.Tile == map.Tile && parentMap.Biome != BiomeDef.Named("Underground"));
+                    parentMap.Tile == map.Tile && parentMap.Biome != UndergroundBiomeDefOf.Underground);
         }
 
         if (surfaceMap == null)
@@ -115,7 +115,7 @@ public class Building_SpawnedLift : Building
             var convertedLocation = HarmonyPatches.ConvertParentDrillLocation(
                 Position, Map.Size, surfaceMap.Size);
             parentDrill = (Building_MiningShaft)surfaceMap.listerBuldingOfDefInProximity
-                .GetForCell(convertedLocation, 5, ThingDef.Named("miningshaft")).FirstOrDefault();
+                .GetForCell(convertedLocation, 5, ShaftThingDefOf.miningshaft).FirstOrDefault();
         }
 
         m_Power = GetComp<CompPowerPlant>();

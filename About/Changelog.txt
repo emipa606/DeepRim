@@ -1,5 +1,9 @@
 # Changelog for DeepRim
 
+1.4.7 - Some minor optimizations.
+Used DeepL to update translations for ChineseSimplified, French, German, Russian
+
+
 1.4.6 - Reverted the map-gen for the lower layer.
 
 

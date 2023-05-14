@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
 using RimWorld;
+using UnityEngine;
 using Verse;
 
 namespace DeepRim;
@@ -25,13 +26,36 @@ public static class HarmonyPatches
         325
     };
 
+
+    public static readonly Texture2D UI_Send = ContentFinder<Texture2D>.Get("UI/sendDown");
+
+    public static readonly Texture2D UI_BringUp = ContentFinder<Texture2D>.Get("UI/bringUp");
+
+    public static readonly Texture2D UI_Start = ContentFinder<Texture2D>.Get("UI/Start");
+
+    public static readonly Texture2D UI_Pause = ContentFinder<Texture2D>.Get("UI/Pause");
+
+    public static readonly Texture2D UI_IncreasePower = ContentFinder<Texture2D>.Get("UI/IncreasePower");
+
+    public static readonly Texture2D UI_DecreasePower = ContentFinder<Texture2D>.Get("UI/DecreasePower");
+
+    public static readonly Texture2D UI_Abandon = ContentFinder<Texture2D>.Get("UI/Abandon");
+
+    public static readonly Texture2D UI_DrillDown = ContentFinder<Texture2D>.Get("UI/drilldown");
+
+    public static readonly Texture2D UI_DrillUp = ContentFinder<Texture2D>.Get("UI/drillup");
+
+    public static readonly Texture2D UI_Option = ContentFinder<Texture2D>.Get("UI/optionsIcon");
+
+    public static readonly Texture2D UI_Transfer = ContentFinder<Texture2D>.Get("UI/transferIcon");
+
     public static List<BiomeDef> PossibleBiomeDefs;
 
     static HarmonyPatches()
     {
         PossibleBiomeDefs = new List<BiomeDef>
         {
-            BiomeDef.Named("Underground")
+            UndergroundBiomeDefOf.Underground
         };
         if (DefDatabase<BiomeDef>.GetNamedSilentFail("BMT_CrystalCaverns") != null)
         {
@@ -121,13 +145,13 @@ public static class HarmonyPatches
     {
         try
         {
-            var shaftThingDef = DefDatabase<ThingDef>.GetNamedSilentFail("miningshaft");
+            var shaftThingDef = ShaftThingDefOf.miningshaft;
             if (shaftThingDef == null)
             {
                 return;
             }
 
-            var liftThingDef = DefDatabase<ThingDef>.GetNamedSilentFail("undergroundlift");
+            var liftThingDef = ShaftThingDefOf.undergroundlift;
             if (liftThingDef == null)
             {
                 return;
@@ -178,5 +202,28 @@ public static class HarmonyPatches
         {
             Log.Message($"[DeepRim]: Failed to update the shaft def: {exception}");
         }
+    }
+}
+
+[DefOf]
+public static class ShaftThingDefOf
+{
+    public static ThingDef miningshaft;
+    public static ThingDef undergroundlift;
+
+    static ShaftThingDefOf()
+    {
+        DefOfHelper.EnsureInitializedInCtor(typeof(ThingDefOf));
+    }
+}
+
+[DefOf]
+public static class UndergroundBiomeDefOf
+{
+    public static BiomeDef Underground;
+
+    static UndergroundBiomeDefOf()
+    {
+        DefOfHelper.EnsureInitializedInCtor(typeof(BiomeDefOf));
     }
 }

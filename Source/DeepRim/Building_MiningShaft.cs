@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using RimWorld;
 using RimWorld.Planet;
-using UnityEngine;
 using Verse;
 
 namespace DeepRim;
@@ -17,26 +16,6 @@ public class Building_MiningShaft : Building
     private const float defaultPowerNeeded = 1200;
     private const float idlePowerNeeded = 200;
 
-    private static readonly Texture2D UI_Send = ContentFinder<Texture2D>.Get("UI/sendDown");
-
-    public static readonly Texture2D UI_BringUp = ContentFinder<Texture2D>.Get("UI/bringUp");
-
-    private static readonly Texture2D UI_Start = ContentFinder<Texture2D>.Get("UI/Start");
-
-    private static readonly Texture2D UI_Pause = ContentFinder<Texture2D>.Get("UI/Pause");
-
-    private static readonly Texture2D UI_IncreasePower = ContentFinder<Texture2D>.Get("UI/IncreasePower");
-
-    private static readonly Texture2D UI_DecreasePower = ContentFinder<Texture2D>.Get("UI/DecreasePower");
-
-    private static readonly Texture2D UI_Abandon = ContentFinder<Texture2D>.Get("UI/Abandon");
-
-    private static readonly Texture2D UI_DrillDown;
-
-    private static readonly Texture2D UI_DrillUp = ContentFinder<Texture2D>.Get("UI/drillup");
-
-    private static readonly Texture2D UI_Option;
-    private static readonly Texture2D UI_Transfer;
 
     public float ChargeLevel;
 
@@ -63,11 +42,19 @@ public class Building_MiningShaft : Building
 
     public int transferLevel;
 
-    static Building_MiningShaft()
+    private UndergroundManager undergroundManager;
+
+    public UndergroundManager UndergroundManager
     {
-        UI_DrillDown = ContentFinder<Texture2D>.Get("UI/drilldown");
-        UI_Option = ContentFinder<Texture2D>.Get("UI/optionsIcon");
-        UI_Transfer = ContentFinder<Texture2D>.Get("UI/transferIcon");
+        get
+        {
+            if (undergroundManager == null)
+            {
+                undergroundManager = Map.components.Find(item => item is UndergroundManager) as UndergroundManager;
+            }
+
+            return undergroundManager;
+        }
     }
 
     public float ConnectedMapMarketValue
@@ -124,7 +111,7 @@ public class Building_MiningShaft : Building
             defaultDesc = drillNew
                 ? "Deeprim.ChangeTargetNewTT".Translate()
                 : "Deeprim.ChangeTargetExistingTT".Translate(targetedLevel),
-            icon = UI_Option
+            icon = HarmonyPatches.UI_Option
         };
 
         yield return command;
@@ -137,7 +124,7 @@ public class Building_MiningShaft : Building
                 action = delegate { },
                 defaultLabel = "Deeprim.ChangeTransferTarget".Translate(),
                 defaultDesc = "Deeprim.ChangeTransferTargetTT".Translate(transferLevel),
-                icon = UI_Transfer
+                icon = HarmonyPatches.UI_Transfer
             };
             yield return transferCommand;
         }
@@ -153,7 +140,7 @@ public class Building_MiningShaft : Building
                     defaultDesc = drillNew
                         ? "Deeprim.StartDrillingNewTT".Translate()
                         : "Deeprim.StartDrillingExistingTT".Translate(),
-                    icon = UI_Start
+                    icon = HarmonyPatches.UI_Start
                 };
 
                 yield return command_ActionStart;
@@ -166,7 +153,7 @@ public class Building_MiningShaft : Building
                     action = PauseDrilling,
                     defaultLabel = "Deeprim.PauseDrilling".Translate(),
                     defaultDesc = "Deeprim.PauseDrillingTT".Translate(),
-                    icon = UI_Pause
+                    icon = HarmonyPatches.UI_Pause
                 };
                 yield return command_ActionPause;
                 break;
@@ -180,7 +167,7 @@ public class Building_MiningShaft : Building
                         action = PrepareToAbandon,
                         defaultLabel = "Deeprim.Abandon".Translate(),
                         defaultDesc = "Deeprim.AbandonTT".Translate(),
-                        icon = UI_Abandon
+                        icon = HarmonyPatches.UI_Abandon
                     };
                     yield return command_ActionAbandon;
                 }
@@ -193,7 +180,7 @@ public class Building_MiningShaft : Building
                             action = Abandon,
                             defaultLabel = "Deeprim.ConfirmAbandon".Translate(),
                             defaultDesc = "Deeprim.ConfirmAbandonTT".Translate(),
-                            icon = UI_Abandon
+                            icon = HarmonyPatches.UI_Abandon
                         };
                         yield return command_ActionAbandon2;
                     }
@@ -213,7 +200,7 @@ public class Building_MiningShaft : Building
             action = Send,
             defaultLabel = "Deeprim.SendDown".Translate(),
             defaultDesc = "Deeprim.SendDownTT".Translate(),
-            icon = UI_Send
+            icon = HarmonyPatches.UI_Send
         };
         yield return send;
         var bringUp = new Command_Action
@@ -221,7 +208,7 @@ public class Building_MiningShaft : Building
             action = BringUp,
             defaultLabel = "Deeprim.BringUp".Translate(),
             defaultDesc = "Deeprim.BringUpTT".Translate(),
-            icon = UI_BringUp
+            icon = HarmonyPatches.UI_BringUp
         };
         yield return bringUp;
 
@@ -237,7 +224,7 @@ public class Building_MiningShaft : Building
                 action = () => extraPower -= 100,
                 defaultLabel = "Deeprim.DecreasePower".Translate(),
                 defaultDesc = "Deeprim.DecreasePowerTT".Translate(extraPower - 100),
-                icon = UI_DecreasePower
+                icon = HarmonyPatches.UI_DecreasePower
             };
             yield return decreasePower;
         }
@@ -247,7 +234,7 @@ public class Building_MiningShaft : Building
             action = () => extraPower += 100,
             defaultLabel = "Deeprim.IncreasePower".Translate(),
             defaultDesc = "Deeprim.IncreasePowerTT".Translate(extraPower + 100),
-            icon = UI_IncreasePower
+            icon = HarmonyPatches.UI_IncreasePower
         };
         yield return increasePower;
     }
@@ -361,8 +348,7 @@ public class Building_MiningShaft : Building
         connectedMapParent?.AbandonLift(connectedLift);
 
         connectedLift.Destroy();
-        var undergroundManager = Map.components.Find(item => item is UndergroundManager) as UndergroundManager;
-        undergroundManager?.DestroyLayer(connectedMapParent);
+        UndergroundManager?.DestroyLayer(connectedMapParent);
         connectedMap = null;
         connectedMapParent = null;
         connectedLift = null;
@@ -418,11 +404,10 @@ public class Building_MiningShaft : Building
         connectedMap = MapGenerator.GenerateMap(mapSize, mapParent, mapGenerator, mapParent.ExtraGenStepDefs);
         Find.World.info.seedString = seedString;
         connectedLift =
-            GenSpawn.Spawn(ThingMaker.MakeThing(DefDatabase<ThingDef>.GetNamed("undergroundlift"), Stuff),
+            GenSpawn.Spawn(ThingMaker.MakeThing(ShaftThingDefOf.undergroundlift, Stuff),
                 connectedMapParent.holeLocation, connectedMap);
         connectedLift.SetFaction(Faction.OfPlayer);
-        var undergroundManager = Map.components.Find(item => item is UndergroundManager) as UndergroundManager;
-        undergroundManager?.InsertLayer(connectedMapParent);
+        UndergroundManager?.InsertLayer(connectedMapParent);
         if (connectedLift is Building_SpawnedLift lift)
         {
             lift.depth = connectedMapParent.depth;
@@ -450,13 +435,12 @@ public class Building_MiningShaft : Building
 
     private void DrillToOldLayer()
     {
-        var undergroundManager = Map.components.Find(item => item is UndergroundManager) as UndergroundManager;
-        connectedMapParent = undergroundManager?.layersState[targetedLevel];
-        connectedMap = undergroundManager?.layersState[targetedLevel]?.Map;
+        connectedMapParent = UndergroundManager?.layersState[targetedLevel];
+        connectedMap = UndergroundManager?.layersState[targetedLevel]?.Map;
         var cellRect = this.OccupiedRect();
         var intVec = new IntVec3(cellRect.minX + 1, 0, cellRect.minZ + 1);
         connectedLift =
-            GenSpawn.Spawn(ThingMaker.MakeThing(DefDatabase<ThingDef>.GetNamed("undergroundlift"), Stuff), intVec,
+            GenSpawn.Spawn(ThingMaker.MakeThing(ShaftThingDefOf.undergroundlift, Stuff), intVec,
                 connectedMap);
         connectedLift.SetFaction(Faction.OfPlayer);
         FloodFillerFog.FloodUnfog(intVec, connectedMap);
@@ -581,9 +565,8 @@ public class Building_MiningShaft : Building
 
     public void SyncConnectedMap()
     {
-        var undergroundManager = Map.components.Find(item => item is UndergroundManager) as UndergroundManager;
-        connectedMapParent = undergroundManager?.layersState[targetedLevel];
-        connectedMap = undergroundManager?.layersState[targetedLevel]?.Map;
+        connectedMapParent = UndergroundManager?.layersState[targetedLevel];
+        connectedMap = UndergroundManager?.layersState[targetedLevel]?.Map;
         connectedLift =
             (from Building_SpawnedLift lift in connectedMap?.listerBuildings.allBuildingsColonist
                 where lift != null
@@ -621,11 +604,9 @@ public class Building_MiningShaft : Building
 
             if (transferLevel > 0)
             {
-                var undergroundManager = Map.components.Find(item => item is UndergroundManager) as UndergroundManager;
-
-                if (undergroundManager?.layersState.ContainsKey(transferLevel) == true)
+                if (UndergroundManager?.layersState.ContainsKey(transferLevel) == true)
                 {
-                    var connectedTransferMap = undergroundManager.layersState[transferLevel]?.Map;
+                    var connectedTransferMap = UndergroundManager.layersState[transferLevel]?.Map;
                     if (connectedTransferMap != null)
                     {
                         connectedStorages = new HashSet<Building_Storage>();

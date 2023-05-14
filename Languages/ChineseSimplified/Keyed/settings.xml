@@ -52,4 +52,5 @@
   <Deeprim.ChangeTarget>改变目标</Deeprim.ChangeTarget>
   <Deeprim.ChangeTargetNewTT>在新层和旧层之间切换目标。目前，采矿井被设定为挖掘新层。</Deeprim.ChangeTargetNewTT>
   <Deeprim.ChangeTargetExistingTT>在新层和旧层之间切换目标。目前，采矿井被设置为旧层，深度：{0}。</Deeprim.ChangeTargetExistingTT>
+  <Deeprim.ExtraPowerReceived>接收{0}W电源</Deeprim.ExtraPowerReceived>
 </LanguageData>

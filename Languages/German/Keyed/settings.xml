@@ -52,4 +52,5 @@
   <Deeprim.ChangeTarget>Ziel ändern</Deeprim.ChangeTarget>
   <Deeprim.ChangeTargetNewTT>Ziel zwischen neuer Schicht und alten Schichten umschalten. Derzeit ist der Schacht so eingestellt, dass die neue Schicht gegraben wird.</Deeprim.ChangeTargetNewTT>
   <Deeprim.ChangeTargetExistingTT>Schaltet das Ziel zwischen neuer und alter Ebene um. Derzeit ist der Bergbauschacht auf die alte Schicht eingestellt, Tiefe: {0}</Deeprim.ChangeTargetExistingTT>
+  <Deeprim.ExtraPowerReceived>Empfang von {0}W Leistung</Deeprim.ExtraPowerReceived>
 </LanguageData>

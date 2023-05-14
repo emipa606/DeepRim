@@ -52,4 +52,5 @@
   <Deeprim.ChangeTarget>Цель изменения</Deeprim.ChangeTarget>
   <Deeprim.ChangeTargetNewTT>Переключение цели между новым и старым слоями. В настоящее время шахта настроена на копание нового слоя.</Deeprim.ChangeTargetNewTT>
   <Deeprim.ChangeTargetExistingTT>Переключение цели между новым и старым слоями. В настоящее время шахта установлена на старый слой, глубина: {0}</Deeprim.ChangeTargetExistingTT>
+  <Deeprim.ExtraPowerReceived>Получение мощности {0} Вт</Deeprim.ExtraPowerReceived>
 </LanguageData>

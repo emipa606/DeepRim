@@ -7,14 +7,13 @@ namespace DeepRim;
 
 public class WorkGiver_DrillDown : WorkGiver_Scanner
 {
-    public override ThingRequest PotentialWorkThingRequest =>
-        ThingRequest.ForDef(ThingDef.Named("miningshaft"));
+    public override ThingRequest PotentialWorkThingRequest => ThingRequest.ForDef(ShaftThingDefOf.miningshaft);
 
     public override PathEndMode PathEndMode => PathEndMode.OnCell;
 
     public override IEnumerable<Thing> PotentialWorkThingsGlobal(Pawn pawn)
     {
-        return pawn.Map.listerBuildings.AllBuildingsColonistOfDef(ThingDef.Named("miningshaft"));
+        return pawn.Map.listerBuildings.AllBuildingsColonistOfDef(ShaftThingDefOf.miningshaft);
     }
 
     public override bool ShouldSkip(Pawn pawn, bool forced = false)
@@ -22,7 +21,7 @@ public class WorkGiver_DrillDown : WorkGiver_Scanner
         var allBuildingsColonist = pawn.Map.listerBuildings.allBuildingsColonist;
         foreach (var buildings in allBuildingsColonist)
         {
-            if (buildings.def != ThingDef.Named("miningshaft"))
+            if (buildings.def != ShaftThingDefOf.miningshaft)
             {
                 continue;
             }

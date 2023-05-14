@@ -28,6 +28,7 @@
   <Deeprim.GeneratingMap>Drilling is complete, generating new map. This may take a while depending on the map-size used.</Deeprim.GeneratingMap>
   <Deeprim.AboveGround>Must be placed above ground.</Deeprim.AboveGround>
   <Deeprim.ExtraPowerSent>Transfers {0}W power to each layer</Deeprim.ExtraPowerSent>
+  <Deeprim.ExtraPowerReceived>Receiving {0}W power</Deeprim.ExtraPowerReceived>
   <Deeprim.DecreasePower>Decrease extra power</Deeprim.DecreasePower>
   <Deeprim.DecreasePowerTT>Lowers the extra power transferred to lower layers to {0}W. This is not counting the 1000W transferred when the drill is not currently drilling. Power is split equal between connected layers.</Deeprim.DecreasePowerTT>
   <Deeprim.IncreasePower>Increase extra power</Deeprim.IncreasePower>
