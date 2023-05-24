@@ -118,6 +118,17 @@ public class Building_SpawnedLift : Building
                 .GetForCell(convertedLocation, 5, ShaftThingDefOf.miningshaft).FirstOrDefault();
         }
 
+
+        if (DeepRimMod.instance.DeepRimSettings.LowTechMode && stuffInt == null)
+        {
+            stuffInt = ThingDefOf.WoodLog;
+        }
+
+        if (!DeepRimMod.instance.DeepRimSettings.LowTechMode && stuffInt != null)
+        {
+            stuffInt = null;
+        }
+
         m_Power = GetComp<CompPowerPlant>();
 
         if (m_Power == null)

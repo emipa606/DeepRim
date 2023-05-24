@@ -13,8 +13,11 @@ https://ludeon.com/forums/index.php?topic=39262.0
 - Added option for transfering items between layers automatically if they are in nearby built storages. You need storage-buildings built both on the top level as well as on a lower level, next to the shaft. You will then get an added option on the shaft to automatically transfer items between them. 
 - Added power-transfer from the top layer to the lower layers. A set amount of power is split equally to each layer.
 - sk4p3g04t made retexture for this mod: https://steamcommunity.com/sharedfiles/filedetails/?id=2965262893]DeepRim Retexture
+- New icon textures made by Ontheheavens
+- New drill texture made by Ontheheavens based on the the retexture mod by sk4p3g04t. The old texture will be used when selecting the "Low-tech"-option in the mod-settings.
+- Manual drilling should now only be possible when the "Low-tech" option is on, as the new modern texture does not really allow manual drilling.
 
-Will now generate versions of cave biomes in https://steamcommunity.com/sharedfiles/filedetails/?id=2969748433]Biomes! Caverns and https://steamcommunity.com/sharedfiles/filedetails/?id=2259124387]CaveBiome if loaded. The biome will be selected randomly. The amount of rock in these biomes will be about 50% while in the original underground biome it is now about 25%.
+Will now generate versions of cave biomes in https://steamcommunity.com/sharedfiles/filedetails/?id=2969748433]Biomes! Caverns and https://steamcommunity.com/sharedfiles/filedetails/?id=2259124387]CaveBiome if loaded. The biome will be selected randomly. The amount of rock in these biomes will be about 50%.
 
 ![Image](https://i.imgur.com/pufA0kM.png)
 
@@ -68,4 +71,4 @@ Oh, wait. Asset by jabbamonkey is used.
 -  If you have the solution for a problem, please post it to the GitHub repository.
 
 
-https://steamcommunity.com/sharedfiles/filedetails/changelog/2164179860]Last updated 2023-05-14
+https://steamcommunity.com/sharedfiles/filedetails/changelog/2164179860]Last updated 2023-05-24

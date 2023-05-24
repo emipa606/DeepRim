@@ -51,8 +51,21 @@ internal class DeepRimMod : Mod
     {
         var listing_Standard = new Listing_Standard();
         listing_Standard.Begin(rect);
-        listing_Standard.CheckboxLabeled("Deeprim.Lowtech".Translate(), ref instance.DeepRimSettings.LowTechMode,
-            "Deeprim.Lowtech.Tooltip".Translate());
+
+        if (Current.Game == null)
+        {
+            listing_Standard.CheckboxLabeled("Deeprim.Lowtech".Translate(), ref instance.DeepRimSettings.LowTechMode,
+                "Deeprim.Lowtech.Tooltip".Translate());
+        }
+        else
+        {
+            listing_Standard.Label(
+                instance.DeepRimSettings.LowTechMode
+                    ? "Deeprim.LowtechInfo.Enabled".Translate()
+                    : "Deeprim.LowtechInfo.Disabled".Translate(), -1,
+                "Deeprim.LowtechInfo.Tooltip".Translate());
+        }
+
         listing_Standard.Gap();
         listing_Standard.CheckboxLabeled("Deeprim.VerboseLogging".Translate(),
             ref instance.DeepRimSettings.VerboseLogging,

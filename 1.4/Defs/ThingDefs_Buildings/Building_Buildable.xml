@@ -6,9 +6,9 @@
     <description>Allows digging deep into the planet for exploration and mining. Requires power.</description>
     <thingClass>DeepRim.Building_MiningShaft</thingClass>
     <graphicData>
-      <texPath>Things/industrialmine</texPath>
+      <texPath>Things/hightechmine</texPath>
       <graphicClass>Graphic_Single</graphicClass>
-      <drawSize>(3,3)</drawSize>
+      <drawSize>(3.1,3.1)</drawSize>
     </graphicData>
     <altitudeLayer>Building</altitudeLayer>
     <passability>Standable</passability>
@@ -40,14 +40,9 @@
       <li Class="CompProperties_Flickable" />
     </comps>
     <size>(3,3)</size>
-    <stuffCategories>
-      <li>Metallic</li>
-      <li>Woody</li>
-    </stuffCategories>
-    <costStuffCount>45</costStuffCount>
     <costList>
       <ComponentIndustrial>5</ComponentIndustrial>
-      <Steel>100</Steel>
+      <Steel>245</Steel>
     </costList>
     <building>
       <ai_neverTrashThis>true</ai_neverTrashThis>

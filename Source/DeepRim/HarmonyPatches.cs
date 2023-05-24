@@ -41,15 +41,11 @@ public static class HarmonyPatches
 
     public static readonly Texture2D UI_Abandon = ContentFinder<Texture2D>.Get("UI/Abandon");
 
-    public static readonly Texture2D UI_DrillDown = ContentFinder<Texture2D>.Get("UI/drilldown");
-
-    public static readonly Texture2D UI_DrillUp = ContentFinder<Texture2D>.Get("UI/drillup");
-
     public static readonly Texture2D UI_Option = ContentFinder<Texture2D>.Get("UI/optionsIcon");
 
     public static readonly Texture2D UI_Transfer = ContentFinder<Texture2D>.Get("UI/transferIcon");
 
-    public static List<BiomeDef> PossibleBiomeDefs;
+    public static readonly List<BiomeDef> PossibleBiomeDefs;
 
     static HarmonyPatches()
     {
@@ -176,6 +172,17 @@ public static class HarmonyPatches
                 shaftThingDef.description = "Deeprim.NoPowerDesc".Translate();
                 shaftThingDef.costStuffCount = 300;
                 shaftThingDef.costList = null;
+                liftThingDef.costList = null;
+                shaftThingDef.stuffCategories = new List<StuffCategoryDef>
+                    { StuffCategoryDefOf.Metallic, StuffCategoryDefOf.Woody };
+                liftThingDef.stuffCategories = new List<StuffCategoryDef>
+                    { StuffCategoryDefOf.Metallic, StuffCategoryDefOf.Woody };
+                shaftThingDef.graphicData.texPath = "Things/industrialmine";
+                liftThingDef.graphicData.texPath = "Things/shaft";
+                shaftThingDef.uiIcon = ContentFinder<Texture2D>.Get("Things/industrialmine");
+                liftThingDef.uiIcon = ContentFinder<Texture2D>.Get("Things/shaft");
+                shaftThingDef.graphicData.Init();
+                liftThingDef.graphicData.Init();
                 return;
             }
 
@@ -194,36 +201,23 @@ public static class HarmonyPatches
             }
 
             shaftThingDef.description = "Deeprim.PowerDesc".Translate();
-            shaftThingDef.costStuffCount = 145;
+            shaftThingDef.costStuffCount = 0;
+            shaftThingDef.stuffCategories = null;
+            liftThingDef.stuffCategories = null;
             shaftThingDef.costList = new List<ThingDefCountClass>
-                { new ThingDefCountClass(ThingDefOf.ComponentIndustrial, 5) };
+            {
+                new ThingDefCountClass(ThingDefOf.ComponentIndustrial, 5), new ThingDefCountClass(ThingDefOf.Steel, 245)
+            };
+            shaftThingDef.graphicData.texPath = "Things/hightechmine";
+            liftThingDef.graphicData.texPath = "Things/hightechshaft";
+            shaftThingDef.uiIcon = ContentFinder<Texture2D>.Get("Things/hightechmine");
+            liftThingDef.uiIcon = ContentFinder<Texture2D>.Get("Things/hightechshaft");
+            shaftThingDef.graphicData.Init();
+            liftThingDef.graphicData.Init();
         }
         catch (Exception exception)
         {
             Log.Message($"[DeepRim]: Failed to update the shaft def: {exception}");
         }
-    }
-}
-
-[DefOf]
-public static class ShaftThingDefOf
-{
-    public static ThingDef miningshaft;
-    public static ThingDef undergroundlift;
-
-    static ShaftThingDefOf()
-    {
-        DefOfHelper.EnsureInitializedInCtor(typeof(ThingDefOf));
-    }
-}
-
-[DefOf]
-public static class UndergroundBiomeDefOf
-{
-    public static BiomeDef Underground;
-
-    static UndergroundBiomeDefOf()
-    {
-        DefOfHelper.EnsureInitializedInCtor(typeof(BiomeDefOf));
     }
 }

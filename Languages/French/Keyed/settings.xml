@@ -53,4 +53,7 @@
   <Deeprim.ChangeTargetNewTT>Basculer la cible entre la nouvelle couche et les anciennes couches. Actuellement, le puits d'extraction est réglé pour creuser la nouvelle couche.</Deeprim.ChangeTargetNewTT>
   <Deeprim.ChangeTargetExistingTT>Basculer la cible entre la nouvelle et l'ancienne couche. Actuellement, le puits d'extraction est défini sur l'ancienne couche, profondeur : {0}</Deeprim.ChangeTargetExistingTT>
   <Deeprim.ExtraPowerReceived>Recevoir une puissance de {0}W</Deeprim.ExtraPowerReceived>
+  <Deeprim.LowtechInfo.Enabled>Les exercices de basse technologie sont possibles, mais ne peuvent pas changer avec le jeu actif</Deeprim.LowtechInfo.Enabled>
+  <Deeprim.LowtechInfo.Disabled>Les exercices de basse technologie sont désactivés et ne peuvent pas être modifiés en fonction du jeu actif</Deeprim.LowtechInfo.Disabled>
+  <Deeprim.LowtechInfo.Tooltip>Cette option ne peut pas être modifiée lorsqu'un jeu est en cours. Sauvegardez et revenez au menu principal pour pouvoir modifier cette option. Lors du chargement, les exercices seront convertis au niveau technique sélectionné.</Deeprim.LowtechInfo.Tooltip>
 </LanguageData>

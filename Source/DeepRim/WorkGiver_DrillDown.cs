@@ -26,8 +26,7 @@ public class WorkGiver_DrillDown : WorkGiver_Scanner
                 continue;
             }
 
-            if (buildings.def.HasComp(typeof(CompPowerTrader)) &&
-                ((Building_MiningShaft)buildings).GetComp<CompPowerTrader>().PowerOn)
+            if (buildings.def.HasComp(typeof(CompPowerTrader)))
             {
                 continue;
             }
@@ -40,7 +39,7 @@ public class WorkGiver_DrillDown : WorkGiver_Scanner
 
     public override bool HasJobOnThing(Pawn pawn, Thing t, bool forced = false)
     {
-        if (t.def.HasComp(typeof(CompPowerTrader)) && ((Building_MiningShaft)t).GetComp<CompPowerTrader>().PowerOn)
+        if (t.def.HasComp(typeof(CompPowerTrader)))
         {
             return false;
         }

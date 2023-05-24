@@ -10,7 +10,10 @@
   <Deeprim.NoPowerDesc>Allows digging deep into the planet for exploration and mining. Requires a miner.</Deeprim.NoPowerDesc>
   <Deeprim.PowerDesc>Allows digging deep into the planet for exploration and mining. Requires power.</Deeprim.PowerDesc>
   <Deeprim.Lowtech>Use low-tech drills</Deeprim.Lowtech>
-  <Deeprim.Lowtech.Tooltip>Changes the drill to use manually without power and changes the construction cost</Deeprim.Lowtech.Tooltip>
+  <Deeprim.Lowtech.Tooltip>Changes the drill to use manually without power and changes the construction cost. This will convert any built drill to the selected tech-level when changed.</Deeprim.Lowtech.Tooltip>
+  <Deeprim.LowtechInfo.Enabled>Low-tech drills enabled, cannot change with active game</Deeprim.LowtechInfo.Enabled>
+  <Deeprim.LowtechInfo.Disabled>Low-tech drills disabled, cannot change with active game</Deeprim.LowtechInfo.Disabled>
+  <Deeprim.LowtechInfo.Tooltip>This option can not be changed while a game is active. Save and return to the main menu to be able to change this option. Upon loading drills will convert to the selected tech-level.</Deeprim.LowtechInfo.Tooltip>
   <Deeprim.BringingUp>Bringing Up</Deeprim.BringingUp>
   <Deeprim.LayerDepth>Layer Depth: {0}0m</Deeprim.LayerDepth>
   <Deeprim.TargetNewLayer>Target: New layer</Deeprim.TargetNewLayer>
@@ -47,9 +50,9 @@
   <Deeprim.StartDrilling>Start drilling</Deeprim.StartDrilling>
   <Deeprim.StartDrillingNewTT>Start drilling down to find a new suitable mining area.</Deeprim.StartDrillingNewTT>
   <Deeprim.StartDrillingExistingTT>Start drilling down towards existing mining area.</Deeprim.StartDrillingExistingTT>
-  <Deeprim.ChangeTransferTarget>Change transfer target</Deeprim.ChangeTransferTarget>
-  <Deeprim.ChangeTransferTargetTT>Toggle target for nearby storage. Currently, transfer is set to depth: {0}</Deeprim.ChangeTransferTargetTT>
-  <Deeprim.ChangeTarget>Change target</Deeprim.ChangeTarget>
+  <Deeprim.ChangeTransferTarget>Item target</Deeprim.ChangeTransferTarget>
+  <Deeprim.ChangeTransferTargetTT>Toggle target for nearby storage. Currently, transfer is set to depth: {0}m</Deeprim.ChangeTransferTargetTT>
+  <Deeprim.ChangeTarget>Target depth</Deeprim.ChangeTarget>
   <Deeprim.ChangeTargetNewTT>Toggle target between new layer and old layers. Currently, mining shaft is set to dig new layer.</Deeprim.ChangeTargetNewTT>
-  <Deeprim.ChangeTargetExistingTT>Toggle target between new layer and old layers. Currently, mining shaft is set to old layer, depth: {0}</Deeprim.ChangeTargetExistingTT>
+  <Deeprim.ChangeTargetExistingTT>Toggle target between new layer and old layers. Currently, mining shaft is set to old layer, depth: {0}m</Deeprim.ChangeTargetExistingTT>
 </LanguageData>

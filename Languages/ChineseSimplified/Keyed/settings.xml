@@ -53,4 +53,7 @@
   <Deeprim.ChangeTargetNewTT>在新层和旧层之间切换目标。目前，采矿井被设定为挖掘新层。</Deeprim.ChangeTargetNewTT>
   <Deeprim.ChangeTargetExistingTT>在新层和旧层之间切换目标。目前，采矿井被设置为旧层，深度：{0}。</Deeprim.ChangeTargetExistingTT>
   <Deeprim.ExtraPowerReceived>接收{0}W电源</Deeprim.ExtraPowerReceived>
+  <Deeprim.LowtechInfo.Enabled>启用低技术演习，不能随主动游戏而改变</Deeprim.LowtechInfo.Enabled>
+  <Deeprim.LowtechInfo.Disabled>低技术演习被禁用，不能随主动游戏而改变</Deeprim.LowtechInfo.Disabled>
+  <Deeprim.LowtechInfo.Tooltip>当游戏正在进行时，这个选项不能被改变。保存并返回到主菜单，就可以改变这个选项。在加载时，演习将转换为选定的技术等级。</Deeprim.LowtechInfo.Tooltip>
 </LanguageData>

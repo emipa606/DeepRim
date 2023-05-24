@@ -1,5 +1,13 @@
 # Changelog for DeepRim
 
+1.4.8 - Added the new textures for drill and gizmos
+Manual drilling only when in low-tech
+Old drill-texture when in low-tech
+Converts drills build-stuff when changing tech-level
+Modern drill is no longer stuffable.
+Used DeepL to update translations for ChineseSimplified, French, German, Russian
+
+
 1.4.7 - Some minor optimizations.
 Used DeepL to update translations for ChineseSimplified, French, German, Russian
 

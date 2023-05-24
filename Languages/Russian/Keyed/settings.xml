@@ -53,4 +53,7 @@
   <Deeprim.ChangeTargetNewTT>Переключение цели между новым и старым слоями. В настоящее время шахта настроена на копание нового слоя.</Deeprim.ChangeTargetNewTT>
   <Deeprim.ChangeTargetExistingTT>Переключение цели между новым и старым слоями. В настоящее время шахта установлена на старый слой, глубина: {0}</Deeprim.ChangeTargetExistingTT>
   <Deeprim.ExtraPowerReceived>Получение мощности {0} Вт</Deeprim.ExtraPowerReceived>
+  <Deeprim.LowtechInfo.Enabled>Низкотехнологичные тренировки включены, не могут меняться при активной игре</Deeprim.LowtechInfo.Enabled>
+  <Deeprim.LowtechInfo.Disabled>Низкотехнологичные учения отключены, не могут меняться при активной игре</Deeprim.LowtechInfo.Disabled>
+  <Deeprim.LowtechInfo.Tooltip>Этот параметр нельзя изменить, пока игра активна. Сохраните игру и вернитесь в главное меню, чтобы иметь возможность изменить этот параметр. При загрузке тренировки будут преобразованы в выбранный технический уровень.</Deeprim.LowtechInfo.Tooltip>
 </LanguageData>

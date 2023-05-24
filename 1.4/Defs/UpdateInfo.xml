@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+	<TabulaRasa.UpdateDef Abstract="true" Name="DeepRim_UpdateInfoBase">
+		<linkUrl>https://steamcommunity.com/sharedfiles/filedetails/?id=2164179860</linkUrl>
+		<banner>UpdateInfo/DeepRim</banner>
+	</TabulaRasa.UpdateDef>
+	<TabulaRasa.UpdateDef ParentName="DeepRim_UpdateInfoBase">
+		<defName>DeepRim_1_4_8</defName>
+		<date>2023/5/24</date>
+		<content>This update adds more vanilla-like icons for the drill-gizmos, made by Ontheheavens.
+It also adds a new texture for the drill, based on the retexture-mod by sk4p3g04t and reworked by Ontheheavens.
+The old drill-texture is still used if the low-tech option is enabled in the mod-settings.
+If the low-tech option is changed any already built drills will now convert to the selected tech-level upon loading a save.
+The manual drilling is now only possible on the low-tech drill as the new graphic does not really allow manual drilling.</content>
+	</TabulaRasa.UpdateDef>
+</Defs>
+

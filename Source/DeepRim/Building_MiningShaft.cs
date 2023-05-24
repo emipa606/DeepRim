@@ -110,7 +110,7 @@ public class Building_MiningShaft : Building
             defaultLabel = "Deeprim.ChangeTarget".Translate(),
             defaultDesc = drillNew
                 ? "Deeprim.ChangeTargetNewTT".Translate()
-                : "Deeprim.ChangeTargetExistingTT".Translate(targetedLevel),
+                : "Deeprim.ChangeTargetExistingTT".Translate(targetedLevel * 10),
             icon = HarmonyPatches.UI_Option
         };
 
@@ -123,7 +123,7 @@ public class Building_MiningShaft : Building
                 manager = Map.components.Find(item => item is UndergroundManager) as UndergroundManager,
                 action = delegate { },
                 defaultLabel = "Deeprim.ChangeTransferTarget".Translate(),
-                defaultDesc = "Deeprim.ChangeTransferTargetTT".Translate(transferLevel),
+                defaultDesc = "Deeprim.ChangeTransferTargetTT".Translate(transferLevel * 10),
                 icon = HarmonyPatches.UI_Transfer
             };
             yield return transferCommand;
@@ -290,6 +290,16 @@ public class Building_MiningShaft : Building
         if (def.HasComp(typeof(CompPowerTrader)))
         {
             m_Power = GetComp<CompPowerTrader>();
+        }
+
+        if (DeepRimMod.instance.DeepRimSettings.LowTechMode && stuffInt == null)
+        {
+            stuffInt = ThingDefOf.WoodLog;
+        }
+
+        if (!DeepRimMod.instance.DeepRimSettings.LowTechMode && stuffInt != null)
+        {
+            stuffInt = null;
         }
     }
 
