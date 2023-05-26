@@ -1,5 +1,8 @@
 # Changelog for DeepRim
 
+1.4.9 - Fixed missing icons
+
+
 1.4.8 - Added the new textures for drill and gizmos
 Manual drilling only when in low-tech
 Old drill-texture when in low-tech
