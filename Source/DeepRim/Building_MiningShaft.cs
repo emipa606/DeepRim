@@ -390,20 +390,14 @@ public class Building_MiningShaft : Building
 
         var mapGenerator = mapParent.MapGeneratorDef;
         var biomeToGenerate = HarmonyPatches.PossibleBiomeDefs.RandomElement();
-        connectedMapParent.biome = biomeToGenerate.defName;
+        connectedMapParent.biome = biomeToGenerate;
         switch (biomeToGenerate.defName)
         {
             case "BMT_CrystalCaverns":
-                mapGenerator = DefDatabase<MapGeneratorDef>.GetNamedSilentFail("DeepCrystalCaverns");
-                DeepRimMod.LogMessage("Generating DeepCrystalCaverns");
-                break;
             case "BMT_EarthenDepths":
-                mapGenerator = DefDatabase<MapGeneratorDef>.GetNamedSilentFail("DeepEarthenDepths");
-                DeepRimMod.LogMessage("Generating DeepEarthenDepths");
-                break;
             case "BMT_FungalForest":
-                mapGenerator = DefDatabase<MapGeneratorDef>.GetNamedSilentFail("DeepFungalForest");
-                DeepRimMod.LogMessage("Generating DeepFungalForest");
+                mapGenerator = DefDatabase<MapGeneratorDef>.GetNamedSilentFail("Deep_BMT_Cavern");
+                DeepRimMod.LogMessage("Generating Deep_BMT_Cavern");
                 break;
             case "Cave":
                 mapGenerator = DefDatabase<MapGeneratorDef>.GetNamedSilentFail("DeepCave");
@@ -418,6 +412,7 @@ public class Building_MiningShaft : Building
                 connectedMapParent.holeLocation, connectedMap);
         connectedLift.SetFaction(Faction.OfPlayer);
         UndergroundManager?.InsertLayer(connectedMapParent);
+        FloodFillerFog.FloodUnfog(connectedMapParent.holeLocation, connectedMap);
         if (connectedLift is Building_SpawnedLift lift)
         {
             lift.depth = connectedMapParent.depth;
