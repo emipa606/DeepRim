@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using HarmonyLib;
 using RimWorld;
 using UnityEngine;
@@ -73,61 +74,10 @@ public static class HarmonyPatches
             PossibleBiomeDefs.Add(BiomeDef.Named("Cave"));
         }
 
-        var harmonyInstance = new Harmony("com.deeprim.rimworld.mod");
-        Log.Message("DeepRim: Adding Harmony patch ");
-        harmonyInstance.Patch(AccessTools.Property(typeof(Thing), "MarketValue").GetGetMethod(false), null,
-            new HarmonyMethod(patchType, "MarketValuePostfix"));
-        harmonyInstance.Patch(
-            AccessTools.Property(typeof(CompHeatPusherPowered), "ShouldPushHeatNow").GetGetMethod(true), null,
-            new HarmonyMethod(patchType, "HeatPusherPoweredPostfix"));
-        harmonyInstance.Patch(AccessTools.Property(typeof(Map), "Biome").GetGetMethod(false), null,
-            new HarmonyMethod(patchType, "MapBiomePostfix"));
+        new Harmony("com.deeprim.rimworld.mod").PatchAll(Assembly.GetExecutingAssembly());
         RefreshDrillTechLevel();
     }
 
-    private static void MarketValuePostfix(Thing __instance, ref float __result)
-    {
-        if (__instance is not Building_MiningShaft buildingMiningShaft)
-        {
-            return;
-        }
-
-        __result += buildingMiningShaft.ConnectedMapMarketValue;
-    }
-
-    private static void HeatPusherPoweredPostfix(CompHeatPusherPowered __instance, ref bool __result)
-    {
-        if (!__result)
-        {
-            return;
-        }
-
-        if (__instance.parent is not Building_MiningShaft shaft)
-        {
-            return;
-        }
-
-        if (DeepRimMod.instance.DeepRimSettings.LowTechMode)
-        {
-            __result = false;
-            return;
-        }
-
-        if (shaft.CurMode == 1)
-        {
-            return;
-        }
-
-        __result = false;
-    }
-
-    private static void MapBiomePostfix(Map __instance, ref BiomeDef __result)
-    {
-        if (__instance.ParentHolder is UndergroundMapParent mapParent)
-        {
-            __result = BiomeDef.Named(mapParent.biome);
-        }
-    }
 
     public static IntVec3 ConvertParentDrillLocation(IntVec3 parentLocation, IntVec3 parentSize, IntVec3 childSize)
     {
