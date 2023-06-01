@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using RimWorld;
 using RimWorld.Planet;
 using Verse;
 
@@ -7,8 +6,7 @@ namespace DeepRim;
 
 public class UndergroundMapParent : MapParent
 {
-    public BiomeDef biome = UndergroundBiomeDefOf.Underground;
-    
+    public string biome;
     public int depth = -1;
 
     public IntVec3 holeLocation;
@@ -25,8 +23,7 @@ public class UndergroundMapParent : MapParent
         Scribe_Values.Look(ref holeLocation, "holeLocation");
         Scribe_Values.Look(ref depth, "depth", -1);
         Scribe_Values.Look(ref shouldRiver, "shouldRiver", true);
-        Scribe_Defs.Look(ref biome, "biome");
-        biome ??= UndergroundBiomeDefOf.Underground;
+        Scribe_Values.Look(ref biome, "biome", "Underground");
     }
 
     public override IEnumerable<Gizmo> GetGizmos()
