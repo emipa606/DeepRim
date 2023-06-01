@@ -11,7 +11,7 @@ public static class Map_Biome
     {
         if (__instance.ParentHolder is UndergroundMapParent mapParent)
         {
-            __result = mapParent.biome;
+            __result = BiomeDef.Named(mapParent.biome);
         }
     }
 }
