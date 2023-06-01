@@ -4,10 +4,10 @@ using Verse;
 
 namespace DeepRim;
 
-[HarmonyPatch(typeof(Map), "Biome")]
+[HarmonyPatch(typeof(Map), "Biome", MethodType.Getter)]
 public static class Map_Biome
 {
-    private static void MapBiomePostfix(Map __instance, ref BiomeDef __result)
+    private static void Postfix(Map __instance, ref BiomeDef __result)
     {
         if (__instance.ParentHolder is UndergroundMapParent mapParent)
         {
