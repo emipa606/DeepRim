@@ -1,5 +1,8 @@
 # Changelog for DeepRim
 
+1.4.11 - Fixed typo
+
+
 1.4.10 - Biomes from Biomes! Caverns should now spawn correctly, thank you m00nl1ght-dev!
 
 

@@ -25,7 +25,7 @@
   <Deeprim.NoPower>No power</Deeprim.NoPower>
   <Deeprim.SendingDown>Sending down</Deeprim.SendingDown>
   <Deeprim.NewLayer>New Layer</Deeprim.NewLayer>
-  <Deeprim.SelectLayerAt>Layer at Depth: [0}0m</Deeprim.SelectLayerAt>
+  <Deeprim.SelectLayerAt>Layer at Depth: {0}0m</Deeprim.SelectLayerAt>
   <Deeprim.NotWhileDrilling>Can't change target while drilling</Deeprim.NotWhileDrilling>
   <Deeprim.None>None</Deeprim.None>
   <Deeprim.GeneratingMap>Drilling is complete, generating new map. This may take a while depending on the map-size used.</Deeprim.GeneratingMap>

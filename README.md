@@ -17,7 +17,7 @@ https://ludeon.com/forums/index.php?topic=39262.0
 - New drill texture made by Ontheheavens based on the the retexture mod by sk4p3g04t. The old texture will be used when selecting the "Low-tech"-option in the mod-settings.
 - Manual drilling should now only be possible when the "Low-tech" option is on, as the new modern texture does not really allow manual drilling.
 
-Will now generate versions of cave biomes in https://steamcommunity.com/sharedfiles/filedetails/?id=2969748433]Biomes! Caverns and https://steamcommunity.com/sharedfiles/filedetails/?id=2259124387]CaveBiome if loaded. The biome will be selected randomly. The amount of rock in these biomes will be about 50%.
+Will now generate versions of cave biomes in https://steamcommunity.com/sharedfiles/filedetails/?id=2969748433]Biomes! Caverns  (Thanks to m00nl1ght-dev for the fix) and https://steamcommunity.com/sharedfiles/filedetails/?id=2259124387]CaveBiome if loaded.
 
 ![Image](https://i.imgur.com/pufA0kM.png)
 
@@ -71,4 +71,4 @@ Oh, wait. Asset by jabbamonkey is used.
 -  If you have the solution for a problem, please post it to the GitHub repository.
 
 
-https://steamcommunity.com/sharedfiles/filedetails/changelog/2164179860]Last updated 2023-06-01
+https://steamcommunity.com/sharedfiles/filedetails/changelog/2164179860]Last updated 2023-08-20
