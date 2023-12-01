@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using RimWorld;
 using RimWorld.Planet;
+using UnityEngine;
 using Verse;
 
 namespace DeepRim;
@@ -24,7 +25,7 @@ public class Building_MiningShaft : Building
     public Map connectedMap;
 
     private UndergroundMapParent connectedMapParent;
-    private HashSet<Building_Storage> connectedStorages = new HashSet<Building_Storage>();
+    private HashSet<Building_Storage> connectedStorages = [];
 
     public bool drillNew = true;
 
@@ -34,7 +35,7 @@ public class Building_MiningShaft : Building
 
     private int mode;
 
-    private HashSet<Building_Storage> nearbyStorages = new HashSet<Building_Storage>();
+    private HashSet<Building_Storage> nearbyStorages = [];
 
     public int targetedLevel;
 
@@ -199,7 +200,7 @@ public class Building_MiningShaft : Building
         {
             action = Send,
             defaultLabel = "Deeprim.SendDown".Translate(),
-            defaultDesc = "Deeprim.SendDownTT".Translate(),
+            defaultDesc = "Deeprim.SendDownTT".Translate(connectedMapParent.depth * 10),
             icon = HarmonyPatches.UI_Send
         };
         yield return send;
@@ -207,7 +208,7 @@ public class Building_MiningShaft : Building
         {
             action = BringUp,
             defaultLabel = "Deeprim.BringUp".Translate(),
-            defaultDesc = "Deeprim.BringUpTT".Translate(),
+            defaultDesc = "Deeprim.BringUpTopTT".Translate(connectedMapParent.depth * 10),
             icon = HarmonyPatches.UI_BringUp
         };
         yield return bringUp;
@@ -479,8 +480,8 @@ public class Building_MiningShaft : Building
             return;
         }
 
-        Messages.Message("Deeprim.SendingDown".Translate(), MessageTypeDefOf.PositiveEvent);
         var cells = this.OccupiedRect().Cells;
+        var anythingSent = false;
         foreach (var intVec in cells)
         {
             var convertedLocation = HarmonyPatches.ConvertParentDrillLocation(
@@ -498,8 +499,24 @@ public class Building_MiningShaft : Building
 
                 thing.DeSpawn();
                 GenSpawn.Spawn(thing, convertedLocation, connectedMap);
+                anythingSent = true;
             }
         }
+
+        if (!anythingSent)
+        {
+            Messages.Message("Deeprim.NothingToSend".Translate(), MessageTypeDefOf.RejectInput);
+            return;
+        }
+
+        Messages.Message("Deeprim.SendingDown".Translate(), MessageTypeDefOf.PositiveEvent);
+        if (!Event.current.control)
+        {
+            return;
+        }
+
+        Current.Game.CurrentMap = connectedMap;
+        Find.Selector.Select(connectedLift);
     }
 
     private void Transfer(Map connectedTransferMap, IEnumerable<Building> transferLifts)
@@ -553,8 +570,8 @@ public class Building_MiningShaft : Building
             return;
         }
 
-        Messages.Message("Deeprim.BringingUp".Translate(), MessageTypeDefOf.PositiveEvent);
         var cells = connectedLift.OccupiedRect().Cells;
+        var anythingSent = false;
         foreach (var intVec in cells)
         {
             var thingList = intVec.GetThingList(connectedMap);
@@ -572,8 +589,17 @@ public class Building_MiningShaft : Building
 
                 thing.DeSpawn();
                 GenSpawn.Spawn(thing, convertedLocation, Map);
+                anythingSent = true;
             }
         }
+
+        if (!anythingSent)
+        {
+            Messages.Message("Deeprim.NothingToSend".Translate(), MessageTypeDefOf.RejectInput);
+            return;
+        }
+
+        Messages.Message("Deeprim.BringingUp".Translate(), MessageTypeDefOf.PositiveEvent);
     }
 
     public void SyncConnectedMap()
@@ -601,7 +627,7 @@ public class Building_MiningShaft : Building
 
         if (GenTicks.TicksGame % GenTicks.TickRareInterval == 0)
         {
-            nearbyStorages = new HashSet<Building_Storage>();
+            nearbyStorages = [];
             foreach (var cell in this.OccupiedRect().AdjacentCells)
             {
                 var building = cell.GetFirstBuilding(Map);
@@ -622,7 +648,7 @@ public class Building_MiningShaft : Building
                     var connectedTransferMap = UndergroundManager.layersState[transferLevel]?.Map;
                     if (connectedTransferMap != null)
                     {
-                        connectedStorages = new HashSet<Building_Storage>();
+                        connectedStorages = [];
                         var transferLifts =
                             connectedTransferMap.listerBuildings.AllBuildingsColonistOfDef(
                                 ThingDef.Named("undergroundlift"));

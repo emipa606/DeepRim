@@ -56,4 +56,6 @@
   <Deeprim.LowtechInfo.Enabled>Low-tech-Übungen aktiviert, können nicht mit aktivem Spiel geändert werden</Deeprim.LowtechInfo.Enabled>
   <Deeprim.LowtechInfo.Disabled>Low-tech-Übungen deaktiviert, können nicht mit aktivem Spiel geändert werden</Deeprim.LowtechInfo.Disabled>
   <Deeprim.LowtechInfo.Tooltip>Diese Option kann nicht geändert werden, während ein Spiel aktiv ist. Speichern Sie und kehren Sie zum Hauptmenü zurück, um diese Option ändern zu können. Beim Laden werden die Übungen auf die gewählte Technikstufe umgestellt.</Deeprim.LowtechInfo.Tooltip>
+  <Deeprim.NothingToSend>Nichts zu senden</Deeprim.NothingToSend>
+  <Deeprim.BringUpTopTT>Bringen Sie alles auf dem Aufzug von der Schicht bei {0}m bis zur Oberfläche.</Deeprim.BringUpTopTT>
 </LanguageData>

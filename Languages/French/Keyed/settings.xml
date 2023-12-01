@@ -56,4 +56,6 @@
   <Deeprim.LowtechInfo.Enabled>Les exercices de basse technologie sont possibles, mais ne peuvent pas changer avec le jeu actif</Deeprim.LowtechInfo.Enabled>
   <Deeprim.LowtechInfo.Disabled>Les exercices de basse technologie sont désactivés et ne peuvent pas être modifiés en fonction du jeu actif</Deeprim.LowtechInfo.Disabled>
   <Deeprim.LowtechInfo.Tooltip>Cette option ne peut pas être modifiée lorsqu'un jeu est en cours. Sauvegardez et revenez au menu principal pour pouvoir modifier cette option. Lors du chargement, les exercices seront convertis au niveau technique sélectionné.</Deeprim.LowtechInfo.Tooltip>
+  <Deeprim.NothingToSend>Rien à envoyer</Deeprim.NothingToSend>
+  <Deeprim.BringUpTopTT>Faites remonter tout ce qui se trouve dans l'ascenseur depuis la couche à {0}m jusqu'à la surface.</Deeprim.BringUpTopTT>
 </LanguageData>

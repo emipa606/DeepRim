@@ -23,6 +23,7 @@
   <Deeprim.DrillingComplete>Drilling complete. Depth: {0}0m</Deeprim.DrillingComplete>
   <Deeprim.DrillingCompleteTT>Drilling complete</Deeprim.DrillingCompleteTT>
   <Deeprim.NoPower>No power</Deeprim.NoPower>
+  <Deeprim.NothingToSend>Nothing to send</Deeprim.NothingToSend>
   <Deeprim.SendingDown>Sending down</Deeprim.SendingDown>
   <Deeprim.NewLayer>New Layer</Deeprim.NewLayer>
   <Deeprim.SelectLayerAt>Layer at Depth: {0}0m</Deeprim.SelectLayerAt>
@@ -37,9 +38,10 @@
   <Deeprim.IncreasePower>Increase extra power</Deeprim.IncreasePower>
   <Deeprim.IncreasePowerTT>Increases the extra power transferred to lower layers to {0}W. This is not counting the 1000W transferred when the drill is not currently drilling. Power is split equal between connected layers.</Deeprim.IncreasePowerTT>
   <Deeprim.SendDown>Send down</Deeprim.SendDown>
-  <Deeprim.SendDownTT>Send everything on the elevator down the shaft</Deeprim.SendDownTT>
+  <Deeprim.SendDownTT>Send everything on the elevator down to the layer at {0}m. Hold CTRL to also switch map to that layer.</Deeprim.SendDownTT>
   <Deeprim.BringUp>Bring up</Deeprim.BringUp>
-  <Deeprim.BringUpTT>Bring everything on the elevator up to the surface</Deeprim.BringUpTT>
+  <Deeprim.BringUpTT>Bring everything on the elevator up to the surface. Hold CTRL to also switch map to the surface layer.</Deeprim.BringUpTT>
+  <Deeprim.BringUpTopTT>Bring everything on the elevator from the layer at {0}m up to the surface.</Deeprim.BringUpTopTT>
   <Deeprim.ConfirmAbandonAgain>Click again to confirm. Once abandoned, everything in that layer is lost forever!</Deeprim.ConfirmAbandonAgain>
   <Deeprim.ConfirmAbandon>Confirm abandon</Deeprim.ConfirmAbandon>
   <Deeprim.ConfirmAbandonTT>This action is irreversible!!! If this is the only shaft to it, everything currently on that layer shall be lost forever, without any way of getting them back.</Deeprim.ConfirmAbandonTT>

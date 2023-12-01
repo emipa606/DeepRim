@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
+using UnityEngine;
 using Verse;
 
 namespace DeepRim;
@@ -54,8 +55,8 @@ public class Building_SpawnedLift : Building
 
     private void BringUp()
     {
-        Messages.Message("Deeprim.BringingUp".Translate(), MessageTypeDefOf.PositiveEvent);
         var cells = this.OccupiedRect().Cells;
+        var anythingSent = false;
         foreach (var intVec in cells)
         {
             var thingList = intVec.GetThingList(Map);
@@ -72,8 +73,25 @@ public class Building_SpawnedLift : Building
 
                 thing.DeSpawn();
                 GenSpawn.Spawn(thing, convertedLocation, surfaceMap);
+                anythingSent = true;
             }
         }
+
+        if (anythingSent)
+        {
+            Messages.Message("Deeprim.BringingUp".Translate(), MessageTypeDefOf.PositiveEvent);
+            if (!Event.current.control)
+            {
+                return;
+            }
+
+            Current.Game.CurrentMap = surfaceMap;
+            Find.Selector.Select(parentDrill);
+
+            return;
+        }
+
+        Messages.Message("Deeprim.NothingToSend".Translate(), MessageTypeDefOf.RejectInput);
     }
 
     public override void Tick()

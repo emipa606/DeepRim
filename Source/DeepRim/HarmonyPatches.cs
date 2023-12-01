@@ -50,10 +50,7 @@ public static class HarmonyPatches
 
     static HarmonyPatches()
     {
-        PossibleBiomeDefs = new List<BiomeDef>
-        {
-            UndergroundBiomeDefOf.Underground
-        };
+        PossibleBiomeDefs = [UndergroundBiomeDefOf.Underground];
         if (DefDatabase<BiomeDef>.GetNamedSilentFail("BMT_CrystalCaverns") != null)
         {
             PossibleBiomeDefs.Add(BiomeDef.Named("BMT_CrystalCaverns"));
@@ -123,10 +120,8 @@ public static class HarmonyPatches
                 shaftThingDef.costStuffCount = 300;
                 shaftThingDef.costList = null;
                 liftThingDef.costList = null;
-                shaftThingDef.stuffCategories = new List<StuffCategoryDef>
-                    { StuffCategoryDefOf.Metallic, StuffCategoryDefOf.Woody };
-                liftThingDef.stuffCategories = new List<StuffCategoryDef>
-                    { StuffCategoryDefOf.Metallic, StuffCategoryDefOf.Woody };
+                shaftThingDef.stuffCategories = [StuffCategoryDefOf.Metallic, StuffCategoryDefOf.Woody];
+                liftThingDef.stuffCategories = [StuffCategoryDefOf.Metallic, StuffCategoryDefOf.Woody];
                 shaftThingDef.graphicData.texPath = "Things/industrialmine";
                 liftThingDef.graphicData.texPath = "Things/shaft";
                 shaftThingDef.uiIcon = ContentFinder<Texture2D>.Get("Things/industrialmine");
@@ -154,10 +149,10 @@ public static class HarmonyPatches
             shaftThingDef.costStuffCount = 0;
             shaftThingDef.stuffCategories = null;
             liftThingDef.stuffCategories = null;
-            shaftThingDef.costList = new List<ThingDefCountClass>
-            {
+            shaftThingDef.costList =
+            [
                 new ThingDefCountClass(ThingDefOf.ComponentIndustrial, 5), new ThingDefCountClass(ThingDefOf.Steel, 245)
-            };
+            ];
             shaftThingDef.graphicData.texPath = "Things/hightechmine";
             liftThingDef.graphicData.texPath = "Things/hightechshaft";
             shaftThingDef.uiIcon = ContentFinder<Texture2D>.Get("Things/hightechmine");
