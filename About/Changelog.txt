@@ -1,5 +1,8 @@
 # Changelog for DeepRim
 
+1.4.13 - Fixed trailing whitespace in russian translation
+
+
 1.4.12 - More informative tooltips for sending things up/down
 You can hold CTRL to also switch map when transfering things.
 Used DeepL to update translations for ChineseSimplified, French, German, Russian
