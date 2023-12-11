@@ -58,4 +58,6 @@
   <Deeprim.LowtechInfo.Tooltip>当游戏正在进行时，这个选项不能被改变。保存并返回到主菜单，就可以改变这个选项。在加载时，演习将转换为选定的技术等级。</Deeprim.LowtechInfo.Tooltip>
   <Deeprim.NothingToSend>无信息可发送</Deeprim.NothingToSend>
   <Deeprim.BringUpTopTT>将电梯上的所有东西从{0}米处的层上升到表面。</Deeprim.BringUpTopTT>
+  <Deeprim.Surface>直至表面</Deeprim.Surface>
+  <Deeprim.TransferSurface>转移目标：达地面</Deeprim.TransferSurface>
 </LanguageData>

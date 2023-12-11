@@ -29,6 +29,8 @@
   <Deeprim.SelectLayerAt>Layer at Depth: {0}0m</Deeprim.SelectLayerAt>
   <Deeprim.NotWhileDrilling>Can't change target while drilling</Deeprim.NotWhileDrilling>
   <Deeprim.None>None</Deeprim.None>
+  <Deeprim.Surface>Up to surface</Deeprim.Surface>
+  <Deeprim.TransferSurface>Transfer target: Up to surface</Deeprim.TransferSurface>
   <Deeprim.GeneratingMap>Drilling is complete, generating new map. This may take a while depending on the map-size used.</Deeprim.GeneratingMap>
   <Deeprim.AboveGround>Must be placed above ground.</Deeprim.AboveGround>
   <Deeprim.ExtraPowerSent>Transfers {0}W power to each layer</Deeprim.ExtraPowerSent>

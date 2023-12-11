@@ -19,7 +19,7 @@ public class Command_TransferLayer : Command_Action
     {
         var list = new List<FloatMenuOption>
         {
-            new FloatMenuOption("Deeprim.None".Translate(), delegate { shaft.transferLevel = 0; })
+            new FloatMenuOption("Deeprim.Surface".Translate(), delegate { shaft.transferLevel = 0; })
         };
         using var enumerator = manager.layersState.GetEnumerator();
         while (enumerator.MoveNext())

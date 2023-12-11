@@ -1,5 +1,9 @@
 # Changelog for DeepRim
 
+1.4.14 - Item-transfer should now work from all layers to a target layer. You can also transfer items to the surface.
+Used DeepL to update translations for ChineseSimplified, French, German, Russian
+
+
 1.4.13 - Fixed trailing whitespace in russian translation
 
 

@@ -58,4 +58,6 @@
   <Deeprim.LowtechInfo.Tooltip>Diese Option kann nicht geändert werden, während ein Spiel aktiv ist. Speichern Sie und kehren Sie zum Hauptmenü zurück, um diese Option ändern zu können. Beim Laden werden die Übungen auf die gewählte Technikstufe umgestellt.</Deeprim.LowtechInfo.Tooltip>
   <Deeprim.NothingToSend>Nichts zu senden</Deeprim.NothingToSend>
   <Deeprim.BringUpTopTT>Bringen Sie alles auf dem Aufzug von der Schicht bei {0}m bis zur Oberfläche.</Deeprim.BringUpTopTT>
+  <Deeprim.Surface>Bis zur Oberfläche</Deeprim.Surface>
+  <Deeprim.TransferSurface>Ziel übertragen: Bis zur Oberfläche</Deeprim.TransferSurface>
 </LanguageData>
