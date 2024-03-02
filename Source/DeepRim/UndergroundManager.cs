@@ -3,7 +3,7 @@ using Verse;
 
 namespace DeepRim;
 
-public class UndergroundManager : MapComponent
+public class UndergroundManager(Map map) : MapComponent(map)
 {
     private const int targetversion = 1;
 
@@ -14,10 +14,6 @@ public class UndergroundManager : MapComponent
     private List<UndergroundMapParent> list3;
 
     private int spawned;
-
-    public UndergroundManager(Map map) : base(map)
-    {
-    }
 
     public int GetNextEmptyLayer(int starting = 1)
     {

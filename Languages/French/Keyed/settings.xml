@@ -60,4 +60,6 @@
   <Deeprim.BringUpTopTT>Faites remonter tout ce qui se trouve dans l'ascenseur depuis la couche à {0}m jusqu'à la surface.</Deeprim.BringUpTopTT>
   <Deeprim.Surface>Jusqu'à la surface</Deeprim.Surface>
   <Deeprim.TransferSurface>Cible de transfert : Jusqu'à la surface</Deeprim.TransferSurface>
+  <Deeprim.NoMoreShafts>Vous ne pouvez pas placer plus d'un arbre. Vous pouvez maintenir la touche MAJ enfoncée pendant que vous placez l'arbre pour contourner ce problème.
+NOTE : Le modèle n'est pas conçu pour avoir plus d'un arbre, le placer peut avoir des conséquences inattendues !</Deeprim.NoMoreShafts>
 </LanguageData>

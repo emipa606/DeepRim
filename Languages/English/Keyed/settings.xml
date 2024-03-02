@@ -28,6 +28,8 @@
   <Deeprim.NewLayer>New Layer</Deeprim.NewLayer>
   <Deeprim.SelectLayerAt>Layer at Depth: {0}0m</Deeprim.SelectLayerAt>
   <Deeprim.NotWhileDrilling>Can't change target while drilling</Deeprim.NotWhileDrilling>
+  <Deeprim.NoMoreShafts>You cannot place more than one shaft. You can hold SHIFT while placing to override this.
+NOTE: The mod is not designed to have more than one shaft, placing this may have unintended consequences!</Deeprim.NoMoreShafts>
   <Deeprim.None>None</Deeprim.None>
   <Deeprim.Surface>Up to surface</Deeprim.Surface>
   <Deeprim.TransferSurface>Transfer target: Up to surface</Deeprim.TransferSurface>

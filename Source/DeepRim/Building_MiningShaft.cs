@@ -221,7 +221,7 @@ public class Building_MiningShaft : Building
         {
             var decreasePower = new Command_Action
             {
-                action = () => extraPower -= 100,
+                action = () => { extraPower -= 100; },
                 defaultLabel = "Deeprim.DecreasePower".Translate(),
                 defaultDesc = "Deeprim.DecreasePowerTT".Translate(extraPower - 100),
                 icon = HarmonyPatches.UI_DecreasePower
@@ -231,7 +231,7 @@ public class Building_MiningShaft : Building
 
         var increasePower = new Command_Action
         {
-            action = () => extraPower += 100,
+            action = () => { extraPower += 100; },
             defaultLabel = "Deeprim.IncreasePower".Translate(),
             defaultDesc = "Deeprim.IncreasePowerTT".Translate(extraPower + 100),
             icon = HarmonyPatches.UI_IncreasePower
@@ -633,7 +633,7 @@ public class Building_MiningShaft : Building
                         targetMap = UndergroundManager.layersState[transferLevel]?.Map;
                         var transferLifts =
                             targetMap?.listerBuildings.AllBuildingsColonistOfDef(ThingDef.Named("undergroundlift"));
-                        if (transferLifts.Any())
+                        if (transferLifts != null && transferLifts.Any())
                         {
                             targetPostition = transferLifts.First().Position;
                         }

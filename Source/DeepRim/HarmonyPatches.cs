@@ -16,7 +16,7 @@ public static class HarmonyPatches
 
 
     public static readonly int[] mapSizes =
-    {
+    [
         0,
         75,
         200,
@@ -25,7 +25,7 @@ public static class HarmonyPatches
         275,
         300,
         325
-    };
+    ];
 
 
     public static readonly Texture2D UI_Send = ContentFinder<Texture2D>.Get("UI/sendDown");

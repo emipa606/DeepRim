@@ -1,24 +1,29 @@
 using RimWorld;
+using UnityEngine;
 using Verse;
 
 namespace DeepRim;
 
 public class PlaceWorker_AboveGround : PlaceWorker
 {
-    public virtual AcceptanceReport AllowsPlacing(BuildableDef checkingDef, IntVec3 loc, Rot4 rot, Map map,
-        Thing thingToIgnore = null)
+    private bool ShiftIsHeld => Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+
+    public override AcceptanceReport AllowsPlacing(BuildableDef checkingDef, IntVec3 loc, Rot4 rot, Map map,
+        Thing thingToIgnore = null, Thing thing = null)
     {
-        AcceptanceReport result;
         if (map.ParentHolder is UndergroundMapParent)
         {
-            result = "Deeprim.AboveGround".Translate();
-        }
-        else
-        {
-            result = true;
+            return "Deeprim.AboveGround".Translate();
         }
 
-        return result;
+        if ((map.listerBuildings.ColonistsHaveBuilding(ShaftThingDefOf.miningshaft) ||
+             map.listerBuildings.ColonistsHaveBuilding(ShaftThingDefOf.undergroundlift)) &&
+            !ShiftIsHeld)
+        {
+            return "Deeprim.NoMoreShafts".Translate();
+        }
+
+        return true;
     }
 
     public override bool ForceAllowPlaceOver(BuildableDef otherDef)

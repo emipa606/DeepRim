@@ -60,4 +60,6 @@
   <Deeprim.BringUpTopTT>Поднимите все на лифте от слоя на {0}м до поверхности.</Deeprim.BringUpTopTT>
   <Deeprim.Surface>До поверхности</Deeprim.Surface>
   <Deeprim.TransferSurface>Цель передачи: До поверхности</Deeprim.TransferSurface>
+  <Deeprim.NoMoreShafts>Вы не можете разместить более одного вала. Вы можете удерживать SHIFT во время размещения, чтобы отменить это.
+ПРИМЕЧАНИЕ: Мод не предназначен для установки более чем одного вала, размещение может привести к нежелательным последствиям!</Deeprim.NoMoreShafts>
 </LanguageData>

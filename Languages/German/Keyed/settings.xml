@@ -60,4 +60,6 @@
   <Deeprim.BringUpTopTT>Bringen Sie alles auf dem Aufzug von der Schicht bei {0}m bis zur Oberfläche.</Deeprim.BringUpTopTT>
   <Deeprim.Surface>Bis zur Oberfläche</Deeprim.Surface>
   <Deeprim.TransferSurface>Ziel übertragen: Bis zur Oberfläche</Deeprim.TransferSurface>
+  <Deeprim.NoMoreShafts>Sie können nicht mehr als eine Welle platzieren. Sie können SHIFT halten, während Sie platzieren, um dies außer Kraft zu setzen.
+HINWEIS: Der Mod ist nicht dafür ausgelegt, mehr als eine Welle zu haben, die Platzierung kann unbeabsichtigte Folgen haben!</Deeprim.NoMoreShafts>
 </LanguageData>

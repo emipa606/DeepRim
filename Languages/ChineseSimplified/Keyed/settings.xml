@@ -60,4 +60,6 @@
   <Deeprim.BringUpTopTT>将电梯上的所有东西从{0}米处的层上升到表面。</Deeprim.BringUpTopTT>
   <Deeprim.Surface>直至表面</Deeprim.Surface>
   <Deeprim.TransferSurface>转移目标：达地面</Deeprim.TransferSurface>
+  <Deeprim.NoMoreShafts>您不能放置多个轴。您可以在放置时按住 SHIFT 键来覆盖这一点。
+注意：该模型并非设计为有多个轴，放置轴可能会产生意想不到的后果！</Deeprim.NoMoreShafts>
 </LanguageData>
