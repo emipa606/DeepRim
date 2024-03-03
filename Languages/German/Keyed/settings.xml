@@ -62,4 +62,7 @@
   <Deeprim.TransferSurface>Ziel übertragen: Bis zur Oberfläche</Deeprim.TransferSurface>
   <Deeprim.NoMoreShafts>Sie können nicht mehr als eine Welle platzieren. Sie können SHIFT halten, während Sie platzieren, um dies außer Kraft zu setzen.
 HINWEIS: Der Mod ist nicht dafür ausgelegt, mehr als eine Welle zu haben, die Platzierung kann unbeabsichtigte Folgen haben!</Deeprim.NoMoreShafts>
+  <Deeprim.AbandonAll>Sie sind im Begriff, den Hauptschacht zu dekonstruieren. Alle Schichten und alles, was sich in ihnen befindet, werden endgültig aufgegeben. Es gibt keinen Weg zurück. Sind Sie sicher, dass Sie mit dem Rückbau fortfahren wollen?</Deeprim.AbandonAll>
+  <Deeprim.AbandonAllYes>Ja, zerstören Sie alles</Deeprim.AbandonAllYes>
+  <Deeprim.AbandonAllNo>Nein, Abbruch</Deeprim.AbandonAllNo>
 </LanguageData>

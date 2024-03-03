@@ -36,18 +36,21 @@ public class UndergroundMapParent : MapParent
         }
     }
 
-    public void AbandonLift(Thing lift)
+    public void AbandonLift(Thing lift, bool force = false)
     {
         lift.DeSpawn();
-        foreach (var building in Map.listerBuildings.allBuildingsColonist)
+        if (!force)
         {
-            if (building is not Building_SpawnedLift)
+            foreach (var building in Map.listerBuildings.allBuildingsColonist)
             {
-                continue;
-            }
+                if (building is not Building_SpawnedLift)
+                {
+                    continue;
+                }
 
-            Log.Message("There's still remaining shafts leading to layer.");
-            return;
+                Log.Message("There's still remaining shafts leading to layer.");
+                return;
+            }
         }
 
         Abandon();

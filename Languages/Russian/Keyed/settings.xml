@@ -62,4 +62,7 @@
   <Deeprim.TransferSurface>Цель передачи: До поверхности</Deeprim.TransferSurface>
   <Deeprim.NoMoreShafts>Вы не можете разместить более одного вала. Вы можете удерживать SHIFT во время размещения, чтобы отменить это.
 ПРИМЕЧАНИЕ: Мод не предназначен для установки более чем одного вала, размещение может привести к нежелательным последствиям!</Deeprim.NoMoreShafts>
+  <Deeprim.AbandonAll>Вы собираетесь разрушить главную шахту. Все слои и все, что в них находится, будут покинуты навсегда. Обратного пути нет. Вы уверены, что хотите продолжить деконструкцию?</Deeprim.AbandonAll>
+  <Deeprim.AbandonAllYes>Да, уничтожьте все это.</Deeprim.AbandonAllYes>
+  <Deeprim.AbandonAllNo>Нет, прервать</Deeprim.AbandonAllNo>
 </LanguageData>

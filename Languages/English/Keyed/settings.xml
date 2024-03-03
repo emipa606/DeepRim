@@ -49,6 +49,9 @@ NOTE: The mod is not designed to have more than one shaft, placing this may have
   <Deeprim.ConfirmAbandonAgain>Click again to confirm. Once abandoned, everything in that layer is lost forever!</Deeprim.ConfirmAbandonAgain>
   <Deeprim.ConfirmAbandon>Confirm abandon</Deeprim.ConfirmAbandon>
   <Deeprim.ConfirmAbandonTT>This action is irreversible!!! If this is the only shaft to it, everything currently on that layer shall be lost forever, without any way of getting them back.</Deeprim.ConfirmAbandonTT>
+  <Deeprim.AbandonAll>You are about to deconstruct the main shaft. All layers and anything in them will be abandoned permanently. There is no way back from this. Are you sure you want to continue with the deconstruction?</Deeprim.AbandonAll>
+  <Deeprim.AbandonAllYes>Yes, destroy it all</Deeprim.AbandonAllYes>
+  <Deeprim.AbandonAllNo>No, abort</Deeprim.AbandonAllNo>
   <Deeprim.Abandon>Abandon layer</Deeprim.Abandon>
   <Deeprim.AbandonTT>Abandon the layer. If there's no more shafts connected to it, all pawns and items in it is lost forever.</Deeprim.AbandonTT>
   <Deeprim.PauseDrilling>Pause drilling</Deeprim.PauseDrilling>

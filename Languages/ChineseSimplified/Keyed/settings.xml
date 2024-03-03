@@ -62,4 +62,7 @@
   <Deeprim.TransferSurface>转移目标：达地面</Deeprim.TransferSurface>
   <Deeprim.NoMoreShafts>您不能放置多个轴。您可以在放置时按住 SHIFT 键来覆盖这一点。
 注意：该模型并非设计为有多个轴，放置轴可能会产生意想不到的后果！</Deeprim.NoMoreShafts>
+  <Deeprim.AbandonAll>您即将解构主竖井。所有层和其中的任何东西都将被永久废弃。没有退路。你确定要继续解构吗？</Deeprim.AbandonAll>
+  <Deeprim.AbandonAllYes>是的，全部摧毁</Deeprim.AbandonAllYes>
+  <Deeprim.AbandonAllNo>否，中止</Deeprim.AbandonAllNo>
 </LanguageData>

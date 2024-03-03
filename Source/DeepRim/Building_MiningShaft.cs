@@ -15,8 +15,14 @@ public class Building_MiningShaft : Building
     private const int updateEveryXTicks = 50;
 
     private const float defaultPowerNeeded = 1200;
+
     private const float idlePowerNeeded = 200;
 
+    private readonly List<ThingCategory> invalidCategories =
+    [
+        ThingCategory.None, ThingCategory.Ethereal, ThingCategory.Filth, ThingCategory.Gas,
+        ThingCategory.Mote, ThingCategory.Projectile
+    ];
 
     public float ChargeLevel;
 
@@ -25,6 +31,8 @@ public class Building_MiningShaft : Building
     public Map connectedMap;
 
     private UndergroundMapParent connectedMapParent;
+
+    private bool destroy;
 
     public bool drillNew = true;
 
@@ -102,7 +110,7 @@ public class Building_MiningShaft : Building
             yield return current;
         }
 
-        var command = new Command_TargetLayer
+        yield return new Command_TargetLayer
         {
             shaft = this,
             manager = Map.components.Find(item => item is UndergroundManager) as UndergroundManager,
@@ -114,10 +122,9 @@ public class Building_MiningShaft : Building
             icon = HarmonyPatches.UI_Option
         };
 
-        yield return command;
         if (nearbyStorages.Any())
         {
-            var transferCommand = new Command_TransferLayer
+            yield return new Command_TransferLayer
             {
                 shaft = this,
                 manager = Map.components.Find(item => item is UndergroundManager) as UndergroundManager,
@@ -126,14 +133,13 @@ public class Building_MiningShaft : Building
                 defaultDesc = "Deeprim.ChangeTransferTargetTT".Translate(transferLevel * 10),
                 icon = HarmonyPatches.UI_Transfer
             };
-            yield return transferCommand;
         }
 
         switch (mode)
         {
             case 0 when drillNew:
             {
-                var command_ActionStart = new Command_Action
+                yield return new Command_Action
                 {
                     action = StartDrilling,
                     defaultLabel = "Deeprim.StartDrilling".Translate(),
@@ -142,47 +148,42 @@ public class Building_MiningShaft : Building
                         : "Deeprim.StartDrillingExistingTT".Translate(),
                     icon = HarmonyPatches.UI_Start
                 };
-
-                yield return command_ActionStart;
                 break;
             }
             case 1:
             {
-                var command_ActionPause = new Command_Action
+                yield return new Command_Action
                 {
                     action = PauseDrilling,
                     defaultLabel = "Deeprim.PauseDrilling".Translate(),
                     defaultDesc = "Deeprim.PauseDrillingTT".Translate(),
                     icon = HarmonyPatches.UI_Pause
                 };
-                yield return command_ActionPause;
                 break;
             }
             default:
             {
                 if (mode == 2 || !drillNew && mode != 3)
                 {
-                    var command_ActionAbandon = new Command_Action
+                    yield return new Command_Action
                     {
                         action = PrepareToAbandon,
                         defaultLabel = "Deeprim.Abandon".Translate(),
                         defaultDesc = "Deeprim.AbandonTT".Translate(),
                         icon = HarmonyPatches.UI_Abandon
                     };
-                    yield return command_ActionAbandon;
                 }
                 else
                 {
                     if (mode == 3)
                     {
-                        var command_ActionAbandon2 = new Command_Action
+                        yield return new Command_Action
                         {
                             action = Abandon,
                             defaultLabel = "Deeprim.ConfirmAbandon".Translate(),
                             defaultDesc = "Deeprim.ConfirmAbandonTT".Translate(),
                             icon = HarmonyPatches.UI_Abandon
                         };
-                        yield return command_ActionAbandon2;
                     }
                 }
 
@@ -190,27 +191,35 @@ public class Building_MiningShaft : Building
             }
         }
 
+        if (Prefs.DevMode && drillNew)
+        {
+            yield return new Command_Action
+            {
+                action = DrillNewLayer,
+                defaultLabel = "DEV: Drill Now"
+            };
+        }
+
         if (!IsConnected)
         {
             yield break;
         }
 
-        var send = new Command_Action
+        yield return new Command_Action
         {
             action = Send,
             defaultLabel = "Deeprim.SendDown".Translate(),
             defaultDesc = "Deeprim.SendDownTT".Translate(connectedMapParent.depth * 10),
             icon = HarmonyPatches.UI_Send
         };
-        yield return send;
-        var bringUp = new Command_Action
+
+        yield return new Command_Action
         {
             action = BringUp,
             defaultLabel = "Deeprim.BringUp".Translate(),
             defaultDesc = "Deeprim.BringUpTopTT".Translate(connectedMapParent.depth * 10),
             icon = HarmonyPatches.UI_BringUp
         };
-        yield return bringUp;
 
         if (DeepRimMod.instance.DeepRimSettings.LowTechMode)
         {
@@ -219,34 +228,68 @@ public class Building_MiningShaft : Building
 
         if (extraPower > 0)
         {
-            var decreasePower = new Command_Action
+            yield return new Command_Action
             {
-                action = () => { extraPower -= 100; },
+                action = () =>
+                {
+                    extraPower -= 100;
+                    m_Power.Props.basePowerConsumption = defaultPowerNeeded + extraPower;
+                    m_Power.SetUpPowerVars();
+                },
                 defaultLabel = "Deeprim.DecreasePower".Translate(),
                 defaultDesc = "Deeprim.DecreasePowerTT".Translate(extraPower - 100),
                 icon = HarmonyPatches.UI_DecreasePower
             };
-            yield return decreasePower;
         }
 
-        var increasePower = new Command_Action
+        yield return new Command_Action
         {
-            action = () => { extraPower += 100; },
+            action = () =>
+            {
+                extraPower += 100;
+                m_Power.Props.basePowerConsumption = defaultPowerNeeded + extraPower;
+                m_Power.SetUpPowerVars();
+            },
             defaultLabel = "Deeprim.IncreasePower".Translate(),
             defaultDesc = "Deeprim.IncreasePowerTT".Translate(extraPower + 100),
             icon = HarmonyPatches.UI_IncreasePower
         };
-        yield return increasePower;
+    }
+
+    private void Abandon()
+    {
+        Abandon(false);
     }
 
     public override void Destroy(DestroyMode mode = DestroyMode.Vanish)
     {
-        if (IsConnected)
+        if (UndergroundManager != null)
         {
-            Abandon();
+            if (UndergroundManager.layersState.Any() && !destroy)
+            {
+                Find.WindowStack.Add(new Dialog_MessageBox(
+                    "Deeprim.AbandonAll".Translate(),
+                    "Deeprim.AbandonAllNo".Translate(), null,
+                    "Deeprim.AbandonAllYes".Translate(),
+                    delegate
+                    {
+                        destroy = true;
+                        Destroy(mode);
+                    }));
+                return;
+            }
+
+            foreach (var key in UndergroundManager.layersState.Keys.Reverse())
+            {
+                targetedLevel = key;
+                Abandon(true);
+            }
         }
 
+        var originalValue = allowDestroyNonDestroyable;
+        allowDestroyNonDestroyable = true;
         base.Destroy(mode);
+        allowDestroyNonDestroyable = originalValue;
     }
 
     public override string GetInspectString()
@@ -353,14 +396,22 @@ public class Building_MiningShaft : Building
         Messages.Message("Deeprim.ConfirmAbandonAgain".Translate(), MessageTypeDefOf.RejectInput);
     }
 
-    private void Abandon()
+    private void Abandon(bool force)
     {
+        if (UndergroundManager == null)
+        {
+            return;
+        }
+
         mode = 0;
         SyncConnectedMap();
-        connectedMapParent?.AbandonLift(connectedLift);
+        connectedMapParent?.AbandonLift(connectedLift, force);
 
-        connectedLift.Destroy();
-        UndergroundManager?.DestroyLayer(connectedMapParent);
+        var originalValue = allowDestroyNonDestroyable;
+        allowDestroyNonDestroyable = true;
+        connectedLift?.Destroy();
+        allowDestroyNonDestroyable = originalValue;
+        UndergroundManager.DestroyLayer(connectedMapParent);
         connectedMap = null;
         connectedMapParent = null;
         connectedLift = null;
@@ -498,6 +549,11 @@ public class Building_MiningShaft : Building
                     continue;
                 }
 
+                if (invalidCategories.Contains(thing.def.category))
+                {
+                    continue;
+                }
+
                 thing.DeSpawn();
                 GenSpawn.Spawn(thing, convertedLocation, connectedMap);
                 anythingSent = true;
@@ -601,9 +657,11 @@ public class Building_MiningShaft : Building
             ((Building_SpawnedLift)connectedLift).surfaceMap = Map;
         }
 
-        if (!DeepRimMod.instance.DeepRimSettings.LowTechMode)
+        if (!DeepRimMod.instance.DeepRimSettings.LowTechMode &&
+            m_Power.Props.basePowerConsumption != defaultPowerNeeded + extraPower)
         {
             m_Power.Props.basePowerConsumption = defaultPowerNeeded + extraPower;
+            m_Power.SetUpPowerVars();
         }
 
         if (GenTicks.TicksGame % GenTicks.TickRareInterval == 0)

@@ -15,10 +15,11 @@
     <castEdgeShadows>true</castEdgeShadows>
     <fillPercent>0.7</fillPercent>
     <canOverlapZones>true</canOverlapZones>
+    <useHitPoints>false</useHitPoints>
+    <destroyable>false</destroyable>
     <statBases>
       <WorkToBuild>12500</WorkToBuild>
-      <MaxHitPoints>300</MaxHitPoints>
-      <Flammability>1.0</Flammability>
+      <Flammability>0</Flammability>
       <Beauty>-60</Beauty>
       <Cleanliness>-20</Cleanliness>
     </statBases>

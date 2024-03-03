@@ -34,7 +34,7 @@
       <ai_neverTrashThis>true</ai_neverTrashThis>
       <deconstructible>false</deconstructible>
     </building>
-    <destroyable>true</destroyable>
+    <destroyable>false</destroyable>
     <useHitPoints>false</useHitPoints>
     <leaveResourcesWhenKilled>false</leaveResourcesWhenKilled>
     <staticSunShadowHeight>0.6</staticSunShadowHeight>
