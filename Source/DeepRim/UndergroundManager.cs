@@ -13,12 +13,14 @@ public class UndergroundManager(Map map) : MapComponent(map)
 
     private List<UndergroundMapParent> list3;
 
+    public int deepestLayer = 0;
+
     private int spawned;
 
     public int GetNextEmptyLayer(int starting = 1)
     {
         var num = starting;
-        while (layersState.ContainsKey(num))
+        while (layersState.ContainsKey(num) || num < deepestLayer)
         {
             num++;
         }
@@ -87,6 +89,7 @@ public class UndergroundManager(Map map) : MapComponent(map)
     {
         base.ExposeData();
         Scribe_Values.Look(ref spawned, "spawned");
+        Scribe_Values.Look(ref deepestLayer, "deepestLayer");
         Scribe_Collections.Look(ref layersState, "layers", LookMode.Value, LookMode.Reference, ref list2,
             ref list3);
         Scribe_References.Look(ref map, "map");

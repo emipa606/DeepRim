@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Verse;
 
@@ -25,7 +26,7 @@ public class Command_TargetLayer : Command_Action
                 shaft.drillNew = true;
                 shaft.PauseDrilling();
             }));
-            using var enumerator = manager.layersState.GetEnumerator();
+            using var enumerator = manager.layersState.OrderBy(x => x.Key).GetEnumerator();
             while (enumerator.MoveNext())
             {
                 var pair = enumerator.Current;
