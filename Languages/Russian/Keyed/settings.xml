@@ -14,7 +14,7 @@
   <Deeprim.Lowtech.Tooltip>Изменяет дрель для использования вручную без питания и изменяет стоимость конструкции</Deeprim.Lowtech.Tooltip>
   <Deeprim.BringingUp>Воспитание</Deeprim.BringingUp>
   <Deeprim.LayerDepth>Глубина слоя: {0}0м</Deeprim.LayerDepth>
-  <Deeprim.TargetNewLayer>Цель: Новый слой</Deeprim.TargetNewLayer>
+  <Deeprim.TargetNewLayer>Цель: Новый слой на глубине {0}м</Deeprim.TargetNewLayer>
   <Deeprim.TargetLayerAt>Цель: Слой на глубине {0}0 м</Deeprim.TargetLayerAt>
   <Deeprim.TransferTargetAt>Цель переноса: Слой на глубине {0}0 м</Deeprim.TransferTargetAt>
   <Deeprim.Progress>Прогресс: {0}%</Deeprim.Progress>
@@ -65,4 +65,6 @@
   <Deeprim.AbandonAll>Вы собираетесь разрушить главную шахту. Все слои и все, что в них находится, будут покинуты навсегда. Обратного пути нет. Вы уверены, что хотите продолжить деконструкцию?</Deeprim.AbandonAll>
   <Deeprim.AbandonAllYes>Да, уничтожьте все это.</Deeprim.AbandonAllYes>
   <Deeprim.AbandonAllNo>Нет, прервать</Deeprim.AbandonAllNo>
+  <Deeprim.OreDensity>Плотность руды для новых слоев: {0}</Deeprim.OreDensity>
+  <Deeprim.OreDensityTT>Сколько руды будет появляться в новых слоях (больше = больше) [По умолчанию: 16]</Deeprim.OreDensityTT>
 </LanguageData>

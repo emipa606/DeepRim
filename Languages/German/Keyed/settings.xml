@@ -14,7 +14,7 @@
   <Deeprim.Lowtech.Tooltip>Ändert die Bohrmaschine zu verwenden manuell ohne Strom und ändert die Baukosten</Deeprim.Lowtech.Tooltip>
   <Deeprim.BringingUp>Heranziehen</Deeprim.BringingUp>
   <Deeprim.LayerDepth>Schichttiefe: {0}0m</Deeprim.LayerDepth>
-  <Deeprim.TargetNewLayer>Ziel: Neue Ebene</Deeprim.TargetNewLayer>
+  <Deeprim.TargetNewLayer>Ziel: Neue Schicht in Tiefe {0}m</Deeprim.TargetNewLayer>
   <Deeprim.TargetLayerAt>Ziel: Schicht in Tiefe {0}0m</Deeprim.TargetLayerAt>
   <Deeprim.TransferTargetAt>Ziel übertragen: Schicht in Tiefe {0}0m</Deeprim.TransferTargetAt>
   <Deeprim.Progress>Fortschritt: {0}%</Deeprim.Progress>
@@ -65,4 +65,6 @@ HINWEIS: Der Mod ist nicht dafür ausgelegt, mehr als eine Welle zu haben, die P
   <Deeprim.AbandonAll>Sie sind im Begriff, den Hauptschacht zu dekonstruieren. Alle Schichten und alles, was sich in ihnen befindet, werden endgültig aufgegeben. Es gibt keinen Weg zurück. Sind Sie sicher, dass Sie mit dem Rückbau fortfahren wollen?</Deeprim.AbandonAll>
   <Deeprim.AbandonAllYes>Ja, zerstören Sie alles</Deeprim.AbandonAllYes>
   <Deeprim.AbandonAllNo>Nein, Abbruch</Deeprim.AbandonAllNo>
+  <Deeprim.OreDensity>Erzdichte für neue Schichten: {0}</Deeprim.OreDensity>
+  <Deeprim.OreDensityTT>Wie viel Erz in neuen Schichten spawnen wird (höher = mehr) [Standard: 16]</Deeprim.OreDensityTT>
 </LanguageData>
