@@ -22,21 +22,21 @@ public class UndergroundManager(Map map) : MapComponent(map)
         {
             if (nextLayer == 0)
             {
-                DeepRimMod.LogMessage("nextlayer is 0, fixing".ToString());
+                DeepRimMod.LogMessage("nextlayer is 0, trying to find deepest layer".ToString());
                 if (layersState.Any())
                 {
                     int deepest = 0;
                     var enumerator = layersState.GetEnumerator();
                     while (enumerator.MoveNext())
                     {
-                        DeepRimMod.LogMessage($"countlayers: {enumerator.Current}");
+                        DeepRimMod.LogMessage($"Layer: {enumerator.Current}");
                         if (enumerator.Current.Key > nextLayer)
                         {
                             deepest = enumerator.Current.Key;
                         }
                     }
                     nextLayer = deepest + 1;
-                    Log.Warning($"nextlayer is being set to {nextLayer}");
+                    DeepRimMod.LogMessage($"nextLayer is being set to: {nextLayer}");
                     return nextLayer;
                 }
                 else
