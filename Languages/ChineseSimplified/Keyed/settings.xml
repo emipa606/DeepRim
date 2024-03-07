@@ -15,6 +15,7 @@
   <Deeprim.BringingUp>抚养孩子</Deeprim.BringingUp>
   <Deeprim.LayerDepth>层深度: {0}0m</Deeprim.LayerDepth>
   <Deeprim.TargetNewLayer>目标：新层</Deeprim.TargetNewLayer>
+  <Deeprim.TargetNewLayerAtDepth>目标深度 {0}m 的新层</Deeprim.TargetNewLayerAtDepth>
   <Deeprim.TargetLayerAt>目标：深度{0}0米处的层</Deeprim.TargetLayerAt>
   <Deeprim.TransferTargetAt>转移目标：深度{0}0米处的层</Deeprim.TransferTargetAt>
   <Deeprim.Progress>进展：{0}%</Deeprim.Progress>
@@ -65,4 +66,6 @@
   <Deeprim.AbandonAll>您即将解构主竖井。所有层和其中的任何东西都将被永久废弃。没有退路。你确定要继续解构吗？</Deeprim.AbandonAll>
   <Deeprim.AbandonAllYes>是的，全部摧毁</Deeprim.AbandonAllYes>
   <Deeprim.AbandonAllNo>否，中止</Deeprim.AbandonAllNo>
+  <Deeprim.OreDensity>新矿层的矿石密度：{0}</Deeprim.OreDensity>
+  <Deeprim.OreDensityTT>新矿层会生成多少矿石（越高 = 越多） [默认：16]</Deeprim.OreDensityTT>
 </LanguageData>

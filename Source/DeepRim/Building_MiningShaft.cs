@@ -298,7 +298,7 @@ public class Building_MiningShaft : Building
         var stringBuilder = new StringBuilder();
         int nextLayer = UndergroundManager != null ? (UndergroundManager.deepestLayer+1)*10 : 0;
         stringBuilder.AppendLine(drillNew
-            ? "Deeprim.TargetNewLayer".Translate(nextLayer)
+            ? "Deeprim.TargetNewLayerAtDepth".Translate(nextLayer)
             : "Deeprim.TargetLayerAt".Translate(targetedLevel));
 
         if (nearbyStorages.Any())
