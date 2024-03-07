@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Verse;
 
 namespace DeepRim;
@@ -13,37 +14,55 @@ public class UndergroundManager(Map map) : MapComponent(map)
 
     private List<UndergroundMapParent> list3;
 
-    public int deepestLayer = 0;
+    private int nextLayer = 0;
+
+    public int NextLayer
+    {
+        get
+        {
+            if (nextLayer == 0)
+            {
+                DeepRimMod.LogMessage("nextlayer is 0, fixing".ToString());
+                if (layersState.Any())
+                {
+                    int deepest = 0;
+                    var enumerator = layersState.GetEnumerator();
+                    while (enumerator.MoveNext())
+                    {
+                        DeepRimMod.LogMessage($"countlayers: {enumerator.Current}");
+                        if (enumerator.Current.Key > nextLayer)
+                        {
+                            deepest = enumerator.Current.Key;
+                        }
+                    }
+                    nextLayer = deepest + 1;
+                    Log.Warning($"nextlayer is being set to {nextLayer}");
+                    return nextLayer;
+                }
+                else
+                {
+                    nextLayer = 1;
+                    return nextLayer;
+                }
+            }
+            else
+            {
+                return nextLayer;
+            }
+        }
+        set
+        {
+            nextLayer = value;
+        }
+    }
 
     private int spawned;
 
-    public int GetNextEmptyLayer(int starting = 1)
-    {
-        var num = starting;
-        while (layersState.ContainsKey(num) || num < deepestLayer)
-        {
-            num++;
-        }
-
-        return num;
-    }
-
-    public int GetNextLayer(int starting = 1)
-    {
-        var num = starting;
-        while (layersState.ContainsKey(num))
-        {
-            num++;
-        }
-
-        return num - 1;
-    }
-
     public void InsertLayer(UndergroundMapParent mp)
     {
-        var nextEmptyLayer = GetNextEmptyLayer();
-        layersState.Add(nextEmptyLayer, mp);
-        mp.depth = nextEmptyLayer;
+        layersState.Add(NextLayer, mp);
+        mp.depth = NextLayer;
+        NextLayer++;
     }
 
     public void PinAllUnderground()
@@ -89,7 +108,7 @@ public class UndergroundManager(Map map) : MapComponent(map)
     {
         base.ExposeData();
         Scribe_Values.Look(ref spawned, "spawned");
-        Scribe_Values.Look(ref deepestLayer, "deepestLayer");
+        Scribe_Values.Look(ref nextLayer, "nextLayer");
         Scribe_Collections.Look(ref layersState, "layers", LookMode.Value, LookMode.Reference, ref list2,
             ref list3);
         Scribe_References.Look(ref map, "map");

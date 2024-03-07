@@ -284,7 +284,7 @@ public class Building_MiningShaft : Building
                 targetedLevel = key;
                 Abandon(true);
             }
-            UndergroundManager.deepestLayer = 0;
+            UndergroundManager.NextLayer = 1;
         }
 
         var originalValue = allowDestroyNonDestroyable;
@@ -296,7 +296,7 @@ public class Building_MiningShaft : Building
     public override string GetInspectString()
     {
         var stringBuilder = new StringBuilder();
-        int nextLayer = UndergroundManager != null ? (UndergroundManager.deepestLayer+1)*10 : 0;
+        int nextLayer = undergroundManager != null ? undergroundManager.NextLayer * 10 : 10;
         stringBuilder.AppendLine(drillNew
             ? "Deeprim.TargetNewLayerAtDepth".Translate(nextLayer)
             : "Deeprim.TargetLayerAt".Translate(targetedLevel));
@@ -422,7 +422,6 @@ public class Building_MiningShaft : Building
 
     private void DrillNewLayer()
     {
-       undergroundManager.deepestLayer++;
         Messages.Message("Deeprim.DrillingCompleteTT".Translate(), MessageTypeDefOf.PositiveEvent);
         var mapParent =
             (MapParent)WorldObjectMaker.MakeWorldObject(
