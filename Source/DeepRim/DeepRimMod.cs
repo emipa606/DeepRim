@@ -71,6 +71,17 @@ internal class DeepRimMod : Mod
             ref instance.DeepRimSettings.VerboseLogging,
             "Deeprim.VerboseLogging.Tooltip".Translate());
         listing_Standard.Gap();
+        listing_Standard.Gap();
+        listing_Standard.Label("Deeprim.OreDensity".Translate(instance.DeepRimSettings.OreDensity), -1,
+            "Deeprim.OreDensityTT".Translate());
+        listing_Standard.IntAdjuster(ref instance.DeepRimSettings.OreDensity, 1, 0);
+        listing_Standard.Gap();
+        var resetPlace = listing_Standard.GetRect(25f);
+        if (Widgets.ButtonText(resetPlace.RightHalf().RightHalf().RightHalf(), "Deeprim.Reset".Translate()))
+        {
+            Reset();
+        }
+        listing_Standard.Gap();
         listing_Standard.Label("Deeprim.MapSize".Translate());
         listing_Standard.Gap();
         foreach (var num in HarmonyPatches.mapSizes)
@@ -134,5 +145,10 @@ internal class DeepRimMod : Mod
         }
 
         Log.Message($"[DeepRim]: {message}");
+    }
+
+    public void Reset()
+    {
+        instance.DeepRimSettings.OreDensity = 16;
     }
 }

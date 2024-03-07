@@ -10,6 +10,7 @@ internal class DeepRimSettings : ModSettings
     public bool LowTechMode;
     public int SpawnedMapSize;
     public bool VerboseLogging;
+    public int OreDensity;
 
     /// <summary>
     ///     Saving and loading the values
@@ -17,6 +18,7 @@ internal class DeepRimSettings : ModSettings
     public override void ExposeData()
     {
         base.ExposeData();
+        Scribe_Values.Look(ref OreDensity, "OreDensity", 16);
         Scribe_Values.Look(ref SpawnedMapSize, "SpawnedMapSize");
         Scribe_Values.Look(ref LowTechMode, "LowTechMode");
         Scribe_Values.Look(ref VerboseLogging, "VerboseLogging");

@@ -64,4 +64,7 @@ NOTE: The mod is not designed to have more than one shaft, placing this may have
   <Deeprim.ChangeTarget>Target depth</Deeprim.ChangeTarget>
   <Deeprim.ChangeTargetNewTT>Toggle target between new layer and old layers. Currently, mining shaft is set to dig new layer.</Deeprim.ChangeTargetNewTT>
   <Deeprim.ChangeTargetExistingTT>Toggle target between new layer and old layers. Currently, mining shaft is set to old layer, depth: {0}m</Deeprim.ChangeTargetExistingTT>
+  <Deeprim.OreDensity>Ore density for new layers: {0}</Deeprim.OreDensity>
+  <Deeprim.OreDensityTT>How much ore will spawn in new layers (higher = more) [Default: 16]</Deeprim.OreDensityTT>
+  <Deeprim.Reset>Reset</Deeprim.Reset>
 </LanguageData>

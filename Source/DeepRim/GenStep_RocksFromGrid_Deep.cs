@@ -57,7 +57,7 @@ public class GenStep_RocksFromGrid_Deep : GenStep
         }
 
         var genStep_ScatterLumpsMineable = new GenStep_ScatterLumpsMineable();
-        var num = 16f;
+        var num = (float)DeepRimMod.instance.DeepRimSettings.OreDensity; //16f;
         genStep_ScatterLumpsMineable.countPer10kCellsRange = new FloatRange(num, num);
         genStep_ScatterLumpsMineable.Generate(map, default);
         map.regionAndRoomUpdater.Enabled = true;
