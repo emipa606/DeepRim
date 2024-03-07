@@ -10,7 +10,7 @@ internal class DeepRimSettings : ModSettings
     public bool LowTechMode;
     public int SpawnedMapSize;
     public bool VerboseLogging;
-    public int OreDensity;
+    public int OreDensity = 16;
 
     /// <summary>
     ///     Saving and loading the values
