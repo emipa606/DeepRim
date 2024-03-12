@@ -92,7 +92,7 @@ internal class DeepRimMod : Mod
                 case < 75:
                     label = $"{"Deeprim.Inherited".Translate()} - {"Deeprim.Same".Translate()}";
                     break;
-                case < 200:
+                case < 125:
                     listing_Standard.Gap(10f);
                     label += $" - {"Deeprim.Incident".Translate()}";
                     break;

@@ -19,6 +19,7 @@ public static class HarmonyPatches
     [
         0,
         75,
+        125,
         200,
         225,
         250,
