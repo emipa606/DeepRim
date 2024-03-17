@@ -84,7 +84,6 @@ public class Building_SpawnedLift : Building
             {
                 return;
             }
-
             Current.Game.CurrentMap = surfaceMap;
             Find.Selector.Select(parentDrill);
 
@@ -97,6 +96,9 @@ public class Building_SpawnedLift : Building
     public override void Tick()
     {
         base.Tick();
+        if (!Current.Game.Maps.Contains(surfaceMap)){
+            Current.Game.DeinitAndRemoveMap_NewTemp(this.Map, true);
+        }
         if (GenTicks.TicksGame % 78 != 0)
         {
             return;
