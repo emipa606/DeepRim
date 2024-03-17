@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Text;
 using RimWorld;
 using RimWorld.Planet;
@@ -672,13 +673,9 @@ public class Building_MiningShaft : Building
             foreach (var cell in this.OccupiedRect().AdjacentCells)
             {
                 var building = cell.GetFirstBuilding(Map);
-                switch (building)
-                {
-                    case null:
-                        continue;
-                    case Building_Storage storage:
-                        nearbyStorages.Add(storage);
-                        break;
+                var test = cell.GetThingList(Map).Where(thing => thing is Building_Storage);
+                foreach (Building_Storage storage in test){
+                    nearbyStorages.Add(storage);
                 }
             }
 
