@@ -45,6 +45,8 @@ public static class HarmonyPatches
 
     public static readonly Texture2D UI_Option = ContentFinder<Texture2D>.Get("UI/optionsIcon");
 
+    public static readonly Texture2D UI_ToggleSendPower = ContentFinder<Texture2D>.Get("UI/ToggleSendPower");
+
     public static readonly Texture2D UI_Transfer = ContentFinder<Texture2D>.Get("UI/transferIcon");
 
     public static readonly List<BiomeDef> PossibleBiomeDefs;

@@ -43,7 +43,7 @@ public class Building_SpawnedLift : Building
         var baseString = base.GetInspectString();
         if (!string.IsNullOrEmpty(baseString))
         {
-            returnString += $"\n{baseString}\nPowered: {m_Power.PowerOn}";
+            returnString += $"\n{baseString}";
         }
 
         return returnString;

@@ -230,9 +230,9 @@ public class Building_MiningShaft : Building
             var lift = connectedLift as Building_SpawnedLift;
         yield return new Command_Toggle
             {
-                //icon = CompLaunchable.LaunchCommandTex,
-                defaultLabel = "toggle uses power",
-                defaultDesc = "yeet",
+                icon = HarmonyPatches.UI_ToggleSendPower,
+                defaultLabel = "Deeprim.SendPowerToLayer".Translate(),
+                defaultDesc = "Deeprim.SendPowerToLayerTT".Translate(),
                 isActive = () => lift.usesPower,
                 toggleAction = delegate { 
                     lift.TogglePower();
@@ -682,10 +682,14 @@ public class Building_MiningShaft : Building
             ((Building_SpawnedLift)connectedLift).surfaceMap = Map;
         }
 
-        if (!DeepRimMod.instance.DeepRimSettings.LowTechMode &&
-            m_Power.Props.basePowerConsumption != defaultPowerNeeded + extraPower)
+        if (!DeepRimMod.instance.DeepRimSettings.LowTechMode)
         {
-            m_Power.Props.basePowerConsumption = defaultPowerNeeded + extraPower;
+            if (UndergroundManager.ActiveLayers > 0){
+                m_Power.Props.basePowerConsumption = defaultPowerNeeded + extraPower;
+            }
+            else {
+                m_Power.Props.basePowerConsumption = idlePowerNeeded;
+            }
             m_Power.SetUpPowerVars();
         }
 

@@ -24,6 +24,8 @@
   <Deeprim.DrillingComplete>Drilling complete. Depth: {0}0m</Deeprim.DrillingComplete>
   <Deeprim.DrillingCompleteTT>Drilling complete</Deeprim.DrillingCompleteTT>
   <Deeprim.NoPower>No power</Deeprim.NoPower>
+  <Deeprim.SendPowerToLayer>Send Power</Deeprim.SendPowerToLayer>
+  <Deeprim.SendPowerToLayerTT>Toggle whether power is sent to the underground lift in a layer</Deeprim.SendPowerToLayerTT>
   <Deeprim.NothingToSend>Nothing to send</Deeprim.NothingToSend>
   <Deeprim.SendingDown>Sending down</Deeprim.SendingDown>
   <Deeprim.NewLayer>New Layer</Deeprim.NewLayer>
