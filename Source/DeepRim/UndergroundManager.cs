@@ -10,6 +10,20 @@ public class UndergroundManager(Map map) : MapComponent(map)
 
     public Dictionary<int, UndergroundMapParent> layersState = new Dictionary<int, UndergroundMapParent>();
 
+    public int activeLayers = -1;
+
+    public int ActiveLayers {
+        get {
+            if (activeLayers == -1){
+                activeLayers = 0;
+            }
+            return activeLayers;
+        }
+        set {
+            activeLayers = value;
+        }
+    }
+
     private List<int> list2;
 
     private List<UndergroundMapParent> list3;
@@ -60,6 +74,7 @@ public class UndergroundManager(Map map) : MapComponent(map)
 
     public void InsertLayer(UndergroundMapParent mp)
     {
+        ActiveLayers++;
         layersState.Add(NextLayer, mp);
         mp.depth = NextLayer;
         NextLayer++;
@@ -100,7 +115,7 @@ public class UndergroundManager(Map map) : MapComponent(map)
         {
             Log.Error("Destroyed layer doesn't have correct depth");
         }
-
+        
         layersState.Remove(depth);
     }
 

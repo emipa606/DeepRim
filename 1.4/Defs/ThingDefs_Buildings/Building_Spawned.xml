@@ -24,6 +24,7 @@
       </li>
       <li Class="CompProperties_Power">
         <compClass>CompPowerPlant</compClass>
+        <compClass>CompFlickable</compClass>
         <basePowerConsumption>0</basePowerConsumption>
         <transmitsPower>true</transmitsPower>
       </li>

@@ -12,14 +12,27 @@ public class Building_SpawnedLift : Building
 
     private CompPowerPlant m_Power;
 
+    private CompFlickable m_Flick;
+
     public Building_MiningShaft parentDrill;
 
     public Map surfaceMap;
+    private bool UsesPower = true;
+
+    public bool usesPower {
+        get {
+            return UsesPower;
+        }
+        set {
+            UsesPower = value;
+        }
+    }
 
     public override void ExposeData()
     {
         base.ExposeData();
         Scribe_Values.Look(ref depth, "depth");
+        Scribe_Values.Look(ref UsesPower, "UsesPower");
         Scribe_References.Look(ref parentDrill, "parentDrill");
         Scribe_References.Look(ref surfaceMap, "surfaceMap");
     }
@@ -30,7 +43,7 @@ public class Building_SpawnedLift : Building
         var baseString = base.GetInspectString();
         if (!string.IsNullOrEmpty(baseString))
         {
-            returnString += $"\n{baseString}";
+            returnString += $"\n{baseString}\nPowered: {m_Power.PowerOn}";
         }
 
         return returnString;
@@ -114,6 +127,10 @@ public class Building_SpawnedLift : Building
             m_Power.Props.basePowerConsumption = parentDrill.PowerAvailable();
         }
     }
+    public void TogglePower(){
+        usesPower = !usesPower;
+        m_Flick.DoFlick();
+    }
 
     public override void SpawnSetup(Map map, bool respawningAfterLoad)
     {
@@ -150,12 +167,12 @@ public class Building_SpawnedLift : Building
         }
 
         m_Power = GetComp<CompPowerPlant>();
+        m_Flick = GetComp<CompFlickable>();
 
         if (m_Power == null)
         {
             return;
         }
-
         if (DeepRimMod.instance.DeepRimSettings.LowTechMode)
         {
             DeepRimMod.LogMessage($"{this} had powercomp when it should not, removing");
@@ -163,7 +180,6 @@ public class Building_SpawnedLift : Building
             m_Power = null;
             return;
         }
-
 
         if (parentDrill != null)
         {

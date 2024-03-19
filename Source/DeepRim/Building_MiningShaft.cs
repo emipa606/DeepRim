@@ -226,6 +226,22 @@ public class Building_MiningShaft : Building
         {
             yield break;
         }
+        if (!drillNew){
+            var lift = connectedLift as Building_SpawnedLift;
+        yield return new Command_Toggle
+            {
+                //icon = CompLaunchable.LaunchCommandTex,
+                defaultLabel = "toggle uses power",
+                defaultDesc = "yeet",
+                isActive = () => lift.usesPower,
+                toggleAction = delegate { 
+                    lift.TogglePower();
+                    if (lift.usesPower){undergroundManager.ActiveLayers++;}
+                    else {undergroundManager.ActiveLayers--;}
+                    Log.Message($"Active layers var: {undergroundManager.ActiveLayers}");
+                    }
+            };
+        }
 
         if (extraPower > 0)
         {
@@ -286,6 +302,7 @@ public class Building_MiningShaft : Building
                 Abandon(true);
             }
             UndergroundManager.NextLayer = 1;
+            UndergroundManager.ActiveLayers = 0;
         }
 
         var originalValue = allowDestroyNonDestroyable;
@@ -372,8 +389,7 @@ public class Building_MiningShaft : Building
         {
             return 0;
         }
-
-        var currentActiveLayers = manager.layersState.Count;
+        var currentActiveLayers = manager.ActiveLayers;
         if (currentActiveLayers == 0)
         {
             return 0;
@@ -408,6 +424,12 @@ public class Building_MiningShaft : Building
 
         mode = 0;
         SyncConnectedMap();
+        var lift = connectedLift as Building_SpawnedLift;
+        if (lift != null){
+            if (lift.usesPower){
+                UndergroundManager.ActiveLayers--;
+            }
+        }
         connectedMapParent?.AbandonLift(connectedLift, force);
 
         var originalValue = allowDestroyNonDestroyable;
