@@ -19,7 +19,7 @@ public class Building_MiningShaft : Building
 
     private const float idlePowerNeeded = 200;
 
-    private bool wantsUpdateElectricity = true;
+    public bool wantsUpdateElectricity = true;
 
     private readonly List<ThingCategory> invalidCategories =
     [
@@ -260,20 +260,18 @@ public class Building_MiningShaft : Building
         }
         if (!drillNew){
             var lift = connectedLift as Building_SpawnedLift;
-        yield return new Command_Toggle
-            {
-                icon = HarmonyPatches.UI_ToggleSendPower,
-                defaultLabel = "Deeprim.SendPowerToLayer".Translate(),
-                defaultDesc = "Deeprim.SendPowerToLayerTT".Translate(),
-                isActive = () => (bool)lift.usesPower,
-                toggleAction = delegate { 
-                    wantsUpdateElectricity = true;
-                    lift.TogglePower();
-                    if ((bool)lift.usesPower){undergroundManager.ActiveLayers++;}
-                    else {undergroundManager.ActiveLayers--;}
-                    Log.Message($"Active layers var: {undergroundManager.ActiveLayers}");
-                    }
-            };
+            yield return new Command_Toggle
+                {
+                    icon = HarmonyPatches.UI_ToggleSendPower,
+                    defaultLabel = "Deeprim.SendPowerToLayer".Translate(),
+                    defaultDesc = "Deeprim.SendPowerToLayerTT".Translate(),
+                    isActive = () => lift.usesPower,
+                    toggleAction = delegate { 
+                        lift.TogglePower();
+                        if (lift.usesPower){undergroundManager.ActiveLayers++;}
+                        else {undergroundManager.ActiveLayers--;}
+                        }
+                };
         }
 
         if (undergroundManager.activeLayers > 0){
@@ -463,12 +461,12 @@ public class Building_MiningShaft : Building
         SyncConnectedMap();
         var lift = connectedLift as Building_SpawnedLift;
         if (lift != null){
-            if ((bool)lift.usesPower){
+            if (lift.usesPower){
                 UndergroundManager.ActiveLayers--;
             }
         }
         connectedMapParent?.AbandonLift(connectedLift, force);
-
+        targetedLevel = -1;
         var originalValue = allowDestroyNonDestroyable;
         allowDestroyNonDestroyable = true;
         connectedLift?.Destroy();

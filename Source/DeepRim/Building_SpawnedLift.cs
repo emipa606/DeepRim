@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -17,14 +18,12 @@ public class Building_SpawnedLift : Building
     public Building_MiningShaft parentDrill;
 
     public Map surfaceMap;
-    private bool? UsesPower = null;
+    private bool UsesPower = true;
 
-    public bool? usesPower {
+    public bool usesPower {
         get {
-            if (UsesPower == null){
-                UsesPower = m_Flick.SwitchIsOn;
-            }
-            return (bool)UsesPower;
+            
+            return UsesPower;
         }
         set {
             UsesPower = value;
@@ -42,14 +41,19 @@ public class Building_SpawnedLift : Building
 
     public override string GetInspectString()
     {
-        var returnString = "Deeprim.LayerDepth".Translate(depth);
+        var stringBuilder = new StringBuilder();
+        stringBuilder.AppendLine("Deeprim.LayerDepth".Translate(depth));
+
+        string targetLayerAt = parentDrill.drillNew ? "" : "Deeprim.TargetLayerAt".Translate(parentDrill.targetedLevel);
+        if (targetLayerAt != ""){stringBuilder.AppendLine(targetLayerAt);}
+
         var baseString = base.GetInspectString();
         if (!string.IsNullOrEmpty(baseString))
         {
-            returnString += $"\n{baseString}";
+            stringBuilder.AppendLine(base.GetInspectString());
         }
 
-        return returnString;
+        return stringBuilder.ToString().Trim();
     }
 
     public override IEnumerable<Gizmo> GetGizmos()
@@ -58,15 +62,47 @@ public class Building_SpawnedLift : Building
         {
             yield break;
         }
-
-        var bringUp = new Command_Action
+            yield return new Command_Toggle
+                {
+                    icon = HarmonyPatches.UI_ToggleSendPower,
+                    defaultLabel = "Deeprim.SendPowerToLayer".Translate(),
+                    defaultDesc = "Deeprim.SendPowerToLayerTT".Translate(),
+                    isActive = () => usesPower,
+                    toggleAction = delegate { 
+                        TogglePower();
+                        if (usesPower){
+                            parentDrill.UndergroundManager.ActiveLayers++;
+                            }
+                        else {
+                            parentDrill.UndergroundManager.ActiveLayers--;
+                            }
+                        }
+                };
+            yield return new Command_TargetLayer(true)
+        {
+            shaft = parentDrill,
+            manager = parentDrill.Map.components.Find(item => item is UndergroundManager) as UndergroundManager,
+            action = delegate { },
+            defaultLabel = "Deeprim.ChangeTarget".Translate(),
+            defaultDesc = "Deeprim.ChangeTargetExistingTT".Translate(parentDrill.targetedLevel * 10),
+            icon = HarmonyPatches.UI_Option
+        };
+        yield return new Command_Action
         {
             action = BringUp,
             defaultLabel = "Deeprim.BringUp".Translate(),
             defaultDesc = "Deeprim.BringUpTT".Translate(),
             icon = HarmonyPatches.UI_BringUp
         };
-        yield return bringUp;
+        if (parentDrill.targetedLevel != -1){
+            yield return new Command_Action
+            {
+                action = SendDown,
+                defaultLabel = "Deeprim.SendDown".Translate(),
+                defaultDesc = "Deeprim.SendDownTT".Translate(parentDrill.targetedLevel*10),
+                icon = HarmonyPatches.UI_Send
+            };
+        }
     }
 
     private void BringUp()
@@ -93,6 +129,8 @@ public class Building_SpawnedLift : Building
             }
         }
 
+    
+
         if (anythingSent)
         {
             Messages.Message("Deeprim.BringingUp".Translate(), MessageTypeDefOf.PositiveEvent);
@@ -107,6 +145,50 @@ public class Building_SpawnedLift : Building
         }
 
         Messages.Message("Deeprim.NothingToSend".Translate(), MessageTypeDefOf.RejectInput);
+    }
+
+    private void SendDown(){
+    {
+        var targetLayer = parentDrill.UndergroundManager.layersState[parentDrill.targetedLevel];
+        var cells = this.OccupiedRect().Cells;
+        var anythingSent = false;
+        foreach (var intVec in cells)
+        {
+            var thingList = intVec.GetThingList(Map);
+            var convertedLocation = HarmonyPatches.ConvertParentDrillLocation(
+                intVec, Map.Size, targetLayer.Map.Size);
+            // ReSharper disable once ForCanBeConvertedToForeach, Things despawn, cannot use foreach
+            for (var index = 0; index < thingList.Count; index++)
+            {
+                var thing = thingList[index];
+                if (thing is not Pawn && (thing is not ThingWithComps && thing == null || thing is Building))
+                {
+                    continue;
+                }
+
+                thing.DeSpawn();
+                GenSpawn.Spawn(thing, convertedLocation, targetLayer.Map);
+                anythingSent = true;
+            }
+        }
+
+    
+
+        if (anythingSent)
+        {
+            Messages.Message("Deeprim.BringingUp".Translate(), MessageTypeDefOf.PositiveEvent);
+            if (!Event.current.control)
+            {
+                return;
+            }
+            Current.Game.CurrentMap = surfaceMap;
+            Find.Selector.Select(parentDrill);
+
+            return;
+        }
+
+        Messages.Message("Deeprim.NothingToSend".Translate(), MessageTypeDefOf.RejectInput);
+    }
     }
 
     public override void Tick()
@@ -133,6 +215,7 @@ public class Building_SpawnedLift : Building
     public void TogglePower(){
         m_Flick.DoFlick();
         usesPower = m_Flick.SwitchIsOn;
+        parentDrill.wantsUpdateElectricity = true;
     }
 
     public override void SpawnSetup(Map map, bool respawningAfterLoad)
