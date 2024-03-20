@@ -17,11 +17,14 @@ public class Building_SpawnedLift : Building
     public Building_MiningShaft parentDrill;
 
     public Map surfaceMap;
-    private bool UsesPower = true;
+    private bool? UsesPower = null;
 
-    public bool usesPower {
+    public bool? usesPower {
         get {
-            return UsesPower;
+            if (UsesPower == null){
+                UsesPower = m_Flick.SwitchIsOn;
+            }
+            return (bool)UsesPower;
         }
         set {
             UsesPower = value;

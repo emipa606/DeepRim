@@ -265,47 +265,49 @@ public class Building_MiningShaft : Building
                 icon = HarmonyPatches.UI_ToggleSendPower,
                 defaultLabel = "Deeprim.SendPowerToLayer".Translate(),
                 defaultDesc = "Deeprim.SendPowerToLayerTT".Translate(),
-                isActive = () => lift.usesPower,
+                isActive = () => (bool)lift.usesPower,
                 toggleAction = delegate { 
                     wantsUpdateElectricity = true;
                     lift.TogglePower();
-                    if (lift.usesPower){undergroundManager.ActiveLayers++;}
+                    if ((bool)lift.usesPower){undergroundManager.ActiveLayers++;}
                     else {undergroundManager.ActiveLayers--;}
                     Log.Message($"Active layers var: {undergroundManager.ActiveLayers}");
                     }
             };
         }
 
-        if (extraPower > 0)
-        {
+        if (undergroundManager.activeLayers > 0){
+            if (extraPower > 0)
+            {
+                yield return new Command_Action
+                {
+                    action = () =>
+                    {
+                        extraPower -= 100;
+                        m_Power.Props.basePowerConsumption = PowerAvailable() + idlePowerNeeded;
+                        m_Power.SetUpPowerVars();
+                        wantsUpdateElectricity = true;
+                    },
+                    defaultLabel = "Deeprim.DecreasePower".Translate(),
+                    defaultDesc = "Deeprim.DecreasePowerTT".Translate(extraPower - 100),
+                    icon = HarmonyPatches.UI_DecreasePower
+                };
+            }
+
             yield return new Command_Action
             {
                 action = () =>
                 {
-                    extraPower -= 100;
-                    m_Power.Props.basePowerConsumption = defaultPowerNeeded + extraPower;
+                    extraPower += 100;
+                    m_Power.Props.basePowerConsumption = PowerAvailable() + idlePowerNeeded;
                     m_Power.SetUpPowerVars();
                     wantsUpdateElectricity = true;
                 },
-                defaultLabel = "Deeprim.DecreasePower".Translate(),
-                defaultDesc = "Deeprim.DecreasePowerTT".Translate(extraPower - 100),
-                icon = HarmonyPatches.UI_DecreasePower
+                defaultLabel = "Deeprim.IncreasePower".Translate(),
+                defaultDesc = "Deeprim.IncreasePowerTT".Translate(extraPower + 100),
+                icon = HarmonyPatches.UI_IncreasePower
             };
         }
-
-        yield return new Command_Action
-        {
-            action = () =>
-            {
-                extraPower += 100;
-                m_Power.Props.basePowerConsumption = defaultPowerNeeded + extraPower;
-                m_Power.SetUpPowerVars();
-                wantsUpdateElectricity = true;
-            },
-            defaultLabel = "Deeprim.IncreasePower".Translate(),
-            defaultDesc = "Deeprim.IncreasePowerTT".Translate(extraPower + 100),
-            icon = HarmonyPatches.UI_IncreasePower
-        };
     }
 
     private void Abandon()
@@ -461,7 +463,7 @@ public class Building_MiningShaft : Building
         SyncConnectedMap();
         var lift = connectedLift as Building_SpawnedLift;
         if (lift != null){
-            if (lift.usesPower){
+            if ((bool)lift.usesPower){
                 UndergroundManager.ActiveLayers--;
             }
         }
