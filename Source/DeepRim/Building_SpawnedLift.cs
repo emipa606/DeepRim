@@ -10,9 +10,9 @@ public class Building_SpawnedLift : Building
 {
     public int depth;
 
-    private CompPowerPlant m_Power;
+    public CompPowerPlant m_Power;
 
-    private CompFlickable m_Flick;
+    public CompFlickable m_Flick;
 
     public Building_MiningShaft parentDrill;
 
@@ -128,8 +128,8 @@ public class Building_SpawnedLift : Building
         }
     }
     public void TogglePower(){
-        usesPower = !usesPower;
         m_Flick.DoFlick();
+        usesPower = m_Flick.SwitchIsOn;
     }
 
     public override void SpawnSetup(Map map, bool respawningAfterLoad)

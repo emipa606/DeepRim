@@ -106,6 +106,28 @@ public class Building_MiningShaft : Building
         Scribe_References.Look(ref connectedLift, "m_ConnectedLift");
     }
 
+    public void tryReconfigureAll(){
+        Log.Warning("Reset button was pressed!");
+        Log.Warning("Iterating over maps to gather a list of buildings:");
+
+        UndergroundManager?.layersState.Clear();
+        List<Map> maps = Current.Game.maps;
+        //Get lifts and shaft from maps
+        foreach (Map map in maps){
+            Log.Warning($"Current map: {map}");
+            var lift = map.listerBuildings.AllBuildingsColonistOfClass<Building_SpawnedLift>().FirstOrDefault();
+            if (lift != null){
+                lift.usesPower = true;
+                if (!lift.m_Flick.SwitchIsOn){lift.m_Flick.DoFlick();}
+                var mapParent = map.Parent as UndergroundMapParent;
+                undergroundManager.layersState.Add(lift.depth, mapParent);
+                Log.Warning($"Found lift: {lift}");
+                continue;
+            }
+            Log.Warning("Map didn't contain an underground lift.");
+        }
+        undergroundManager.activeLayers = undergroundManager.layersState.Count();
+    }
     public override IEnumerable<Gizmo> GetGizmos()
     {
         foreach (var current in base.GetGizmos())
@@ -115,16 +137,9 @@ public class Building_MiningShaft : Building
         if (Prefs.DevMode){
             yield return new Command_Action
             {
-                        action = delegate {
-                            Log.Warning("Reset button was pressed!");
-                            Log.Warning("Listing maps:");
-                            List<Map> maps = Current.Game.maps;
-                            foreach (Map map in maps){
-                                Log.Warning($"{map}");
-                            }
-                            },
+                        action = tryReconfigureAll,
                         defaultLabel = "Reset States",
-                        defaultDesc = "Reset the states of the mineshaft and connected layers based on what underground lifts exist"
+                        defaultDesc = "This will attempt to reconnect all underground layers with one mineshaft. May fix some errors. Do not use if you have mineshafts on multiple maps."
             };
         }
 
@@ -689,10 +704,7 @@ public class Building_MiningShaft : Building
     {
         connectedMapParent = UndergroundManager?.layersState[targetedLevel];
         connectedMap = UndergroundManager?.layersState[targetedLevel]?.Map;
-        connectedLift =
-            (from Building_SpawnedLift lift in connectedMap?.listerBuildings.allBuildingsColonist
-                where lift != null
-                select lift).FirstOrDefault();
+        connectedLift = connectedMap?.listerBuildings.AllBuildingsColonistOfClass<Building_SpawnedLift>().FirstOrDefault();
     }
 
     public override void Tick()
