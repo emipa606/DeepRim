@@ -15,7 +15,7 @@ public class UndergroundManager(Map map) : MapComponent(map)
     public int ActiveLayers {
         get {
             if (activeLayers == -1){
-                activeLayers = 0;
+                activeLayers = layersState.Count;
             }
             return activeLayers;
         }

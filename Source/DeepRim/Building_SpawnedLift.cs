@@ -169,7 +169,7 @@ public class Building_SpawnedLift : Building
         m_Power = GetComp<CompPowerPlant>();
         m_Flick = GetComp<CompFlickable>();
 
-        if (m_Power == null)
+        if (m_Power == null || m_Flick == null)
         {
             return;
         }
@@ -177,7 +177,9 @@ public class Building_SpawnedLift : Building
         {
             DeepRimMod.LogMessage($"{this} had powercomp when it should not, removing");
             comps.Remove(m_Power);
+            comps.Remove(m_Flick);
             m_Power = null;
+            m_Flick = null;
             return;
         }
 
