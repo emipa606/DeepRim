@@ -15,7 +15,7 @@ public class Building_MiningShaft : Building
 {
     private const int updateEveryXTicks = 50;
 
-    private const float defaultPowerNeeded = 1200;
+    private const float defaultPowerNeeded = 300;
 
     private const float idlePowerNeeded = 200;
 
@@ -111,6 +111,21 @@ public class Building_MiningShaft : Building
         foreach (var current in base.GetGizmos())
         {
             yield return current;
+        }
+        if (Prefs.DevMode){
+            yield return new Command_Action
+            {
+                        action = delegate {
+                            Log.Warning("Reset button was pressed!");
+                            Log.Warning("Listing maps:");
+                            List<Map> maps = Current.Game.maps;
+                            foreach (Map map in maps){
+                                Log.Warning($"{map}");
+                            }
+                            },
+                        defaultLabel = "Reset States",
+                        defaultDesc = "Reset the states of the mineshaft and connected layers based on what underground lifts exist"
+            };
         }
 
         yield return new Command_TargetLayer
