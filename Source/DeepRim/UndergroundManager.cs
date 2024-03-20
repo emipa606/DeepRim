@@ -10,7 +10,9 @@ public class UndergroundManager(Map map) : MapComponent(map)
 
     public Dictionary<int, UndergroundMapParent> layersState = new Dictionary<int, UndergroundMapParent>();
 
-    public int activeLayers = -1;
+    private int activeLayers = -1;
+
+    public bool AnyLayersPowered = true;
 
     public int ActiveLayers {
         get {

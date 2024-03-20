@@ -18,23 +18,11 @@ public class Building_SpawnedLift : Building
     public Building_MiningShaft parentDrill;
 
     public Map surfaceMap;
-    private bool UsesPower = true;
-
-    public bool usesPower {
-        get {
-            
-            return UsesPower;
-        }
-        set {
-            UsesPower = value;
-        }
-    }
-
+ 
     public override void ExposeData()
     {
         base.ExposeData();
         Scribe_Values.Look(ref depth, "depth");
-        Scribe_Values.Look(ref UsesPower, "UsesPower");
         Scribe_References.Look(ref parentDrill, "parentDrill");
         Scribe_References.Look(ref surfaceMap, "surfaceMap");
     }
@@ -67,14 +55,18 @@ public class Building_SpawnedLift : Building
                     icon = HarmonyPatches.UI_ToggleSendPower,
                     defaultLabel = "Deeprim.SendPowerToLayer".Translate(),
                     defaultDesc = "Deeprim.SendPowerToLayerTT".Translate(),
-                    isActive = () => usesPower,
+                    isActive = () => m_Flick.SwitchIsOn,
                     toggleAction = delegate { 
                         TogglePower();
-                        if (usesPower){
+                        if (m_Flick.SwitchIsOn){
                             parentDrill.UndergroundManager.ActiveLayers++;
+                            parentDrill.UndergroundManager.AnyLayersPowered = true;
                             }
                         else {
                             parentDrill.UndergroundManager.ActiveLayers--;
+                            if (parentDrill.UndergroundManager.ActiveLayers == 0){
+                                parentDrill.UndergroundManager.AnyLayersPowered = false;
+                            }
                             }
                         }
                 };
@@ -214,8 +206,12 @@ public class Building_SpawnedLift : Building
     }
     public void TogglePower(){
         m_Flick.DoFlick();
-        usesPower = m_Flick.SwitchIsOn;
-        parentDrill.wantsUpdateElectricity = true;
+        if (m_Flick.SwitchIsOn){
+            parentDrill.UndergroundManager.AnyLayersPowered = true;
+            }
+        else if (parentDrill.UndergroundManager.ActiveLayers == 0){
+            parentDrill.UndergroundManager.AnyLayersPowered = false;
+        }
     }
 
     public override void SpawnSetup(Map map, bool respawningAfterLoad)

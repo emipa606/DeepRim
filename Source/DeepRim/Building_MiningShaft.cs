@@ -14,12 +14,8 @@ namespace DeepRim;
 public class Building_MiningShaft : Building
 {
     private const int updateEveryXTicks = 50;
-
-    private const float defaultPowerNeeded = 300;
-
+    private const float baseExtraPower = 100;
     private const float idlePowerNeeded = 200;
-
-    public bool wantsUpdateElectricity = true;
 
     private readonly List<ThingCategory> invalidCategories =
     [
@@ -117,16 +113,16 @@ public class Building_MiningShaft : Building
             Log.Warning($"Current map: {map}");
             var lift = map.listerBuildings.AllBuildingsColonistOfClass<Building_SpawnedLift>().FirstOrDefault();
             if (lift != null){
-                lift.usesPower = true;
+                lift.m_Flick.SwitchIsOn = true;
                 if (!lift.m_Flick.SwitchIsOn){lift.m_Flick.DoFlick();}
                 var mapParent = map.Parent as UndergroundMapParent;
-                undergroundManager.layersState.Add(lift.depth, mapParent);
+                UndergroundManager.layersState.Add(lift.depth, mapParent);
                 Log.Warning($"Found lift: {lift}");
                 continue;
             }
             Log.Warning("Map didn't contain an underground lift.");
         }
-        undergroundManager.activeLayers = undergroundManager.layersState.Count();
+        UndergroundManager.ActiveLayers = UndergroundManager.layersState.Count();
     }
     public override IEnumerable<Gizmo> GetGizmos()
     {
@@ -265,16 +261,24 @@ public class Building_MiningShaft : Building
                     icon = HarmonyPatches.UI_ToggleSendPower,
                     defaultLabel = "Deeprim.SendPowerToLayer".Translate(),
                     defaultDesc = "Deeprim.SendPowerToLayerTT".Translate(),
-                    isActive = () => lift.usesPower,
+                    isActive = () => lift.m_Flick.SwitchIsOn,
                     toggleAction = delegate { 
                         lift.TogglePower();
-                        if (lift.usesPower){undergroundManager.ActiveLayers++;}
-                        else {undergroundManager.ActiveLayers--;}
+                        if (lift.m_Flick.SwitchIsOn){
+                            UndergroundManager.ActiveLayers++;
+                            UndergroundManager.AnyLayersPowered = true;
+                            }
+                        else {
+                            UndergroundManager.ActiveLayers--;
+                            if (UndergroundManager.ActiveLayers == 0){
+                                UndergroundManager.AnyLayersPowered = false;
+                            }
+                            }
                         }
                 };
         }
 
-        if (undergroundManager.activeLayers > 0){
+        if (UndergroundManager.ActiveLayers > 0){
             if (extraPower > 0)
             {
                 yield return new Command_Action
@@ -282,9 +286,8 @@ public class Building_MiningShaft : Building
                     action = () =>
                     {
                         extraPower -= 100;
-                        m_Power.Props.basePowerConsumption = PowerAvailable() + idlePowerNeeded;
+                        m_Power.Props.basePowerConsumption = idlePowerNeeded + baseExtraPower + extraPower;
                         m_Power.SetUpPowerVars();
-                        wantsUpdateElectricity = true;
                     },
                     defaultLabel = "Deeprim.DecreasePower".Translate(),
                     defaultDesc = "Deeprim.DecreasePowerTT".Translate(extraPower - 100),
@@ -297,9 +300,8 @@ public class Building_MiningShaft : Building
                 action = () =>
                 {
                     extraPower += 100;
-                    m_Power.Props.basePowerConsumption = PowerAvailable() + idlePowerNeeded;
+                    m_Power.Props.basePowerConsumption = idlePowerNeeded + baseExtraPower + extraPower;
                     m_Power.SetUpPowerVars();
-                    wantsUpdateElectricity = true;
                 },
                 defaultLabel = "Deeprim.IncreasePower".Translate(),
                 defaultDesc = "Deeprim.IncreasePowerTT".Translate(extraPower + 100),
@@ -338,6 +340,7 @@ public class Building_MiningShaft : Building
             }
             UndergroundManager.NextLayer = 1;
             UndergroundManager.ActiveLayers = 0;
+            UndergroundManager.AnyLayersPowered = false;
         }
 
         var originalValue = allowDestroyNonDestroyable;
@@ -349,7 +352,7 @@ public class Building_MiningShaft : Building
     public override string GetInspectString()
     {
         var stringBuilder = new StringBuilder();
-        int nextLayer = undergroundManager != null ? undergroundManager.NextLayer * 10 : 10;
+        int nextLayer = UndergroundManager != null ? UndergroundManager.NextLayer * 10 : 10;
         stringBuilder.AppendLine(drillNew
             ? "Deeprim.TargetNewLayerAtDepth".Translate(nextLayer)
             : "Deeprim.TargetLayerAt".Translate(targetedLevel));
@@ -424,16 +427,15 @@ public class Building_MiningShaft : Building
         {
             return 0;
         }
-        var currentActiveLayers = manager.ActiveLayers;
-        if (currentActiveLayers == 0)
+        if (manager.ActiveLayers == 0)
         {
             return 0;
         }
 
-        var powerAvailable = extraPower;
+        var powerAvailable = 0f;
         if (mode != 1)
         {
-            powerAvailable += defaultPowerNeeded - idlePowerNeeded;
+            powerAvailable = baseExtraPower + extraPower;
         }
 
         if (powerAvailable < 0)
@@ -441,7 +443,7 @@ public class Building_MiningShaft : Building
             return 0;
         }
 
-        return -(float)Math.Round(powerAvailable / currentActiveLayers);
+        return -(float)Math.Round(powerAvailable / manager.ActiveLayers);
     }
 
     private void PrepareToAbandon()
@@ -461,8 +463,11 @@ public class Building_MiningShaft : Building
         SyncConnectedMap();
         var lift = connectedLift as Building_SpawnedLift;
         if (lift != null){
-            if (lift.usesPower){
+            if (lift.m_Flick.SwitchIsOn){
                 UndergroundManager.ActiveLayers--;
+                if (UndergroundManager.ActiveLayers == 0){
+                    UndergroundManager.AnyLayersPowered = false;
+                }
             }
         }
         connectedMapParent?.AbandonLift(connectedLift, force);
@@ -545,7 +550,6 @@ public class Building_MiningShaft : Building
             Log.Warning(
                 "Spawned lift isn't deeprim's lift. Someone's editing this mod! And doing it badly!!! Very badly.");
         }
-        wantsUpdateElectricity = true;
     }
 
     private void FinishedDrill()
@@ -714,17 +718,28 @@ public class Building_MiningShaft : Building
         {
             ((Building_SpawnedLift)connectedLift).surfaceMap = Map;
         }
-
-        if (!DeepRimMod.instance.DeepRimSettings.LowTechMode && wantsUpdateElectricity)
-        {
-            if (UndergroundManager.ActiveLayers > 0){
-                m_Power.Props.basePowerConsumption = defaultPowerNeeded + extraPower;
+        if (!DeepRimMod.instance.DeepRimSettings.LowTechMode){
+            //handle a case where the mod is updated in an existing save and ActiveLayers becomes 0 for some reason when it shouldn't be
+            if(UndergroundManager.ActiveLayers == 0 && UndergroundManager.AnyLayersPowered == true){
+                DeepRimMod.LogWarn($"UndergroundManager.ActiveLayers was not initialized. Setting variable to {UndergroundManager.layersState.Count()}.");
+                UndergroundManager.ActiveLayers = UndergroundManager.layersState.Count();
+                if (UndergroundManager.layersState.Count() == 0){
+                    UndergroundManager.AnyLayersPowered = false;
+                }
             }
-            else {
+            
+            if (m_Power.PowerOn && UndergroundManager.ActiveLayers > 0 
+            && m_Power.Props.basePowerConsumption != idlePowerNeeded + baseExtraPower + extraPower)
+            {
+                DeepRimMod.LogWarn("Updating power to ON state");
+                m_Power.Props.basePowerConsumption = idlePowerNeeded + baseExtraPower + extraPower;          
+                m_Power.SetUpPowerVars();
+            }
+            else if (UndergroundManager.ActiveLayers < 1 && m_Power.Props.basePowerConsumption != idlePowerNeeded){
+                DeepRimMod.LogWarn("Updating power to OFF state.");
                 m_Power.Props.basePowerConsumption = idlePowerNeeded;
+                m_Power.SetUpPowerVars();
             }
-            m_Power.SetUpPowerVars();
-            wantsUpdateElectricity = false;
         }
 
         if (GenTicks.TicksGame % GenTicks.TickRareInterval == 0)

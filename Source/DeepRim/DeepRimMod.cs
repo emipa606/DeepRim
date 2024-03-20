@@ -147,6 +147,15 @@ internal class DeepRimMod : Mod
         Log.Message($"[DeepRim]: {message}");
     }
 
+    public static void LogWarn(string message, bool force = false){
+        if (!force && !instance.DeepRimSettings.VerboseLogging)
+        {
+            return;
+        }
+
+        Log.Warning($"[DeepRim]: {message}");
+    }
+
     public void Reset()
     {
         instance.DeepRimSettings.OreDensity = 16;
