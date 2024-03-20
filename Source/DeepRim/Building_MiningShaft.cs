@@ -19,6 +19,8 @@ public class Building_MiningShaft : Building
 
     private const float idlePowerNeeded = 200;
 
+    private bool wantsUpdateElectricity = true;
+
     private readonly List<ThingCategory> invalidCategories =
     [
         ThingCategory.None, ThingCategory.Ethereal, ThingCategory.Filth, ThingCategory.Gas,
@@ -235,6 +237,7 @@ public class Building_MiningShaft : Building
                 defaultDesc = "Deeprim.SendPowerToLayerTT".Translate(),
                 isActive = () => lift.usesPower,
                 toggleAction = delegate { 
+                    wantsUpdateElectricity = true;
                     lift.TogglePower();
                     if (lift.usesPower){undergroundManager.ActiveLayers++;}
                     else {undergroundManager.ActiveLayers--;}
@@ -252,6 +255,7 @@ public class Building_MiningShaft : Building
                     extraPower -= 100;
                     m_Power.Props.basePowerConsumption = defaultPowerNeeded + extraPower;
                     m_Power.SetUpPowerVars();
+                    wantsUpdateElectricity = true;
                 },
                 defaultLabel = "Deeprim.DecreasePower".Translate(),
                 defaultDesc = "Deeprim.DecreasePowerTT".Translate(extraPower - 100),
@@ -266,6 +270,7 @@ public class Building_MiningShaft : Building
                 extraPower += 100;
                 m_Power.Props.basePowerConsumption = defaultPowerNeeded + extraPower;
                 m_Power.SetUpPowerVars();
+                wantsUpdateElectricity = true;
             },
             defaultLabel = "Deeprim.IncreasePower".Translate(),
             defaultDesc = "Deeprim.IncreasePowerTT".Translate(extraPower + 100),
@@ -510,6 +515,7 @@ public class Building_MiningShaft : Building
             Log.Warning(
                 "Spawned lift isn't deeprim's lift. Someone's editing this mod! And doing it badly!!! Very badly.");
         }
+        wantsUpdateElectricity = true;
     }
 
     private void FinishedDrill()
@@ -682,7 +688,7 @@ public class Building_MiningShaft : Building
             ((Building_SpawnedLift)connectedLift).surfaceMap = Map;
         }
 
-        if (!DeepRimMod.instance.DeepRimSettings.LowTechMode)
+        if (!DeepRimMod.instance.DeepRimSettings.LowTechMode && wantsUpdateElectricity)
         {
             if (UndergroundManager.ActiveLayers > 0){
                 m_Power.Props.basePowerConsumption = defaultPowerNeeded + extraPower;
@@ -691,6 +697,7 @@ public class Building_MiningShaft : Building
                 m_Power.Props.basePowerConsumption = idlePowerNeeded;
             }
             m_Power.SetUpPowerVars();
+            wantsUpdateElectricity = false;
         }
 
         if (GenTicks.TicksGame % GenTicks.TickRareInterval == 0)

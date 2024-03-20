@@ -123,6 +123,7 @@ public class UndergroundManager(Map map) : MapComponent(map)
     {
         base.ExposeData();
         Scribe_Values.Look(ref spawned, "spawned");
+        Scribe_Values.Look(ref activeLayers, "activeLayers");
         Scribe_Values.Look(ref nextLayer, "nextLayer");
         Scribe_Collections.Look(ref layersState, "layers", LookMode.Value, LookMode.Reference, ref list2,
             ref list3);
