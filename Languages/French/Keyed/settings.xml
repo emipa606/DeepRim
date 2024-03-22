@@ -15,7 +15,6 @@
   <Deeprim.BringingUp>L'éducation des enfants</Deeprim.BringingUp>
   <Deeprim.LayerDepth>Profondeur de la couche : {0}0m</Deeprim.LayerDepth>
   <Deeprim.TargetNewLayer>Cible : Nouvelle couche</Deeprim.TargetNewLayer>
-  <Deeprim.TargetNewLayerAtDepth>Cible : Nouvelle couche à la profondeur {0}m</Deeprim.TargetNewLayerAtDepth>
   <Deeprim.TargetLayerAt>Cible : Couche à la profondeur {0}0m</Deeprim.TargetLayerAt>
   <Deeprim.TransferTargetAt>Cible de transfert : Couche à la profondeur {0}0m</Deeprim.TransferTargetAt>
   <Deeprim.Progress>Progrès : {0}%</Deeprim.Progress>
@@ -66,6 +65,4 @@ NOTE : Le modèle n'est pas conçu pour avoir plus d'un arbre, le placer peut av
   <Deeprim.AbandonAll>Vous êtes sur le point de déconstruire le puits principal. Toutes les couches et tout ce qu'elles contiennent seront définitivement abandonnées. Il n'y a aucun moyen de revenir en arrière. Êtes-vous sûr de vouloir poursuivre la déconstruction ?</Deeprim.AbandonAll>
   <Deeprim.AbandonAllYes>Oui, détruisez tout</Deeprim.AbandonAllYes>
   <Deeprim.AbandonAllNo>Non, annuler</Deeprim.AbandonAllNo>
-  <Deeprim.OreDensity>Densité de minerai pour les nouvelles couches : {0}</Deeprim.OreDensity>
-  <Deeprim.OreDensityTT>Quantité de minerai qui apparaîtra dans les nouvelles couches (plus élevée = plus) [Par défaut : 16]</Deeprim.OreDensityTT>
 </LanguageData>
