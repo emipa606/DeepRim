@@ -144,8 +144,13 @@ public class Building_SpawnedLift : Building
         }
     }
 
-    private void BringUp()
+    public void BringUp()
     {
+        if (m_Power is { PowerOn: false })
+        {
+            Messages.Message("Deeprim.NoPower".Translate(), MessageTypeDefOf.RejectInput);
+            return;
+        }
         var cells = this.OccupiedRect().Cells;
         var anythingSent = false;
         foreach (var intVec in cells)
@@ -186,8 +191,13 @@ public class Building_SpawnedLift : Building
         Messages.Message("Deeprim.NothingToSend".Translate(), MessageTypeDefOf.RejectInput);
     }
 
-    private void SendDown(){
+    public void SendDown(){
     {
+        if (m_Power is { PowerOn: false })
+        {
+            Messages.Message("Deeprim.NoPower".Translate(), MessageTypeDefOf.RejectInput);
+            return;
+        }
         var targetLayer = parentDrill.UndergroundManager.layersState[parentDrill.targetedLevel];
         var cells = this.OccupiedRect().Cells;
         var anythingSent = false;
@@ -346,12 +356,12 @@ public class Building_SpawnedLift : Building
         }
         //DeepRimMod.LogWarn($"tempOffState: {TemporaryOffState}\nPrior Power: {PriorPowerState}\nFlick State: {m_Flick.SwitchIsOn}\nPower Available: {parentDrill.PowerAvailable()}");
         //Handle cutting power to the lifts if the parent loses power
-        if (TemporaryOffState && parentDrill.PowerAvailable() > 0){
+        if (TemporaryOffState && parentDrill.m_Power.PowerOn){
             DeepRimMod.LogWarn($"Lift {this} is no longer disabled due to lack of power");
             TemporaryOffState = false;
             if (PriorPowerState && !m_Flick.SwitchIsOn){m_Flick.DoFlick();}
         }
-        else if (!TemporaryOffState && parentDrill.PowerAvailable() == 0){
+        else if (!TemporaryOffState && !parentDrill.m_Power.PowerOn){
             Log.Warning($"Temporarily disabling lift {this} due to lack of power");
             TemporaryOffState = true;
             PriorPowerState = m_Flick.SwitchIsOn;

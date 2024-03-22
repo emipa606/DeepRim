@@ -38,7 +38,7 @@ public class Building_MiningShaft : Building
 
     private float extraPower;
 
-    private CompPowerTrader m_Power;
+    public CompPowerTrader m_Power;
 
     private int mode;
 
@@ -231,7 +231,7 @@ public class Building_MiningShaft : Building
             };
         }
 
-        if (!IsConnected)
+        if (!IsConnected || drillNew)
         {
             yield break;
         }
@@ -256,7 +256,7 @@ public class Building_MiningShaft : Building
         {
             yield break;
         }
-        if (!drillNew && m_Power.PowerOn){
+        if (m_Power.PowerOn){
             var lift = connectedLift as Building_SpawnedLift;
             yield return new Command_Toggle
                 {
@@ -674,37 +674,8 @@ public class Building_MiningShaft : Building
             Messages.Message("Deeprim.NoPower".Translate(), MessageTypeDefOf.RejectInput);
             return;
         }
-
-        var cells = connectedLift.OccupiedRect().Cells;
-        var anythingSent = false;
-        foreach (var intVec in cells)
-        {
-            var thingList = intVec.GetThingList(connectedMap);
-            var convertedLocation = HarmonyPatches.ConvertParentDrillLocation(
-                intVec, Map.Size, connectedMap.Size);
-            // ReSharper disable once ForCanBeConvertedToForeach, Things despawn, cannot use foreach
-            for (var index = 0; index < thingList.Count; index++)
-            {
-                var thing = thingList[index];
-                if (thing is not Pawn &&
-                    (thing is not ThingWithComps && thing is null || thing is Building))
-                {
-                    continue;
-                }
-
-                thing.DeSpawn();
-                GenSpawn.Spawn(thing, convertedLocation, Map);
-                anythingSent = true;
-            }
-        }
-
-        if (!anythingSent)
-        {
-            Messages.Message("Deeprim.NothingToSend".Translate(), MessageTypeDefOf.RejectInput);
-            return;
-        }
-
-        Messages.Message("Deeprim.BringingUp".Translate(), MessageTypeDefOf.PositiveEvent);
+        var lift = connectedLift as Building_SpawnedLift;
+        lift.BringUp();
     }
 
     public void SendFromStorages(){
