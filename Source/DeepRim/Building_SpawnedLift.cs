@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using RimWorld;
+using Steamworks;
 using UnityEngine;
 using Verse;
 
@@ -15,7 +16,26 @@ public class Building_SpawnedLift : Building
 
     public CompFlickable m_Flick;
 
+    public bool TemporaryOffState = false;
+    public bool PriorPowerState = true;
+
     public Building_MiningShaft parentDrill;
+
+    private HashSet<Building_Storage> nearbyStorages = [];
+
+    private int transferLevel = -1;
+
+    public int TransferLevel {
+        get {
+            if (transferLevel == -1){
+                transferLevel = this.depth;
+            }
+            return transferLevel;
+        }
+        set {
+            transferLevel = value;
+        }
+    }
 
     public Map surfaceMap;
  
@@ -34,6 +54,18 @@ public class Building_SpawnedLift : Building
 
         string targetLayerAt = parentDrill.drillNew ? "" : "Deeprim.TargetLayerAt".Translate(parentDrill.targetedLevel);
         if (targetLayerAt != ""){stringBuilder.AppendLine(targetLayerAt);}
+        var storages = this.CellsAdjacent8WayAndInside().Where(vec3 => vec3.GetFirstThing<Building_Storage>(Map) != null);
+        if (storages.Any())
+        {
+            if (TransferLevel == depth){
+                stringBuilder.AppendLine("Deeprim.TransferLevelNone".Translate());
+            }
+            else {
+                stringBuilder.AppendLine(TransferLevel > 0
+                        ? "Deeprim.TransferTargetAt".Translate(TransferLevel)
+                        : "Deeprim.TransferSurface".Translate());
+            }
+        }
 
         var baseString = base.GetInspectString();
         if (!string.IsNullOrEmpty(baseString))
@@ -50,6 +82,7 @@ public class Building_SpawnedLift : Building
         {
             yield break;
         }
+        if (!TemporaryOffState){
             yield return new Command_Toggle
                 {
                     icon = HarmonyPatches.UI_ToggleSendPower,
@@ -70,6 +103,7 @@ public class Building_SpawnedLift : Building
                             }
                         }
                 };
+        }
             yield return new Command_TargetLayer(true)
         {
             shaft = parentDrill,
@@ -79,6 +113,19 @@ public class Building_SpawnedLift : Building
             defaultDesc = "Deeprim.ChangeTargetExistingTT".Translate(parentDrill.targetedLevel * 10),
             icon = HarmonyPatches.UI_Option
         };
+        var storages = this.CellsAdjacent8WayAndInside().Where(vec3 => vec3.GetFirstThing<Building_Storage>(Map) != null);
+        if (storages.Any()){
+            yield return new Command_TransferLayer(this)
+            {
+                lift = this,
+                manager = parentDrill.Map.components.Find(item => item is UndergroundManager) as UndergroundManager,
+                action = delegate { },
+                defaultLabel = "Deeprim.ChangeTransferTarget".Translate(),
+                defaultDesc = "Deeprim.ChangeTransferTargetTT".Translate(this.TransferLevel * 10),
+                icon = HarmonyPatches.UI_Transfer
+
+            };
+        }
         yield return new Command_Action
         {
             action = BringUp,
@@ -86,7 +133,7 @@ public class Building_SpawnedLift : Building
             defaultDesc = "Deeprim.BringUpTT".Translate(),
             icon = HarmonyPatches.UI_BringUp
         };
-        if (parentDrill.targetedLevel != -1){
+        if (parentDrill.targetedLevel > 0 && parentDrill.targetedLevel != depth){
             yield return new Command_Action
             {
                 action = SendDown,
@@ -183,12 +230,106 @@ public class Building_SpawnedLift : Building
     }
     }
 
+    private void Transfer(Map targetMap, IntVec3 targetPosition, List<Building_Storage> connectedStorages)
+    {
+        foreach (var storage in connectedStorages)
+        {
+            var items = storage.GetSlotGroup().HeldThings;
+            if (items == null || items.Any() == false)
+            {
+                DeepRimMod.LogMessage($"Storage {storage} by lift {this} has no items");
+                continue;
+            }
+
+            var itemList = items.ToList();
+            DeepRimMod.LogMessage($"Transferring {itemList.Count} items from {storage} by lift {this} to layer at {TransferLevel*10}m");
+            // ReSharper disable once ForCanBeConvertedToForeach, Things despawn, cannot use foreach
+            for (var index = 0; index < itemList.Count; index++)
+            {
+                var thing = itemList[index];
+                thing.DeSpawn();
+                GenSpawn.Spawn(thing, targetPosition, targetMap);
+            }
+        }
+    }
+
+    public void SendFromStorages(){
+            nearbyStorages = [];
+            foreach (var cell in this.OccupiedRect().AdjacentCells)
+            {
+                var Storages = cell.GetThingList(Map).Where(thing => thing is Building_Storage);
+                foreach (Building_Storage storage in Storages){
+                    nearbyStorages.Add(storage);
+                }
+            }
+            if (!nearbyStorages.Any()){return;}
+            Map targetMap = null;
+            var targetPosition = IntVec3.Invalid;
+            var manager = parentDrill.UndergroundManager;
+            if (parentDrill.UndergroundManager?.layersState != null)
+            {
+                if (TransferLevel != depth)
+                {
+                    if (TransferLevel == 0){
+                        targetMap = parentDrill.Map;
+                        var transferShafts = targetMap?.listerBuildings.AllBuildingsColonistOfDef(ThingDef.Named("miningshaft"));
+                        if (transferShafts != null && transferShafts.Any()){
+                            targetPosition = transferShafts.First().Position;
+                        }
+                        else {
+                            DeepRimMod.LogMessage("Parent mineshaft was not found. How did we get here?");
+                        }
+                    }
+                    else {
+                        if (manager?.layersState.ContainsKey(TransferLevel) == true)
+                        {
+                            targetMap = manager?.layersState[TransferLevel]?.Map;
+                            var transferLifts =
+                                targetMap?.listerBuildings.AllBuildingsColonistOfDef(ThingDef.Named("undergroundlift"));
+                            if (transferLifts != null && transferLifts.Any())
+                            {
+                                targetPosition = transferLifts.First().Position;
+                            }
+                            else
+                            {
+                                DeepRimMod.LogMessage("Found no spawned lift in targeted layer");
+                            }
+                        }
+                    }
+                }
+                else {
+                    DeepRimMod.LogMessage("Underground lift transfer level is set to None");
+                    return;
+                }
+            }
+
+            if (targetMap == null || targetPosition == IntVec3.Invalid || !nearbyStorages.Any())
+            {
+                return;
+            }
+
+            DeepRimMod.LogMessage($"Lift {this} Found {nearbyStorages.Count} storages to transfer items from");
+            if (m_Power is not { PowerOn: false })
+            {
+                Transfer(targetMap, targetPosition, nearbyStorages.ToList());
+            }
+            else
+            {
+                DeepRimMod.LogMessage($"Unpowered lift {this} refuses to send items");
+            }
+    }
+
     public override void Tick()
     {
         base.Tick();
         if (!Current.Game.Maps.Contains(surfaceMap)){
             Current.Game.DeinitAndRemoveMap_NewTemp(this.Map, true);
         }
+        if (GenTicks.TicksGame % GenTicks.TickRareInterval == 0)
+        {
+            this.SendFromStorages();
+        }
+        //Why every 78 ticks?
         if (GenTicks.TicksGame % 78 != 0)
         {
             return;
@@ -201,7 +342,23 @@ public class Building_SpawnedLift : Building
 
         if (m_Power != null && parentDrill != null)
         {
-            m_Power.Props.basePowerConsumption = parentDrill.PowerAvailable();
+            m_Power.Props.basePowerConsumption = 0 - parentDrill.PowerAvailable();
+        }
+        //DeepRimMod.LogWarn($"tempOffState: {TemporaryOffState}\nPrior Power: {PriorPowerState}\nFlick State: {m_Flick.SwitchIsOn}\nPower Available: {parentDrill.PowerAvailable()}");
+        //Handle cutting power to the lifts if the parent loses power
+        if (TemporaryOffState && parentDrill.PowerAvailable() > 0){
+            DeepRimMod.LogWarn($"Lift {this} is no longer disabled due to lack of power");
+            TemporaryOffState = false;
+            if (PriorPowerState && !m_Flick.SwitchIsOn){m_Flick.DoFlick();}
+        }
+        else if (!TemporaryOffState && parentDrill.PowerAvailable() == 0){
+            Log.Warning($"Temporarily disabling lift {this} due to lack of power");
+            TemporaryOffState = true;
+            PriorPowerState = m_Flick.SwitchIsOn;
+            if (m_Flick.SwitchIsOn){
+                m_Flick.DoFlick();
+                }
+            
         }
     }
     public void TogglePower(){
@@ -267,7 +424,7 @@ public class Building_SpawnedLift : Building
 
         if (parentDrill != null)
         {
-            m_Power.Props.basePowerConsumption = parentDrill.PowerAvailable();
+            m_Power.Props.basePowerConsumption = 0 - parentDrill.PowerAvailable();
         }
         else
         {

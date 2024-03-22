@@ -34,6 +34,7 @@
   <Deeprim.NoMoreShafts>You cannot place more than one shaft. You can hold SHIFT while placing to override this.
 NOTE: The mod is not designed to have more than one shaft, placing this may have unintended consequences!</Deeprim.NoMoreShafts>
   <Deeprim.None>None</Deeprim.None>
+  <Deeprim.TransferLevelNone>Transfer target: None</Deeprim.TransferLevelNone>
   <Deeprim.Surface>Up to surface</Deeprim.Surface>
   <Deeprim.TransferSurface>Transfer target: Up to surface</Deeprim.TransferSurface>
   <Deeprim.GeneratingMap>Drilling is complete, generating new map. This may take a while depending on the map-size used.</Deeprim.GeneratingMap>

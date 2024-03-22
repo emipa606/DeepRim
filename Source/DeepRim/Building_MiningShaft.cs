@@ -6,6 +6,7 @@ using System.Text;
 using RimWorld;
 using RimWorld.Planet;
 using UnityEngine;
+using UnityEngine.Analytics;
 using Verse;
 
 namespace DeepRim;
@@ -151,9 +152,10 @@ public class Building_MiningShaft : Building
             icon = HarmonyPatches.UI_Option
         };
 
-        if (nearbyStorages.Any())
+        var storages = this.CellsAdjacent8WayAndInside().Where(vec3 => vec3.GetFirstThing<Building_Storage>(Map) != null);
+        if (storages.Any())
         {
-            yield return new Command_TransferLayer
+            yield return new Command_TransferLayer(this)
             {
                 shaft = this,
                 manager = Map.components.Find(item => item is UndergroundManager) as UndergroundManager,
@@ -254,7 +256,7 @@ public class Building_MiningShaft : Building
         {
             yield break;
         }
-        if (!drillNew){
+        if (!drillNew && m_Power.PowerOn){
             var lift = connectedLift as Building_SpawnedLift;
             yield return new Command_Toggle
                 {
@@ -357,11 +359,12 @@ public class Building_MiningShaft : Building
             ? "Deeprim.TargetNewLayerAtDepth".Translate(nextLayer)
             : "Deeprim.TargetLayerAt".Translate(targetedLevel));
 
-        if (nearbyStorages.Any())
+        var storages = this.CellsAdjacent8WayAndInside().Where(vec3 => vec3.GetFirstThing<Building_Storage>(Map) != null);
+        if (storages.Any())
         {
             stringBuilder.AppendLine(transferLevel > 0
                 ? "Deeprim.TransferTargetAt".Translate(transferLevel)
-                : "Deeprim.TransferSurface".Translate());
+                : "Deeprim.TransferLevelNone".Translate());
         }
 
         if (!DeepRimMod.instance.DeepRimSettings.LowTechMode)
@@ -443,7 +446,7 @@ public class Building_MiningShaft : Building
             return 0;
         }
 
-        return -(float)Math.Round(powerAvailable / manager.ActiveLayers);
+        return (float)Math.Round(powerAvailable / manager.ActiveLayers);
     }
 
     private void PrepareToAbandon()
@@ -653,7 +656,7 @@ public class Building_MiningShaft : Building
             }
 
             var itemList = items.ToList();
-            DeepRimMod.LogMessage($"{storage} has {itemList.Count} items, transfering");
+            DeepRimMod.LogMessage($"Transferring {itemList.Count} items from {storage} by shaft {this} to layer at {transferLevel*10}m");
             // ReSharper disable once ForCanBeConvertedToForeach, Things despawn, cannot use foreach
             for (var index = 0; index < itemList.Count; index++)
             {
@@ -704,6 +707,56 @@ public class Building_MiningShaft : Building
         Messages.Message("Deeprim.BringingUp".Translate(), MessageTypeDefOf.PositiveEvent);
     }
 
+    public void SendFromStorages(){
+            nearbyStorages = [];
+            foreach (var cell in this.OccupiedRect().AdjacentCells)
+            {
+                var Storages = cell.GetThingList(Map).Where(thing => thing is Building_Storage);
+                foreach (Building_Storage storage in Storages){
+                    nearbyStorages.Add(storage);
+                }
+            }
+
+            Map targetMap = null;
+            var targetPostition = IntVec3.Invalid;
+            if (UndergroundManager?.layersState != null)
+            {
+                if (transferLevel != 0)
+                {
+                    if (UndergroundManager?.layersState.ContainsKey(transferLevel) == true)
+                    {
+                        targetMap = UndergroundManager.layersState[transferLevel]?.Map;
+                        var transferLifts =
+                            targetMap?.listerBuildings.AllBuildingsColonistOfDef(ThingDef.Named("undergroundlift"));
+                        if (transferLifts != null && transferLifts.Any())
+                        {
+                            targetPostition = transferLifts.First().Position;
+                        }
+                        else
+                        {
+                            DeepRimMod.LogMessage("Found no spawned lift in targeted layer");
+                            return;
+                        }
+                    }
+                }
+            }
+
+            if (targetMap == null || targetPostition == IntVec3.Invalid || !nearbyStorages.Any())
+            {
+                return;
+            }
+
+            DeepRimMod.LogMessage($"Found {nearbyStorages.Count} storages to transfer items from");
+            if (m_Power is not { PowerOn: false })
+            {
+                Transfer(targetMap, targetPostition, nearbyStorages.ToList());
+            }
+            else
+            {
+                DeepRimMod.LogMessage("Unpowered mining shaft refuses to send items");
+            }
+    }
+
     public void SyncConnectedMap()
     {
         connectedMapParent = UndergroundManager?.layersState[targetedLevel];
@@ -744,104 +797,7 @@ public class Building_MiningShaft : Building
 
         if (GenTicks.TicksGame % GenTicks.TickRareInterval == 0)
         {
-            nearbyStorages = [];
-            foreach (var cell in this.OccupiedRect().AdjacentCells)
-            {
-                var building = cell.GetFirstBuilding(Map);
-                var test = cell.GetThingList(Map).Where(thing => thing is Building_Storage);
-                foreach (Building_Storage storage in test){
-                    nearbyStorages.Add(storage);
-                }
-            }
-
-            Map targetMap = null;
-            var targetPostition = IntVec3.Invalid;
-            if (UndergroundManager?.layersState != null)
-            {
-                if (transferLevel > 0)
-                {
-                    if (UndergroundManager?.layersState.ContainsKey(transferLevel) == true)
-                    {
-                        targetMap = UndergroundManager.layersState[transferLevel]?.Map;
-                        var transferLifts =
-                            targetMap?.listerBuildings.AllBuildingsColonistOfDef(ThingDef.Named("undergroundlift"));
-                        if (transferLifts != null && transferLifts.Any())
-                        {
-                            targetPostition = transferLifts.First().Position;
-                        }
-                        else
-                        {
-                            DeepRimMod.LogMessage("Found no spawned lift in targeted layer");
-                        }
-                    }
-                }
-                else
-                {
-                    targetMap = Map;
-                    targetPostition = PositionHeld;
-                }
-            }
-
-            if (targetMap != null && targetPostition != IntVec3.Invalid)
-            {
-                List<Building_Storage> storagesToTransferFrom = [];
-
-                if (targetMap != Map)
-                {
-                    storagesToTransferFrom = nearbyStorages.ToList();
-                }
-
-                foreach (var layer in UndergroundManager.layersState)
-                {
-                    var connectedTransferMap = layer.Value.Map;
-                    if (connectedTransferMap == null || targetMap == connectedTransferMap)
-                    {
-                        DeepRimMod.LogMessage("Found no connected map to transfer to or we are in the target map");
-                        continue;
-                    }
-
-                    var transferLifts =
-                        connectedTransferMap.listerBuildings.AllBuildingsColonistOfDef(
-                            ThingDef.Named("undergroundlift"));
-                    if (!transferLifts.Any())
-                    {
-                        DeepRimMod.LogMessage("Found no spawned lift in targeted layer");
-                        continue;
-                    }
-
-                    foreach (var buildingSpawnedLift in transferLifts)
-                    {
-                        var adjacentCells = buildingSpawnedLift?.OccupiedRect().AdjacentCells;
-                        if (adjacentCells == null)
-                        {
-                            continue;
-                        }
-
-                        foreach (var cell in adjacentCells)
-                        {
-                            var building = cell.GetFirstBuilding(connectedTransferMap);
-                            switch (building)
-                            {
-                                case null:
-                                    continue;
-                                case Building_Storage storage:
-                                    storagesToTransferFrom.Add(storage);
-                                    break;
-                            }
-                        }
-                    }
-                }
-
-                DeepRimMod.LogMessage($"Found {storagesToTransferFrom.Count} storages to transfer items from");
-                if (m_Power is not { PowerOn: false })
-                {
-                    Transfer(targetMap, targetPostition, storagesToTransferFrom);
-                }
-                else
-                {
-                    DeepRimMod.LogMessage("Either shaft is not powered or no target-layer selected");
-                }
-            }
+            this.SendFromStorages();
         }
 
         if (DeepRimMod.instance.DeepRimSettings.LowTechMode)
