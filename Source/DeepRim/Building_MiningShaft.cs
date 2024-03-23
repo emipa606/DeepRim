@@ -644,6 +644,18 @@ public class Building_MiningShaft : Building
         Find.Selector.Select(connectedLift);
     }
 
+    private void BringUp()
+    {
+        if (m_Power is { PowerOn: false })
+        {
+            Messages.Message("Deeprim.NoPower".Translate(), MessageTypeDefOf.RejectInput);
+            return;
+        }
+        var lift = connectedLift as Building_SpawnedLift;
+        lift.BringUp();
+    }
+
+
     private void Transfer(Map targetMap, IntVec3 targetPosition, List<Building_Storage> connectedStorages)
     {
         foreach (var storage in connectedStorages)
@@ -665,17 +677,6 @@ public class Building_MiningShaft : Building
                 GenSpawn.Spawn(thing, targetPosition, targetMap);
             }
         }
-    }
-
-    private void BringUp()
-    {
-        if (m_Power is { PowerOn: false })
-        {
-            Messages.Message("Deeprim.NoPower".Translate(), MessageTypeDefOf.RejectInput);
-            return;
-        }
-        var lift = connectedLift as Building_SpawnedLift;
-        lift.BringUp();
     }
 
     public void SendFromStorages(){
@@ -734,7 +735,11 @@ public class Building_MiningShaft : Building
         connectedMap = UndergroundManager?.layersState[targetedLevel]?.Map;
         connectedLift = connectedMap?.listerBuildings.AllBuildingsColonistOfClass<Building_SpawnedLift>().FirstOrDefault();
     }
-
+    public void recountWealthSometimes(){
+        if(Find.TickManager.TicksGame % 5000f == 0){
+            Map.wealthWatcher.ForceRecount();
+        }       
+    }
     public override void Tick()
     {
         base.Tick();
@@ -765,12 +770,11 @@ public class Building_MiningShaft : Building
                 m_Power.SetUpPowerVars();
             }
         }
-
         if (GenTicks.TicksGame % GenTicks.TickRareInterval == 0)
         {
             this.SendFromStorages();
         }
-
+        recountWealthSometimes();
         if (DeepRimMod.instance.DeepRimSettings.LowTechMode)
         {
             switch (ChargeLevel)
