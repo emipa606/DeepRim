@@ -99,7 +99,6 @@ internal class DeepRimMod : Mod
         listing_Standard.Gap();
         var label = MapSize > 5 ? "Deeprim.MapSizeSlider".Translate(MapSize) : "Deeprim.MapSizeSlider".Translate("Deeprim.Inherited".Translate());
         MapSize = (int)listing_Standard.SliderLabeled(label, MapSize, 0, 500, 0.3f, "Deeprim.MapSizeSliderTT".Translate());
-        listing_Standard.Gap();
         label = "MapSizeDesc".Translate(MapSize, MapSize * MapSize);
         switch (MapSize)
         {
