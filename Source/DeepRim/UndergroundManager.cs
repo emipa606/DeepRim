@@ -76,6 +76,7 @@ public class UndergroundManager(Map map) : MapComponent(map)
 
     public void InsertLayer(UndergroundMapParent mp)
     {
+        DeepRimMod.LogMessage($"Drilled new layer at depth {NextLayer} with ore density {DeepRimMod.instance.DeepRimSettings.OreDensity}");
         ActiveLayers++;
         layersState.Add(NextLayer, mp);
         mp.depth = NextLayer;
