@@ -15,20 +15,6 @@ public static class HarmonyPatches
     private static readonly Type patchType = typeof(HarmonyPatches);
 
 
-    public static readonly int[] mapSizes =
-    [
-        0,
-        75,
-        125,
-        200,
-        225,
-        250,
-        275,
-        300,
-        325
-    ];
-
-
     public static readonly Texture2D UI_Send = ContentFinder<Texture2D>.Get("UI/sendDown");
 
     public static readonly Texture2D UI_BringUp = ContentFinder<Texture2D>.Get("UI/bringUp");

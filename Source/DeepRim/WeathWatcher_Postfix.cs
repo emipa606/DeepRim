@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using DeepRim;
 using HarmonyLib;
@@ -15,14 +17,20 @@ public static class WealthWatcherForceRecount_Patch
             DeepRimMod.LogWarn("Did not find any mineshafts in forced map wealth recount");
             return;
         }
-
+        float DepthValueBase = (float)Math.Round((float)DeepRimMod.instance.DeepRimSettings.DepthValueBase / 100, 2);
+        float DepthValueFalloff = (float)Math.Round((float)DeepRimMod.instance.DeepRimSettings.DepthValueFalloff / 100, 2);
+        DeepRimMod.LogWarn($"Adding colony wealth from underground layers. Base % value is {DepthValueBase}, % fall-off per layer is {DepthValueFalloff}");
         foreach (KeyValuePair<int, UndergroundMapParent> layer in shaft.UndergroundManager.layersState){
             Map map = layer.Value.Map;
-            DeepRimMod.LogMessage($"Updating mining shaft parent map wealth using underground layer {map}");
-            ___wealthFloorsOnly += map.wealthWatcher.WealthFloorsOnly;
-            ___wealthBuildings += map.wealthWatcher.WealthBuildings;
-            ___wealthPawns += map.wealthWatcher.WealthPawns;
-            ___wealthItems += map.wealthWatcher.WealthItems;
+            float PercentAdjustment = DepthValueBase * (1 - (DepthValueFalloff * layer.Key));
+            PercentAdjustment = PercentAdjustment >= 0 ? PercentAdjustment : 0;
+            //EXAMPLE MATH if valueBase is 0.8, falloff is 0.1
+            //For each layer, wealth percent added would be: [1: 0.72, 2: 0.8, 3: 0.7 ... 10: 0]
+            DeepRimMod.LogMessage($"Adding layer value * {PercentAdjustment} for layer at depth {layer.Key}");
+            ___wealthFloorsOnly += map.wealthWatcher.WealthFloorsOnly * PercentAdjustment;
+            ___wealthBuildings += map.wealthWatcher.WealthBuildings * PercentAdjustment;
+            ___wealthPawns += map.wealthWatcher.WealthPawns * PercentAdjustment;
+            ___wealthItems += map.wealthWatcher.WealthItems * PercentAdjustment;
         }
     }
 }

@@ -146,98 +146,13 @@ public class Building_SpawnedLift : Building
 
     public void BringUp()
     {
-        if (m_Power is { PowerOn: false })
-        {
-            Messages.Message("Deeprim.NoPower".Translate(), MessageTypeDefOf.RejectInput);
-            return;
-        }
-        var cells = this.OccupiedRect().Cells;
-        var anythingSent = false;
-        foreach (var intVec in cells)
-        {
-            var thingList = intVec.GetThingList(Map);
-            var convertedLocation = HarmonyPatches.ConvertParentDrillLocation(
-                intVec, Map.Size, surfaceMap.Size);
-            // ReSharper disable once ForCanBeConvertedToForeach, Things despawn, cannot use foreach
-            for (var index = 0; index < thingList.Count; index++)
-            {
-                var thing = thingList[index];
-                if (thing is not Pawn && (thing is not ThingWithComps && thing == null || thing is Building))
-                {
-                    continue;
-                }
-
-                thing.DeSpawn();
-                GenSpawn.Spawn(thing, convertedLocation, surfaceMap);
-                anythingSent = true;
-            }
-        }
-
-    
-
-        if (anythingSent)
-        {
-            Messages.Message("Deeprim.BringingUp".Translate(), MessageTypeDefOf.PositiveEvent);
-            if (!Event.current.control)
-            {
-                return;
-            }
-            Current.Game.CurrentMap = surfaceMap;
-            Find.Selector.Select(parentDrill);
-
-            return;
-        }
-
-        Messages.Message("Deeprim.NothingToSend".Translate(), MessageTypeDefOf.RejectInput);
+        LiftUtils.StageSend(this, true);
+        return;
     }
 
     public void SendDown(){
-    {
-        if (m_Power is { PowerOn: false })
-        {
-            Messages.Message("Deeprim.NoPower".Translate(), MessageTypeDefOf.RejectInput);
-            return;
-        }
-        var targetLayer = parentDrill.UndergroundManager.layersState[parentDrill.targetedLevel];
-        var cells = this.OccupiedRect().Cells;
-        var anythingSent = false;
-        foreach (var intVec in cells)
-        {
-            var thingList = intVec.GetThingList(Map);
-            var convertedLocation = HarmonyPatches.ConvertParentDrillLocation(
-                intVec, Map.Size, targetLayer.Map.Size);
-            // ReSharper disable once ForCanBeConvertedToForeach, Things despawn, cannot use foreach
-            for (var index = 0; index < thingList.Count; index++)
-            {
-                var thing = thingList[index];
-                if (thing is not Pawn && (thing is not ThingWithComps && thing == null || thing is Building))
-                {
-                    continue;
-                }
-
-                thing.DeSpawn();
-                GenSpawn.Spawn(thing, convertedLocation, targetLayer.Map);
-                anythingSent = true;
-            }
-        }
-
-    
-
-        if (anythingSent)
-        {
-            Messages.Message("Deeprim.BringingUp".Translate(), MessageTypeDefOf.PositiveEvent);
-            if (!Event.current.control)
-            {
-                return;
-            }
-            Current.Game.CurrentMap = surfaceMap;
-            Find.Selector.Select(parentDrill);
-
-            return;
-        }
-
-        Messages.Message("Deeprim.NothingToSend".Translate(), MessageTypeDefOf.RejectInput);
-    }
+        LiftUtils.StageSend(this);
+        return;
     }
 
     private void Transfer(Map targetMap, IntVec3 targetPosition, List<Building_Storage> connectedStorages)
@@ -362,7 +277,7 @@ public class Building_SpawnedLift : Building
             if (PriorPowerState && !m_Flick.SwitchIsOn){m_Flick.DoFlick();}
         }
         else if (!TemporaryOffState && !parentDrill.m_Power.PowerOn){
-            Log.Warning($"Temporarily disabling lift {this} due to lack of power");
+            DeepRimMod.LogMessage($"Temporarily disabling lift {this} due to lack of power");
             TemporaryOffState = true;
             PriorPowerState = m_Flick.SwitchIsOn;
             if (m_Flick.SwitchIsOn){

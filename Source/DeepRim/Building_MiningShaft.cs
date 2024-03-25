@@ -18,15 +18,9 @@ public class Building_MiningShaft : Building
     private const float baseExtraPower = 100;
     private const float idlePowerNeeded = 200;
 
-    private readonly List<ThingCategory> invalidCategories =
-    [
-        ThingCategory.None, ThingCategory.Ethereal, ThingCategory.Filth, ThingCategory.Gas,
-        ThingCategory.Mote, ThingCategory.Projectile
-    ];
-
     public float ChargeLevel;
 
-    private Thing connectedLift;
+    public Thing connectedLift;
 
     public Map connectedMap;
 
@@ -499,7 +493,7 @@ public class Building_MiningShaft : Building
         var seedString = Find.World.info.seedString;
         Find.World.info.seedString = Rand.Range(0, 2147483646).ToString();
         var mapSize = Find.World.info.initialMapSize;
-        if (DeepRimMod.instance.DeepRimSettings.SpawnedMapSize != 0)
+        if (DeepRimMod.instance.DeepRimSettings.SpawnedMapSize > 5)
         {
             mapSize = new IntVec3(DeepRimMod.instance.DeepRimSettings.SpawnedMapSize, 1,
                 DeepRimMod.instance.DeepRimSettings.SpawnedMapSize);
@@ -594,65 +588,19 @@ public class Building_MiningShaft : Building
 
     private void Send()
     {
-        if (m_Power is { PowerOn: false })
-        {
-            Messages.Message("Deeprim.NoPower".Translate(), MessageTypeDefOf.RejectInput);
-            return;
-        }
-
-        var cells = this.OccupiedRect().Cells;
-        var anythingSent = false;
-        foreach (var intVec in cells)
-        {
-            var convertedLocation = HarmonyPatches.ConvertParentDrillLocation(
-                intVec, Map.Size, connectedMap.Size);
-            var thingList = intVec.GetThingList(Map);
-            // ReSharper disable once ForCanBeConvertedToForeach, Things despawn, cannot use foreach
-            for (var index = 0; index < thingList.Count; index++)
-            {
-                var thing = thingList[index];
-                if (thing is not Pawn &&
-                    (thing is not ThingWithComps && thing == null || thing is Building))
-                {
-                    continue;
-                }
-
-                if (invalidCategories.Contains(thing.def.category))
-                {
-                    continue;
-                }
-
-                thing.DeSpawn();
-                GenSpawn.Spawn(thing, convertedLocation, connectedMap);
-                anythingSent = true;
-            }
-        }
-
-        if (!anythingSent)
-        {
-            Messages.Message("Deeprim.NothingToSend".Translate(), MessageTypeDefOf.RejectInput);
-            return;
-        }
-
-        Messages.Message("Deeprim.SendingDown".Translate(), MessageTypeDefOf.PositiveEvent);
-        if (!Event.current.control)
-        {
-            return;
-        }
-
-        Current.Game.CurrentMap = connectedMap;
-        Find.Selector.Select(connectedLift);
+        LiftUtils.StageSend(this);
+        return;
     }
 
     private void BringUp()
     {
-        if (m_Power is { PowerOn: false })
+        if (m_Power is { PowerOn: false } && DeepRimMod.instance.DeepRimSettings.NoPowerPreventsLiftUse)
         {
             Messages.Message("Deeprim.NoPower".Translate(), MessageTypeDefOf.RejectInput);
             return;
         }
         var lift = connectedLift as Building_SpawnedLift;
-        lift.BringUp();
+        LiftUtils.StageSend(lift, true);
     }
 
 
