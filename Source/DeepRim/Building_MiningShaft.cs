@@ -493,7 +493,7 @@ public class Building_MiningShaft : Building
         var seedString = Find.World.info.seedString;
         Find.World.info.seedString = Rand.Range(0, 2147483646).ToString();
         var mapSize = Find.World.info.initialMapSize;
-        if (DeepRimMod.instance.DeepRimSettings.SpawnedMapSize > 5)
+        if (DeepRimMod.instance.DeepRimSettings.SpawnedMapSize >= 50)
         {
             mapSize = new IntVec3(DeepRimMod.instance.DeepRimSettings.SpawnedMapSize, 1,
                 DeepRimMod.instance.DeepRimSettings.SpawnedMapSize);

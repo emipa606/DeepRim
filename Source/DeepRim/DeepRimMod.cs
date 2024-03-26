@@ -97,16 +97,13 @@ internal class DeepRimMod : Mod
         listing_Standard.Gap(24);
         OreDensity = (int)listing_Standard.SliderLabeled("Deeprim.OreDensitySlider".Translate(OreDensity), OreDensity, 0, 500, 0.3f, "Deeprim.OreDensitySliderTT".Translate());
         listing_Standard.Gap();
-        var label = MapSize > 5 ? "Deeprim.MapSizeSlider".Translate(MapSize) : "Deeprim.MapSizeSlider".Translate("Deeprim.Inherited".Translate());
+        var label = MapSize >= 50 ? "Deeprim.MapSizeSlider".Translate(MapSize) : "Deeprim.MapSizeSlider".Translate("Deeprim.Inherited".Translate());
         MapSize = (int)listing_Standard.SliderLabeled(label, MapSize, 0, 500, 0.3f, "Deeprim.MapSizeSliderTT".Translate());
         label = "MapSizeDesc".Translate(MapSize, MapSize * MapSize);
         switch (MapSize)
         {
-            case <= 5:
+            case < 50:
                 label = $"{"Deeprim.Inherited".Translate()} - {"Deeprim.Same".Translate()}";
-                break;
-            case <= 25:
-                label += $" - {"Deeprim.Tiny".Translate()}";
                 break;
             case < 75:
                 label += $" - {"Deeprim.Little".Translate()}";
