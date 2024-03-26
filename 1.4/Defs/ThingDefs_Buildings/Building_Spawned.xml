@@ -27,6 +27,9 @@
         <basePowerConsumption>0</basePowerConsumption>
         <transmitsPower>true</transmitsPower>
       </li>
+      <li Class="CompProperties_Power">
+        <compClass>CompFlickable</compClass>
+      </li>
     </comps>
     <size>(3,3)</size>
     <blockPlants>true</blockPlants>

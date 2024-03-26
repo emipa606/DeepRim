@@ -48,7 +48,7 @@ public class UndergroundMapParent : MapParent
                     continue;
                 }
 
-                Log.Message("There's still remaining shafts leading to layer.");
+                DeepRimMod.LogMessage("There's still remaining shafts leading to layer.");
                 return;
             }
         }

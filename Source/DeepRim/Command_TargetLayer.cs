@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Verse;
 
 namespace DeepRim;
 
-public class Command_TargetLayer : Command_Action
+public class Command_TargetLayer(bool isUndergroundLift = false) : Command_Action
 {
     public UndergroundManager manager;
 
@@ -20,12 +21,15 @@ public class Command_TargetLayer : Command_Action
         var list = new List<FloatMenuOption>();
         if (shaft.CurMode != 1)
         {
-            list.Add(new FloatMenuOption("Deeprim.NewLayer".Translate(), delegate
-            {
-                shaft.drillNew = true;
-                shaft.PauseDrilling();
-            }));
-            using var enumerator = manager.layersState.GetEnumerator();
+            if(!isUndergroundLift){
+                list.Add(new FloatMenuOption("Deeprim.NewLayer".Translate(), delegate
+                {
+                    shaft.targetedLevel = -1;
+                    shaft.drillNew = true;
+                    shaft.PauseDrilling();
+                }));
+            }
+            using var enumerator = manager.layersState.OrderBy(x => x.Key).GetEnumerator();
             while (enumerator.MoveNext())
             {
                 var pair = enumerator.Current;

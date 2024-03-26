@@ -23,7 +23,7 @@
   <Deeprim.NoPower>Нет энергии</Deeprim.NoPower>
   <Deeprim.SendingDown>Отправка вниз</Deeprim.SendingDown>
   <Deeprim.NewLayer>Новый слой</Deeprim.NewLayer>
-  <Deeprim.SelectLayerAt>Слой на глубине: [0}0м</Deeprim.SelectLayerAt>
+  <Deeprim.SelectLayerAt>Слой на глубине: {0}0м</Deeprim.SelectLayerAt>
   <Deeprim.NotWhileDrilling>Невозможно изменить цель во время бурения</Deeprim.NotWhileDrilling>
   <Deeprim.None>Нет</Deeprim.None>
   <Deeprim.GeneratingMap>Бурение завершено, генерируется новая карта. Это может занять некоторое время в зависимости от размера используемой карты.</Deeprim.GeneratingMap>

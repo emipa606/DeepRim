@@ -36,7 +36,7 @@
       </li>
       <li Class="CompProperties_Power">
         <compClass>CompPowerTrader</compClass>
-        <basePowerConsumption>1200</basePowerConsumption>
+        <basePowerConsumption>200</basePowerConsumption>
       </li>
       <li Class="CompProperties_Flickable" />
     </comps>
