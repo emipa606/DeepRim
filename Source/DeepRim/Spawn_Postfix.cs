@@ -18,7 +18,7 @@ public static class PawnsArrivalModeWorker_EdgeWalkIn_Patch
             {
                 Map parentMap = lift.parentDrill.Map;
                 IntVec3 cell = CellFinder.RandomEdgeCell(parentMap);
-                IntVec3 loc = CellFinder.RandomClosewalkCellNear(cell, parentMap, 1000);
+                IntVec3 loc = CellFinder.RandomClosewalkCellNear(cell, parentMap, 20);
                 GenSpawn.Spawn(pawns[i], loc, parentMap, parms.spawnRotation);
             }
         return false;

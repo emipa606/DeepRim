@@ -19,6 +19,9 @@
       <downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
     </li>
   </modDependencies>
+  <loadBefore>
+    <li>Uuugggg.ReplaceStuff</li>
+  </loadBefore>
   <loadAfter>
     <li>brrainz.harmony</li>
   </loadAfter>
