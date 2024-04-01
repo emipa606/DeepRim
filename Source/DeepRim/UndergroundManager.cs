@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.PlayerLoop;
 using Verse;
 
 namespace DeepRim;
@@ -42,6 +43,9 @@ public class UndergroundManager(Map map) : MapComponent(map)
     }
 
     public string GetLayerName(int key){
+        if (layerNames.Count < 1){
+            InitLayerNames();
+        }
         if (layerNames.ContainsKey(key)){
             return layerNames[key];
         }
@@ -147,6 +151,7 @@ public class UndergroundManager(Map map) : MapComponent(map)
         Scribe_Values.Look(ref nextLayer, "nextLayer");
         Scribe_Collections.Look(ref layersState, "layers", LookMode.Value, LookMode.Reference, ref list2,
             ref list3);
+        Scribe_Collections.Look(ref layerNames, "layerNames", LookMode.Value, LookMode.Reference);
         Scribe_References.Look(ref map, "map");
     }
 
