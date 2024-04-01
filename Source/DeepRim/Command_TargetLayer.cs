@@ -35,7 +35,9 @@ public class Command_TargetLayer(bool isUndergroundLift = false) : Command_Actio
                 var pair = enumerator.Current;
                 if (pair.Value != null)
                 {
-                    list.Add(new FloatMenuOption("Deeprim.SelectLayerAt".Translate(pair.Key), delegate
+                    var name = manager.GetLayerName(pair.Key);
+                    var label = name == "" ? "Deeprim.UnnamedLayer".Translate(pair.Key).ToString() : "Deeprim.LayerDepthNamed".Translate(pair.Key, manager.layerNames[pair.Key]).ToString();
+                    list.Add(new FloatMenuOption(label, delegate
                     {
                         shaft.drillNew = false;
                         shaft.targetedLevel = pair.Key;

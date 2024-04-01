@@ -26,11 +26,17 @@
   <Deeprim.LowtechInfo.Tooltip>This option can not be changed while a game is active. Save and return to the main menu to be able to change this option. Upon loading drills will convert to the selected tech-level.</Deeprim.LowtechInfo.Tooltip>
   <Deeprim.BringingUp>Bringing Up</Deeprim.BringingUp>
   <Deeprim.LayerDepth>Layer Depth: {0}0m</Deeprim.LayerDepth>
-  <Deeprim.LayerDepthNamed>Layer Depth: {0}0m ({1})</Deeprim.LayerDepthNamed>
+  <Deeprim.LayerDepthNamed>[{0}0m] {1}</Deeprim.LayerDepthNamed>
+  <Deeprim.ChangeLayerName>Change the name of this layer</Deeprim.ChangeLayerName>
+  <Deeprim.ChangeLayerNameAtDepth>Change the name of the layer at depth: {0}0m</Deeprim.ChangeLayerNameAtDepth>
+  <Deeprim.LayerName>Layer Name: {0}</Deeprim.LayerName>
   <Deeprim.TargetNewLayer>Target: New layer</Deeprim.TargetNewLayer>
   <Deeprim.TargetNewLayerAtDepth>Target: New layer at depth {0}m</Deeprim.TargetNewLayerAtDepth>
-  <Deeprim.TargetLayerAtNamed>Target: Layer at depth {0}0m ({1})</Deeprim.TargetLayerAtNamed>
+  <Deeprim.LayerNameRemoved>Layer name was cleared</Deeprim.LayerNameRemoved>
+  <Deeprim.LayerNameAdded>Layer name was changed to "{0}"</Deeprim.LayerNameAdded>
   <Deeprim.TargetLayerAt>Target: Layer at depth {0}0m</Deeprim.TargetLayerAt>
+  <Deeprim.TargetLayerAtNamed>Target: Layer at depth {0}0m ({1})</Deeprim.TargetLayerAtNamed>
+  <Deeprim.UnnamedLayer>[{0}0m] Unnamed-Layer</Deeprim.UnnamedLayer>
   <Deeprim.TransferTargetAt>Transfer target: Layer at depth {0}0m</Deeprim.TransferTargetAt>
   <Deeprim.Progress>Progress: {0}%</Deeprim.Progress>
   <Deeprim.DrillingComplete>Drilling complete. Depth: {0}0m</Deeprim.DrillingComplete>

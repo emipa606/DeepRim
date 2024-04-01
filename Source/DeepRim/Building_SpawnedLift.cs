@@ -51,9 +51,20 @@ public class Building_SpawnedLift : Building
     {
         var stringBuilder = new StringBuilder();
         stringBuilder.AppendLine("Deeprim.LayerDepth".Translate(depth));
-
+        if (parentDrill.UndergroundManager.GetLayerName(this.depth) != ""){
+            stringBuilder.AppendLine("Deeprim.LayerName".Translate(parentDrill.UndergroundManager.GetLayerName(this.depth)));
+        }
         string targetLayerAt = parentDrill.drillNew ? "" : "Deeprim.TargetLayerAt".Translate(parentDrill.targetedLevel);
-        if (targetLayerAt != ""){stringBuilder.AppendLine(targetLayerAt);}
+        if (targetLayerAt != ""){
+            if (parentDrill.UndergroundManager.GetLayerName(parentDrill.targetedLevel) != ""){
+                stringBuilder.AppendLine("Deeprim.TargetLayerAtNamed".Translate(
+                    parentDrill.targetedLevel, parentDrill.UndergroundManager.GetLayerName(parentDrill.targetedLevel))
+                    );
+            }
+            else {
+                stringBuilder.AppendLine(targetLayerAt);
+            }
+        }
         var storages = this.CellsAdjacent8WayAndInside().Where(vec3 => vec3.GetFirstThing<Building_Storage>(Map) != null);
         if (storages.Any())
         {
@@ -104,6 +115,20 @@ public class Building_SpawnedLift : Building
                         }
                 };
         }
+        yield return new Command_Action(){
+            icon = ContentFinder<Texture2D>.Get("UI/Commands/RenameZone"),
+            defaultLabel = "CommandRenameZoneLabel".Translate(),
+            defaultDesc = "Deeprim.ChangeLayerName".Translate(),
+            action = delegate
+            {
+                var manager = parentDrill.UndergroundManager;
+                if (manager.layerNames.Count == 0 && manager.layersState.Count > 0){
+                    manager.InitLayerNames();
+                }
+                Dialog_RenameLayer dialog_RenameZone = new Dialog_RenameLayer(this);
+                Find.WindowStack.Add(dialog_RenameZone);
+            }
+        };
             yield return new Command_TargetLayer(true)
         {
             shaft = parentDrill,
