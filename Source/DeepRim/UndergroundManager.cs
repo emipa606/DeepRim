@@ -32,18 +32,22 @@ public class UndergroundManager(Map map) : MapComponent(map)
     private List<int> list2;
 
     private List<UndergroundMapParent> list3;
+    private List<int> list4;
+
+    private List<string> list5;
 
     private int nextLayer = 0;
 
     public void InitLayerNames(){
         DeepRimMod.LogMessage("Initializing layerNames variable");
+        layerNames = new Dictionary<int, string>();
         foreach (var layer in layersState){
             layerNames[layer.Key] = "";
         }
     }
 
     public string GetLayerName(int key){
-        if (layerNames.Count < 1){
+        if (layerNames == null){
             InitLayerNames();
         }
         if (layerNames.ContainsKey(key)){
@@ -147,11 +151,10 @@ public class UndergroundManager(Map map) : MapComponent(map)
         base.ExposeData();
         Scribe_Values.Look(ref spawned, "spawned");
         Scribe_Values.Look(ref activeLayers, "activeLayers");
-        Scribe_Values.Look(ref layerNames, "layerNames");
         Scribe_Values.Look(ref nextLayer, "nextLayer");
         Scribe_Collections.Look(ref layersState, "layers", LookMode.Value, LookMode.Reference, ref list2,
             ref list3);
-        Scribe_Collections.Look(ref layerNames, "layerNames", LookMode.Value, LookMode.Reference);
+        Scribe_Collections.Look(ref layerNames, "layerNames", LookMode.Value, LookMode.Value, ref list4, ref list5);
         Scribe_References.Look(ref map, "map");
     }
 

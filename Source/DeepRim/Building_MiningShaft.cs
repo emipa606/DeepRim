@@ -368,8 +368,8 @@ public class Building_MiningShaft : Building
         if (drillNew){
             label = "Deeprim.TargetNewLayerAtDepth".Translate(nextLayer);
             }
-        else if (undergroundManager.GetLayerName(targetedLevel) != ""){
-            label = "Deeprim.TargetLayerAtNamed".Translate(targetedLevel, undergroundManager.GetLayerName(targetedLevel));
+        else if (UndergroundManager.GetLayerName(targetedLevel) != ""){
+            label = "Deeprim.TargetLayerAtNamed".Translate(targetedLevel, UndergroundManager.GetLayerName(targetedLevel));
         }
         else {
             label = "Deeprim.TargetLayerAt".Translate(targetedLevel);
