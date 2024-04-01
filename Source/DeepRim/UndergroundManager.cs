@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
@@ -9,6 +10,7 @@ public class UndergroundManager(Map map) : MapComponent(map)
     private const int targetversion = 1;
 
     public Dictionary<int, UndergroundMapParent> layersState = new Dictionary<int, UndergroundMapParent>();
+    public Dictionary<int, string> layerNames = new Dictionary<int, string>();
 
     private int activeLayers = -1;
 
@@ -31,6 +33,20 @@ public class UndergroundManager(Map map) : MapComponent(map)
     private List<UndergroundMapParent> list3;
 
     private int nextLayer = 0;
+
+    public void InitLayerNames(){
+        DeepRimMod.LogMessage("Initializing layerNames variable");
+        foreach (var layer in layersState){
+            layerNames[layer.Key] = "";
+        }
+    }
+
+    public string GetLayerName(int key){
+        if (layerNames.ContainsKey(key)){
+            return layerNames[key];
+        }
+        return "";
+    }
 
     public int NextLayer
     {

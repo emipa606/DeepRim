@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime;
 using System.Runtime.Versioning;
 using System.Text;
 using RimWorld;
@@ -303,6 +304,20 @@ public class Building_MiningShaft : Building
                 defaultDesc = "Deeprim.IncreasePowerTT".Translate(extraPower + 100),
                 icon = HarmonyPatches.UI_IncreasePower
             };
+            yield return new Command_Action(){
+                icon = ContentFinder<Texture2D>.Get("UI/Commands/RenameZone"),
+                defaultLabel = "CommandRenameZoneLabel".Translate(),
+                defaultDesc = "Deeprim.ChangeLayerNameAtDepth".Translate(targetedLevel),
+                action = delegate
+                {
+                    var manager = UndergroundManager;
+                    if (manager.layerNames.Count == 0 && manager.layersState.Count > 0){
+                        manager.InitLayerNames();
+                    }
+                    Dialog_RenameLayer dialog_RenameZone = new Dialog_RenameLayer((Building_SpawnedLift)connectedLift);
+                    Find.WindowStack.Add(dialog_RenameZone);
+                }
+        };
         }
     }
 
@@ -349,9 +364,17 @@ public class Building_MiningShaft : Building
     {
         var stringBuilder = new StringBuilder();
         int nextLayer = UndergroundManager != null ? UndergroundManager.NextLayer * 10 : 10;
-        stringBuilder.AppendLine(drillNew
-            ? "Deeprim.TargetNewLayerAtDepth".Translate(nextLayer)
-            : "Deeprim.TargetLayerAt".Translate(targetedLevel));
+        var label = "";
+        if (drillNew){
+            label = "Deeprim.TargetNewLayerAtDepth".Translate(nextLayer);
+            }
+        else if (undergroundManager.GetLayerName(targetedLevel) != ""){
+            label = "Deeprim.TargetLayerAtNamed".Translate(targetedLevel, undergroundManager.GetLayerName(targetedLevel));
+        }
+        else {
+            label = "Deeprim.TargetLayerAt".Translate(targetedLevel);
+        }
+        stringBuilder.AppendLine(label);
 
         var storages = this.CellsAdjacent8WayAndInside().Where(vec3 => vec3.GetFirstThing<Building_Storage>(Map) != null);
         if (storages.Any())
