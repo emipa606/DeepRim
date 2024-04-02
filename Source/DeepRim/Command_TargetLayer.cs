@@ -5,7 +5,7 @@ using Verse;
 
 namespace DeepRim;
 
-public class Command_TargetLayer(bool isUndergroundLift = false) : Command_Action
+public class Command_TargetLayer(Building_SpawnedLift lift = null) : Command_Action
 {
     public UndergroundManager manager;
 
@@ -21,7 +21,7 @@ public class Command_TargetLayer(bool isUndergroundLift = false) : Command_Actio
         var list = new List<FloatMenuOption>();
         if (shaft.CurMode != 1)
         {
-            if(!isUndergroundLift){
+            if(lift == null){
                 list.Add(new FloatMenuOption("Deeprim.NewLayer".Translate(), delegate
                 {
                     shaft.targetedLevel = -1;
@@ -32,11 +32,20 @@ public class Command_TargetLayer(bool isUndergroundLift = false) : Command_Actio
             using var enumerator = manager.layersState.OrderBy(x => x.Key).GetEnumerator();
             while (enumerator.MoveNext())
             {
+                string label;
                 var pair = enumerator.Current;
                 if (pair.Value != null)
                 {
                     var name = manager.GetLayerName(pair.Key);
-                    var label = name == "" ? "Deeprim.UnnamedLayer".Translate(pair.Key).ToString() : "Deeprim.LayerDepthNamed".Translate(pair.Key, manager.layerNames[pair.Key]).ToString();
+                    if (lift != null && lift?.depth == pair.Key){
+                        label = "Deeprim.TargetLayerAtThis".Translate(pair.Key);
+                    }
+                    else if (name != ""){
+                        label = "Deeprim.LayerDepthNamed".Translate(pair.Key, manager.layerNames[pair.Key]);
+                    }
+                    else {
+                        label = "Deeprim.UnnamedLayer".Translate(pair.Key);
+                    }
                     list.Add(new FloatMenuOption(label, delegate
                     {
                         shaft.drillNew = false;

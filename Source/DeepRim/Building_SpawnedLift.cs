@@ -51,31 +51,45 @@ public class Building_SpawnedLift : Building
     {
         var stringBuilder = new StringBuilder();
         stringBuilder.AppendLine("Deeprim.LayerDepth".Translate(depth));
-        if (parentDrill.UndergroundManager.GetLayerName(this.depth) != ""){
-            stringBuilder.AppendLine("Deeprim.LayerName".Translate(parentDrill.UndergroundManager.GetLayerName(this.depth)));
+        string label;
+        string name = parentDrill.UndergroundManager.GetLayerName(this.depth);
+        if (name != ""){
+            stringBuilder.AppendLine("Deeprim.LayerName".Translate(name));
         }
-        string targetLayerAt = parentDrill.drillNew ? "" : "Deeprim.TargetLayerAt".Translate(parentDrill.targetedLevel);
-        if (targetLayerAt != ""){
-            if (parentDrill.UndergroundManager.GetLayerName(parentDrill.targetedLevel) != ""){
-                stringBuilder.AppendLine("Deeprim.TargetLayerAtNamed".Translate(
-                    parentDrill.targetedLevel, parentDrill.UndergroundManager.GetLayerName(parentDrill.targetedLevel))
-                    );
-            }
-            else {
-                stringBuilder.AppendLine(targetLayerAt);
-            }
+
+        name = parentDrill.UndergroundManager.GetLayerName(parentDrill.targetedLevel);
+        if (parentDrill.drillNew){
+            int nextLayer = parentDrill.UndergroundManager != null ? parentDrill.UndergroundManager.NextLayer * 10 : 10;
+            label = "Deeprim.TargetNewLayerAtDepth".Translate(nextLayer);
         }
+        else if (parentDrill.targetedLevel == this.depth){
+            label = "Deeprim.TargetLayerThis".Translate();
+        }
+        else if (name != ""){
+            label = "Deeprim.TargetLayerAtNamed".Translate(parentDrill.targetedLevel, name);
+        }
+        else {
+            label = "Deeprim.TargetLayerAt".Translate(parentDrill.targetedLevel);
+        }
+        stringBuilder.AppendLine(label);
+        
         var storages = this.CellsAdjacent8WayAndInside().Where(vec3 => vec3.GetFirstThing<Building_Storage>(Map) != null);
         if (storages.Any())
         {
-            if (TransferLevel == depth){
-                stringBuilder.AppendLine("Deeprim.TransferLevelNone".Translate());
+            name = parentDrill.UndergroundManager.GetLayerName(transferLevel);
+            if (transferLevel == 0){
+                label = "Deeprim.TransferSurface".Translate();
+            }
+            else if (transferLevel == this.depth){
+                label = "Deeprim.TransferLevelNone".Translate();
+            }
+            else if (name != ""){
+                label = "Deeprim.TransferTargetAtNamed".Translate(transferLevel, name);
             }
             else {
-                stringBuilder.AppendLine(TransferLevel > 0
-                        ? "Deeprim.TransferTargetAt".Translate(TransferLevel)
-                        : "Deeprim.TransferSurface".Translate());
+                label = "Deeprim.TransferTargetAt".Translate(transferLevel);
             }
+            stringBuilder.AppendLine(label);
         }
 
         var baseString = base.GetInspectString();
@@ -129,7 +143,7 @@ public class Building_SpawnedLift : Building
                 Find.WindowStack.Add(dialog_RenameZone);
             }
         };
-            yield return new Command_TargetLayer(true)
+            yield return new Command_TargetLayer(this)
         {
             shaft = parentDrill,
             manager = parentDrill.Map.components.Find(item => item is UndergroundManager) as UndergroundManager,

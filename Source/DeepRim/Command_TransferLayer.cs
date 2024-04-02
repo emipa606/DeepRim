@@ -36,7 +36,9 @@ public class Command_TransferLayer(Building building) : Command_Action
                     var pair = enumerator.Current;
                     if (pair.Value != null)
                     {
-                        list.Add(new FloatMenuOption("Deeprim.SelectLayerAt".Translate(pair.Key),
+                    var name = manager.GetLayerName(pair.Key);
+                    var label = name == "" ? "Deeprim.UnnamedLayer".Translate(pair.Key).ToString() : "Deeprim.LayerDepthNamed".Translate(pair.Key, manager.layerNames[pair.Key]).ToString();
+                        list.Add(new FloatMenuOption(label,
                             delegate { shaft.transferLevel = pair.Key; }));
 
                     }
@@ -56,7 +58,9 @@ public class Command_TransferLayer(Building building) : Command_Action
                     var pair = enumerator.Current;
                     if (pair.Value != null && pair.Key != lift.depth)
                     {
-                        list.Add(new FloatMenuOption("Deeprim.SelectLayerAt".Translate(pair.Key),
+                    var name = manager.GetLayerName(pair.Key);
+                    var label = name == "" ? "Deeprim.UnnamedLayer".Translate(pair.Key).ToString() : "Deeprim.LayerDepthNamed".Translate(pair.Key, manager.layerNames[pair.Key]).ToString();
+                        list.Add(new FloatMenuOption(label,
                             delegate { lift.TransferLevel = pair.Key; }));
                     }
                 }

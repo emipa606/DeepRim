@@ -379,9 +379,17 @@ public class Building_MiningShaft : Building
         var storages = this.CellsAdjacent8WayAndInside().Where(vec3 => vec3.GetFirstThing<Building_Storage>(Map) != null);
         if (storages.Any())
         {
-            stringBuilder.AppendLine(transferLevel > 0
-                ? "Deeprim.TransferTargetAt".Translate(transferLevel)
-                : "Deeprim.TransferLevelNone".Translate());
+            var name = UndergroundManager.GetLayerName(transferLevel);
+            if (transferLevel == 0){
+                label = "Deeprim.TransferLevelNone".Translate();
+            }
+            else if (name != ""){
+                label = "Deeprim.TransferTargetAtNamed".Translate(transferLevel, name);
+            }
+            else {
+                label = "Deeprim.TransferTargetAt".Translate(transferLevel);
+            }
+            stringBuilder.AppendLine(label);
         }
 
         if (!DeepRimMod.instance.DeepRimSettings.LowTechMode)
