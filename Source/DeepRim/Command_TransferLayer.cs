@@ -1,14 +1,19 @@
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Linq;
+using RimWorld;
 using UnityEngine;
 using Verse;
 
 namespace DeepRim;
 
-public class Command_TransferLayer : Command_Action
+public class Command_TransferLayer(Building building) : Command_Action
 {
     public UndergroundManager manager;
 
     public Building_MiningShaft shaft;
+
+    public Building_SpawnedLift lift;
 
     public override void ProcessInput(Event ev)
     {
@@ -17,21 +22,53 @@ public class Command_TransferLayer : Command_Action
 
     private FloatMenu MakeMenu()
     {
-        var list = new List<FloatMenuOption>
+        switch (building)
         {
-            new FloatMenuOption("Deeprim.Surface".Translate(), delegate { shaft.transferLevel = 0; })
-        };
-        using var enumerator = manager.layersState.GetEnumerator();
-        while (enumerator.MoveNext())
-        {
-            var pair = enumerator.Current;
-            if (pair.Value != null)
+            case Building_MiningShaft:
             {
-                list.Add(new FloatMenuOption("Deeprim.SelectLayerAt".Translate(pair.Key),
-                    delegate { shaft.transferLevel = pair.Key; }));
-            }
-        }
+                var list = new List<FloatMenuOption>
+                {
+                    new FloatMenuOption("Deeprim.None".Translate(), delegate { shaft.transferLevel = 0; })
+                };
+                var enumerator = manager.layersState.GetEnumerator();
+                while (enumerator.MoveNext())
+                {
+                    var pair = enumerator.Current;
+                    if (pair.Value != null)
+                    {
+                    var name = manager.GetLayerName(pair.Key);
+                    var label = name == "" ? "Deeprim.UnnamedLayer".Translate(pair.Key).ToString() : "Deeprim.LayerDepthNamed".Translate(pair.Key, manager.layerNames[pair.Key]).ToString();
+                        list.Add(new FloatMenuOption(label,
+                            delegate { shaft.transferLevel = pair.Key; }));
 
-        return new FloatMenu(list);
+                    }
+                }
+                return new FloatMenu(list);
+            }
+            case Building_SpawnedLift:
+            {
+                var list = new List<FloatMenuOption>
+                {
+                    new FloatMenuOption("Deeprim.None".Translate(), delegate { lift.TransferLevel = lift.depth; }),
+                    new FloatMenuOption("Deeprim.Surface".Translate(), delegate { lift.TransferLevel = 0; })
+                };
+                var enumerator = manager.layersState.GetEnumerator();
+                while (enumerator.MoveNext())
+                {
+                    var pair = enumerator.Current;
+                    if (pair.Value != null && pair.Key != lift.depth)
+                    {
+                    var name = manager.GetLayerName(pair.Key);
+                    var label = name == "" ? "Deeprim.UnnamedLayer".Translate(pair.Key).ToString() : "Deeprim.LayerDepthNamed".Translate(pair.Key, manager.layerNames[pair.Key]).ToString();
+                        list.Add(new FloatMenuOption(label,
+                            delegate { lift.TransferLevel = pair.Key; }));
+                    }
+                }
+                return new FloatMenu(list);
+            }
+            default:
+                DeepRimMod.LogWarn("Transfer float menu did not recognize the building type");
+                return null;
+        }
     }
 }

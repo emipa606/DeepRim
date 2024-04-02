@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime;
+using System.Runtime.Versioning;
 using System.Text;
 using RimWorld;
 using RimWorld.Planet;
 using UnityEngine;
+using UnityEngine.Analytics;
 using Verse;
 
 namespace DeepRim;
@@ -13,20 +16,12 @@ namespace DeepRim;
 public class Building_MiningShaft : Building
 {
     private const int updateEveryXTicks = 50;
-
-    private const float defaultPowerNeeded = 1200;
-
+    private const float baseExtraPower = 100;
     private const float idlePowerNeeded = 200;
-
-    private readonly List<ThingCategory> invalidCategories =
-    [
-        ThingCategory.None, ThingCategory.Ethereal, ThingCategory.Filth, ThingCategory.Gas,
-        ThingCategory.Mote, ThingCategory.Projectile
-    ];
 
     public float ChargeLevel;
 
-    private Thing connectedLift;
+    public Thing connectedLift;
 
     public Map connectedMap;
 
@@ -38,7 +33,7 @@ public class Building_MiningShaft : Building
 
     private float extraPower;
 
-    private CompPowerTrader m_Power;
+    public CompPowerTrader m_Power;
 
     private int mode;
 
@@ -103,11 +98,41 @@ public class Building_MiningShaft : Building
         Scribe_References.Look(ref connectedLift, "m_ConnectedLift");
     }
 
+    public void tryReconfigureAll(){
+        Log.Warning("Reset button was pressed!");
+        Log.Warning("Iterating over maps to gather a list of buildings:");
+
+        UndergroundManager?.layersState.Clear();
+        List<Map> maps = Current.Game.maps;
+        //Get lifts and shaft from maps
+        foreach (Map map in maps){
+            Log.Warning($"Current map: {map}");
+            var lift = map.listerBuildings.AllBuildingsColonistOfClass<Building_SpawnedLift>().FirstOrDefault();
+            if (lift != null){
+                lift.m_Flick.SwitchIsOn = true;
+                if (!lift.m_Flick.SwitchIsOn){lift.m_Flick.DoFlick();}
+                var mapParent = map.Parent as UndergroundMapParent;
+                UndergroundManager.layersState.Add(lift.depth, mapParent);
+                Log.Warning($"Found lift: {lift}");
+                continue;
+            }
+            Log.Warning("Map didn't contain an underground lift.");
+        }
+        UndergroundManager.ActiveLayers = UndergroundManager.layersState.Count();
+    }
     public override IEnumerable<Gizmo> GetGizmos()
     {
         foreach (var current in base.GetGizmos())
         {
             yield return current;
+        }
+        if (Prefs.DevMode){
+            yield return new Command_Action
+            {
+                        action = tryReconfigureAll,
+                        defaultLabel = "Reset States",
+                        defaultDesc = "This will attempt to reconnect all underground layers with one mineshaft. May fix some errors. Do not use if you have mineshafts on multiple maps."
+            };
         }
 
         yield return new Command_TargetLayer
@@ -122,9 +147,10 @@ public class Building_MiningShaft : Building
             icon = HarmonyPatches.UI_Option
         };
 
-        if (nearbyStorages.Any())
+        var storages = this.CellsAdjacent8WayAndInside().Where(vec3 => vec3.GetFirstThing<Building_Storage>(Map) != null);
+        if (storages.Any())
         {
-            yield return new Command_TransferLayer
+            yield return new Command_TransferLayer(this)
             {
                 shaft = this,
                 manager = Map.components.Find(item => item is UndergroundManager) as UndergroundManager,
@@ -200,7 +226,7 @@ public class Building_MiningShaft : Building
             };
         }
 
-        if (!IsConnected)
+        if (!IsConnected || drillNew)
         {
             yield break;
         }
@@ -225,35 +251,74 @@ public class Building_MiningShaft : Building
         {
             yield break;
         }
+        if (m_Power.PowerOn){
+            var lift = connectedLift as Building_SpawnedLift;
+            yield return new Command_Toggle
+                {
+                    icon = HarmonyPatches.UI_ToggleSendPower,
+                    defaultLabel = "Deeprim.SendPowerToLayer".Translate(),
+                    defaultDesc = "Deeprim.SendPowerToLayerTT".Translate(),
+                    isActive = () => lift.m_Flick.SwitchIsOn,
+                    toggleAction = delegate { 
+                        lift.TogglePower();
+                        if (lift.m_Flick.SwitchIsOn){
+                            UndergroundManager.ActiveLayers++;
+                            UndergroundManager.AnyLayersPowered = true;
+                            }
+                        else {
+                            UndergroundManager.ActiveLayers--;
+                            if (UndergroundManager.ActiveLayers == 0){
+                                UndergroundManager.AnyLayersPowered = false;
+                            }
+                            }
+                        }
+                };
+        }
 
-        if (extraPower > 0)
-        {
+        if (UndergroundManager.ActiveLayers > 0){
+            if (extraPower > 0)
+            {
+                yield return new Command_Action
+                {
+                    action = () =>
+                    {
+                        extraPower -= 100;
+                        m_Power.Props.basePowerConsumption = idlePowerNeeded + baseExtraPower + extraPower;
+                        m_Power.SetUpPowerVars();
+                    },
+                    defaultLabel = "Deeprim.DecreasePower".Translate(),
+                    defaultDesc = "Deeprim.DecreasePowerTT".Translate(extraPower - 100),
+                    icon = HarmonyPatches.UI_DecreasePower
+                };
+            }
+
             yield return new Command_Action
             {
                 action = () =>
                 {
-                    extraPower -= 100;
-                    m_Power.Props.basePowerConsumption = defaultPowerNeeded + extraPower;
+                    extraPower += 100;
+                    m_Power.Props.basePowerConsumption = idlePowerNeeded + baseExtraPower + extraPower;
                     m_Power.SetUpPowerVars();
                 },
-                defaultLabel = "Deeprim.DecreasePower".Translate(),
-                defaultDesc = "Deeprim.DecreasePowerTT".Translate(extraPower - 100),
-                icon = HarmonyPatches.UI_DecreasePower
+                defaultLabel = "Deeprim.IncreasePower".Translate(),
+                defaultDesc = "Deeprim.IncreasePowerTT".Translate(extraPower + 100),
+                icon = HarmonyPatches.UI_IncreasePower
             };
-        }
-
-        yield return new Command_Action
-        {
-            action = () =>
-            {
-                extraPower += 100;
-                m_Power.Props.basePowerConsumption = defaultPowerNeeded + extraPower;
-                m_Power.SetUpPowerVars();
-            },
-            defaultLabel = "Deeprim.IncreasePower".Translate(),
-            defaultDesc = "Deeprim.IncreasePowerTT".Translate(extraPower + 100),
-            icon = HarmonyPatches.UI_IncreasePower
+            yield return new Command_Action(){
+                icon = ContentFinder<Texture2D>.Get("UI/Commands/RenameZone"),
+                defaultLabel = "CommandRenameZoneLabel".Translate(),
+                defaultDesc = "Deeprim.ChangeLayerNameAtDepth".Translate(targetedLevel),
+                action = delegate
+                {
+                    var manager = UndergroundManager;
+                    if (manager.layerNames.Count == 0 && manager.layersState.Count > 0){
+                        manager.InitLayerNames();
+                    }
+                    Dialog_RenameLayer dialog_RenameZone = new Dialog_RenameLayer((Building_SpawnedLift)connectedLift);
+                    Find.WindowStack.Add(dialog_RenameZone);
+                }
         };
+        }
     }
 
     private void Abandon()
@@ -284,6 +349,9 @@ public class Building_MiningShaft : Building
                 targetedLevel = key;
                 Abandon(true);
             }
+            UndergroundManager.NextLayer = 1;
+            UndergroundManager.ActiveLayers = 0;
+            UndergroundManager.AnyLayersPowered = false;
         }
 
         var originalValue = allowDestroyNonDestroyable;
@@ -295,15 +363,33 @@ public class Building_MiningShaft : Building
     public override string GetInspectString()
     {
         var stringBuilder = new StringBuilder();
-        stringBuilder.AppendLine(drillNew
-            ? "Deeprim.TargetNewLayer".Translate()
-            : "Deeprim.TargetLayerAt".Translate(targetedLevel));
+        int nextLayer = UndergroundManager != null ? UndergroundManager.NextLayer * 10 : 10;
+        var label = "";
+        if (drillNew){
+            label = "Deeprim.TargetNewLayerAtDepth".Translate(nextLayer);
+            }
+        else if (UndergroundManager.GetLayerName(targetedLevel) != ""){
+            label = "Deeprim.TargetLayerAtNamed".Translate(targetedLevel, UndergroundManager.GetLayerName(targetedLevel));
+        }
+        else {
+            label = "Deeprim.TargetLayerAt".Translate(targetedLevel);
+        }
+        stringBuilder.AppendLine(label);
 
-        if (nearbyStorages.Any())
+        var storages = this.CellsAdjacent8WayAndInside().Where(vec3 => vec3.GetFirstThing<Building_Storage>(Map) != null);
+        if (storages.Any())
         {
-            stringBuilder.AppendLine(transferLevel > 0
-                ? "Deeprim.TransferTargetAt".Translate(transferLevel)
-                : "Deeprim.TransferSurface".Translate());
+            var name = UndergroundManager.GetLayerName(transferLevel);
+            if (transferLevel == 0){
+                label = "Deeprim.TransferLevelNone".Translate();
+            }
+            else if (name != ""){
+                label = "Deeprim.TransferTargetAtNamed".Translate(transferLevel, name);
+            }
+            else {
+                label = "Deeprim.TransferTargetAt".Translate(transferLevel);
+            }
+            stringBuilder.AppendLine(label);
         }
 
         if (!DeepRimMod.instance.DeepRimSettings.LowTechMode)
@@ -369,17 +455,15 @@ public class Building_MiningShaft : Building
         {
             return 0;
         }
-
-        var currentActiveLayers = manager.layersState.Count;
-        if (currentActiveLayers == 0)
+        if (manager.ActiveLayers == 0)
         {
             return 0;
         }
 
-        var powerAvailable = extraPower;
+        var powerAvailable = 0f;
         if (mode != 1)
         {
-            powerAvailable += defaultPowerNeeded - idlePowerNeeded;
+            powerAvailable = baseExtraPower + extraPower;
         }
 
         if (powerAvailable < 0)
@@ -387,7 +471,7 @@ public class Building_MiningShaft : Building
             return 0;
         }
 
-        return -(float)Math.Round(powerAvailable / currentActiveLayers);
+        return (float)Math.Round(powerAvailable / manager.ActiveLayers);
     }
 
     private void PrepareToAbandon()
@@ -405,8 +489,17 @@ public class Building_MiningShaft : Building
 
         mode = 0;
         SyncConnectedMap();
+        var lift = connectedLift as Building_SpawnedLift;
+        if (lift != null){
+            if (lift.m_Flick.SwitchIsOn){
+                UndergroundManager.ActiveLayers--;
+                if (UndergroundManager.ActiveLayers == 0){
+                    UndergroundManager.AnyLayersPowered = false;
+                }
+            }
+        }
         connectedMapParent?.AbandonLift(connectedLift, force);
-
+        targetedLevel = -1;
         var originalValue = allowDestroyNonDestroyable;
         allowDestroyNonDestroyable = true;
         connectedLift?.Destroy();
@@ -431,7 +524,7 @@ public class Building_MiningShaft : Building
         var seedString = Find.World.info.seedString;
         Find.World.info.seedString = Rand.Range(0, 2147483646).ToString();
         var mapSize = Find.World.info.initialMapSize;
-        if (DeepRimMod.instance.DeepRimSettings.SpawnedMapSize != 0)
+        if (DeepRimMod.instance.DeepRimSettings.SpawnedMapSize >= 50)
         {
             mapSize = new IntVec3(DeepRimMod.instance.DeepRimSettings.SpawnedMapSize, 1,
                 DeepRimMod.instance.DeepRimSettings.SpawnedMapSize);
@@ -526,55 +619,21 @@ public class Building_MiningShaft : Building
 
     private void Send()
     {
-        if (m_Power is { PowerOn: false })
+        LiftUtils.StageSend(this);
+        return;
+    }
+
+    private void BringUp()
+    {
+        if (m_Power is { PowerOn: false } && DeepRimMod.instance.DeepRimSettings.NoPowerPreventsLiftUse)
         {
             Messages.Message("Deeprim.NoPower".Translate(), MessageTypeDefOf.RejectInput);
             return;
         }
-
-        var cells = this.OccupiedRect().Cells;
-        var anythingSent = false;
-        foreach (var intVec in cells)
-        {
-            var convertedLocation = HarmonyPatches.ConvertParentDrillLocation(
-                intVec, Map.Size, connectedMap.Size);
-            var thingList = intVec.GetThingList(Map);
-            // ReSharper disable once ForCanBeConvertedToForeach, Things despawn, cannot use foreach
-            for (var index = 0; index < thingList.Count; index++)
-            {
-                var thing = thingList[index];
-                if (thing is not Pawn &&
-                    (thing is not ThingWithComps && thing == null || thing is Building))
-                {
-                    continue;
-                }
-
-                if (invalidCategories.Contains(thing.def.category))
-                {
-                    continue;
-                }
-
-                thing.DeSpawn();
-                GenSpawn.Spawn(thing, convertedLocation, connectedMap);
-                anythingSent = true;
-            }
-        }
-
-        if (!anythingSent)
-        {
-            Messages.Message("Deeprim.NothingToSend".Translate(), MessageTypeDefOf.RejectInput);
-            return;
-        }
-
-        Messages.Message("Deeprim.SendingDown".Translate(), MessageTypeDefOf.PositiveEvent);
-        if (!Event.current.control)
-        {
-            return;
-        }
-
-        Current.Game.CurrentMap = connectedMap;
-        Find.Selector.Select(connectedLift);
+        var lift = connectedLift as Building_SpawnedLift;
+        LiftUtils.StageSend(lift, true);
     }
+
 
     private void Transfer(Map targetMap, IntVec3 targetPosition, List<Building_Storage> connectedStorages)
     {
@@ -588,7 +647,7 @@ public class Building_MiningShaft : Building
             }
 
             var itemList = items.ToList();
-            DeepRimMod.LogMessage($"{storage} has {itemList.Count} items, transfering");
+            DeepRimMod.LogMessage($"Transferring {itemList.Count} items from {storage} by shaft {this} to layer at {transferLevel*10}m");
             // ReSharper disable once ForCanBeConvertedToForeach, Things despawn, cannot use foreach
             for (var index = 0; index < itemList.Count; index++)
             {
@@ -599,84 +658,13 @@ public class Building_MiningShaft : Building
         }
     }
 
-    private void BringUp()
-    {
-        if (m_Power is { PowerOn: false })
-        {
-            Messages.Message("Deeprim.NoPower".Translate(), MessageTypeDefOf.RejectInput);
-            return;
-        }
-
-        var cells = connectedLift.OccupiedRect().Cells;
-        var anythingSent = false;
-        foreach (var intVec in cells)
-        {
-            var thingList = intVec.GetThingList(connectedMap);
-            var convertedLocation = HarmonyPatches.ConvertParentDrillLocation(
-                intVec, Map.Size, connectedMap.Size);
-            // ReSharper disable once ForCanBeConvertedToForeach, Things despawn, cannot use foreach
-            for (var index = 0; index < thingList.Count; index++)
-            {
-                var thing = thingList[index];
-                if (thing is not Pawn &&
-                    (thing is not ThingWithComps && thing is null || thing is Building))
-                {
-                    continue;
-                }
-
-                thing.DeSpawn();
-                GenSpawn.Spawn(thing, convertedLocation, Map);
-                anythingSent = true;
-            }
-        }
-
-        if (!anythingSent)
-        {
-            Messages.Message("Deeprim.NothingToSend".Translate(), MessageTypeDefOf.RejectInput);
-            return;
-        }
-
-        Messages.Message("Deeprim.BringingUp".Translate(), MessageTypeDefOf.PositiveEvent);
-    }
-
-    public void SyncConnectedMap()
-    {
-        connectedMapParent = UndergroundManager?.layersState[targetedLevel];
-        connectedMap = UndergroundManager?.layersState[targetedLevel]?.Map;
-        connectedLift =
-            (from Building_SpawnedLift lift in connectedMap?.listerBuildings.allBuildingsColonist
-                where lift != null
-                select lift).FirstOrDefault();
-    }
-
-    public override void Tick()
-    {
-        base.Tick();
-        if (connectedLift != null && ((Building_SpawnedLift)connectedLift).surfaceMap == null)
-        {
-            ((Building_SpawnedLift)connectedLift).surfaceMap = Map;
-        }
-
-        if (!DeepRimMod.instance.DeepRimSettings.LowTechMode &&
-            m_Power.Props.basePowerConsumption != defaultPowerNeeded + extraPower)
-        {
-            m_Power.Props.basePowerConsumption = defaultPowerNeeded + extraPower;
-            m_Power.SetUpPowerVars();
-        }
-
-        if (GenTicks.TicksGame % GenTicks.TickRareInterval == 0)
-        {
+    public void SendFromStorages(){
             nearbyStorages = [];
             foreach (var cell in this.OccupiedRect().AdjacentCells)
             {
-                var building = cell.GetFirstBuilding(Map);
-                switch (building)
-                {
-                    case null:
-                        continue;
-                    case Building_Storage storage:
-                        nearbyStorages.Add(storage);
-                        break;
+                var Storages = cell.GetThingList(Map).Where(thing => thing is Building_Storage);
+                foreach (Building_Storage storage in Storages){
+                    nearbyStorages.Add(storage);
                 }
             }
 
@@ -684,7 +672,7 @@ public class Building_MiningShaft : Building
             var targetPostition = IntVec3.Invalid;
             if (UndergroundManager?.layersState != null)
             {
-                if (transferLevel > 0)
+                if (transferLevel != 0)
                 {
                     if (UndergroundManager?.layersState.ContainsKey(transferLevel) == true)
                     {
@@ -698,78 +686,74 @@ public class Building_MiningShaft : Building
                         else
                         {
                             DeepRimMod.LogMessage("Found no spawned lift in targeted layer");
+                            return;
                         }
                     }
-                }
-                else
-                {
-                    targetMap = Map;
-                    targetPostition = PositionHeld;
                 }
             }
 
-            if (targetMap != null && targetPostition != IntVec3.Invalid)
+            if (targetMap == null || targetPostition == IntVec3.Invalid || !nearbyStorages.Any())
             {
-                List<Building_Storage> storagesToTransferFrom = [];
+                return;
+            }
 
-                if (targetMap != Map)
-                {
-                    storagesToTransferFrom = nearbyStorages.ToList();
+            DeepRimMod.LogMessage($"Found {nearbyStorages.Count} storages to transfer items from");
+            if (m_Power is not { PowerOn: false })
+            {
+                Transfer(targetMap, targetPostition, nearbyStorages.ToList());
+            }
+            else
+            {
+                DeepRimMod.LogMessage("Unpowered mining shaft refuses to send items");
+            }
+    }
+
+    public void SyncConnectedMap()
+    {
+        connectedMapParent = UndergroundManager?.layersState[targetedLevel];
+        connectedMap = UndergroundManager?.layersState[targetedLevel]?.Map;
+        connectedLift = connectedMap?.listerBuildings.AllBuildingsColonistOfClass<Building_SpawnedLift>().FirstOrDefault();
+    }
+    public void recountWealthSometimes(){
+        if(Find.TickManager.TicksGame % 5000f == 0){
+            Map.wealthWatcher.ForceRecount();
+        }       
+    }
+    public override void Tick()
+    {
+        base.Tick();
+        if (connectedLift != null && ((Building_SpawnedLift)connectedLift).surfaceMap == null)
+        {
+            ((Building_SpawnedLift)connectedLift).surfaceMap = Map;
+        }
+        if (!DeepRimMod.instance.DeepRimSettings.LowTechMode){
+            //handle a case where the mod is updated in an existing save and ActiveLayers becomes 0 for some reason when it shouldn't be
+            if(UndergroundManager.ActiveLayers == 0 && UndergroundManager.AnyLayersPowered == true){
+                DeepRimMod.LogWarn($"UndergroundManager.ActiveLayers was not initialized. Setting variable to {UndergroundManager.layersState.Count()}.");
+                UndergroundManager.ActiveLayers = UndergroundManager.layersState.Count();
+                if (UndergroundManager.layersState.Count() == 0){
+                    UndergroundManager.AnyLayersPowered = false;
                 }
-
-                foreach (var layer in UndergroundManager.layersState)
-                {
-                    var connectedTransferMap = layer.Value.Map;
-                    if (connectedTransferMap == null || targetMap == connectedTransferMap)
-                    {
-                        DeepRimMod.LogMessage("Found no connected map to transfer to or we are in the target map");
-                        continue;
-                    }
-
-                    var transferLifts =
-                        connectedTransferMap.listerBuildings.AllBuildingsColonistOfDef(
-                            ThingDef.Named("undergroundlift"));
-                    if (!transferLifts.Any())
-                    {
-                        DeepRimMod.LogMessage("Found no spawned lift in targeted layer");
-                        continue;
-                    }
-
-                    foreach (var buildingSpawnedLift in transferLifts)
-                    {
-                        var adjacentCells = buildingSpawnedLift?.OccupiedRect().AdjacentCells;
-                        if (adjacentCells == null)
-                        {
-                            continue;
-                        }
-
-                        foreach (var cell in adjacentCells)
-                        {
-                            var building = cell.GetFirstBuilding(connectedTransferMap);
-                            switch (building)
-                            {
-                                case null:
-                                    continue;
-                                case Building_Storage storage:
-                                    storagesToTransferFrom.Add(storage);
-                                    break;
-                            }
-                        }
-                    }
-                }
-
-                DeepRimMod.LogMessage($"Found {storagesToTransferFrom.Count} storages to transfer items from");
-                if (m_Power is not { PowerOn: false })
-                {
-                    Transfer(targetMap, targetPostition, storagesToTransferFrom);
-                }
-                else
-                {
-                    DeepRimMod.LogMessage("Either shaft is not powered or no target-layer selected");
-                }
+            }
+            
+            if (m_Power.PowerOn && UndergroundManager.ActiveLayers > 0 
+            && m_Power.Props.basePowerConsumption != idlePowerNeeded + baseExtraPower + extraPower)
+            {
+                DeepRimMod.LogWarn("Updating power to ON state");
+                m_Power.Props.basePowerConsumption = idlePowerNeeded + baseExtraPower + extraPower;          
+                m_Power.SetUpPowerVars();
+            }
+            else if (UndergroundManager.ActiveLayers < 1 && m_Power.Props.basePowerConsumption != idlePowerNeeded){
+                DeepRimMod.LogWarn("Updating power to OFF state.");
+                m_Power.Props.basePowerConsumption = idlePowerNeeded;
+                m_Power.SetUpPowerVars();
             }
         }
-
+        if (GenTicks.TicksGame % GenTicks.TickRareInterval == 0)
+        {
+            this.SendFromStorages();
+        }
+        recountWealthSometimes();
         if (DeepRimMod.instance.DeepRimSettings.LowTechMode)
         {
             switch (ChargeLevel)
