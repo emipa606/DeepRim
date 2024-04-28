@@ -65,4 +65,33 @@ NOTE : Le modèle n'est pas conçu pour avoir plus d'un arbre, le placer peut av
   <Deeprim.AbandonAll>Vous êtes sur le point de déconstruire le puits principal. Toutes les couches et tout ce qu'elles contiennent seront définitivement abandonnées. Il n'y a aucun moyen de revenir en arrière. Êtes-vous sûr de vouloir poursuivre la déconstruction ?</Deeprim.AbandonAll>
   <Deeprim.AbandonAllYes>Oui, détruisez tout</Deeprim.AbandonAllYes>
   <Deeprim.AbandonAllNo>Non, annuler</Deeprim.AbandonAllNo>
+  <Deeprim.MapSizeSlider>Taille de la carte pour les nouvelles couches : {0}</Deeprim.MapSizeSlider>
+  <Deeprim.MapSizeSliderTT>Contrôle la taille des cartes générées pour les couches souterraines [Par défaut : 75].</Deeprim.MapSizeSliderTT>
+  <Deeprim.OreDensitySlider>Densité de minerai pour les nouvelles couches : {0}</Deeprim.OreDensitySlider>
+  <Deeprim.OreDensitySliderTT>La quantité de minerai qui apparaîtra dans les nouvelles couches [Par défaut : 16]. Des valeurs plus élevées rendent les minerais rares plus communs.</Deeprim.OreDensitySliderTT>
+  <Deeprim.DepthValueBaseSlider>Valeur des couches souterraines : {0}%</Deeprim.DepthValueBaseSlider>
+  <Deeprim.DepthValueBaseSliderTT>Le pourcentage de base de la richesse souterraine qui sera pris en compte par couche, quelle que soit la profondeur.</Deeprim.DepthValueBaseSliderTT>
+  <Deeprim.DepthValueFalloffSlider>Perte de valeur par profondeur : {0}%</Deeprim.DepthValueFalloffSlider>
+  <Deeprim.DepthValueFalloffSliderTT>Les couches plus profondes comptent moins dans la richesse de la colonie à mesure que cette valeur augmente.</Deeprim.DepthValueFalloffSliderTT>
+  <Deeprim.Little>Très petit</Deeprim.Little>
+  <Deeprim.Tiny>Minuscule</Deeprim.Tiny>
+  <Deeprim.LayerDepthNamed>[{0}0m] {1}</Deeprim.LayerDepthNamed>
+  <Deeprim.ChangeLayerName>Modifier le nom de ce calque</Deeprim.ChangeLayerName>
+  <Deeprim.ChangeLayerNameAtDepth>Modifier le nom de la couche à la profondeur : {0}0m</Deeprim.ChangeLayerNameAtDepth>
+  <Deeprim.LayerName>Nom de la couche : {0}</Deeprim.LayerName>
+  <Deeprim.TargetNewLayerAtDepth>Cible : Nouvelle couche à la profondeur {0}m</Deeprim.TargetNewLayerAtDepth>
+  <Deeprim.LayerNameRemoved>Le nom du calque a été effacé</Deeprim.LayerNameRemoved>
+  <Deeprim.LayerNameAdded>Le nom du calque a été changé en "{0}"</Deeprim.LayerNameAdded>
+  <Deeprim.TargetLayerAtNamed>Cible : Couche à la profondeur {0}0m ({1})</Deeprim.TargetLayerAtNamed>
+  <Deeprim.UnnamedLayer>[{0}0m] Couche sans nom</Deeprim.UnnamedLayer>
+  <Deeprim.TransferTargetAtNamed>Cible de transfert : Couche à la profondeur {0}0m ({1})</Deeprim.TransferTargetAtNamed>
+  <Deeprim.SendPowerToLayer>Envoyer de la puissance</Deeprim.SendPowerToLayer>
+  <Deeprim.SendPowerToLayerTT>Basculer si l'énergie est envoyée à l'ascenseur souterrain dans une couche.</Deeprim.SendPowerToLayerTT>
+  <Deeprim.NoPowerPreventsLiftUse>Les ascenseurs nécessitent de l'énergie</Deeprim.NoPowerPreventsLiftUse>
+  <Deeprim.NoPowerPreventsLiftUseTT>Indique si les ascenseurs doivent être alimentés en électricité pour envoyer des messages. Activé par défaut. Attention, vous risquez d'être piégé !</Deeprim.NoPowerPreventsLiftUseTT>
+  <Deeprim.TransferLevelNone>Objectif de transfert : Aucun</Deeprim.TransferLevelNone>
+  <Deeprim.TargetLayerNone>Cible : Aucune</Deeprim.TargetLayerNone>
+  <Deeprim.TargetLayerThis>Cible : Cette couche</Deeprim.TargetLayerThis>
+  <Deeprim.TargetLayerAtThis>[{0}0m] Cette couche</Deeprim.TargetLayerAtThis>
+  <Deeprim.Reset>Remise à zéro</Deeprim.Reset>
 </LanguageData>

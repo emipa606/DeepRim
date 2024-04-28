@@ -1,5 +1,9 @@
 # Changelog for DeepRim
 
+1.5.0 - Large addition of features, added by SunPraise
+Used DeepL to update translations for ChineseSimplified, French, German, Russian
+
+
 1.4.16 - Powertransfer now updates the consumed power correctly
 Shafts can no longer be destroyed by damage
 When deconstructing the main shaft, all connected layers are also removed after confirmation

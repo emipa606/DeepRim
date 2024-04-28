@@ -65,4 +65,33 @@
   <Deeprim.AbandonAll>Вы собираетесь разрушить главную шахту. Все слои и все, что в них находится, будут покинуты навсегда. Обратного пути нет. Вы уверены, что хотите продолжить деконструкцию?</Deeprim.AbandonAll>
   <Deeprim.AbandonAllYes>Да, уничтожьте все это.</Deeprim.AbandonAllYes>
   <Deeprim.AbandonAllNo>Нет, прервать</Deeprim.AbandonAllNo>
+  <Deeprim.MapSizeSlider>Размер карты для новых слоев: {0}</Deeprim.MapSizeSlider>
+  <Deeprim.MapSizeSliderTT>Управляет размером карт, создаваемых для подземных слоев [По умолчанию: 75].</Deeprim.MapSizeSliderTT>
+  <Deeprim.OreDensitySlider>Плотность руды для новых слоев: {0}</Deeprim.OreDensitySlider>
+  <Deeprim.OreDensitySliderTT>Сколько руды будет появляться в новых слоях [По умолчанию: 16]. Более высокие значения делают редкие руды более распространенными.</Deeprim.OreDensitySliderTT>
+  <Deeprim.DepthValueBaseSlider>Значение подземных слоев: {0}%</Deeprim.DepthValueBaseSlider>
+  <Deeprim.DepthValueBaseSliderTT>Базовый процент подземных богатств, который будет учитываться в каждом слое независимо от глубины.</Deeprim.DepthValueBaseSliderTT>
+  <Deeprim.DepthValueFalloffSlider>Падение стоимости на глубину: {0}%</Deeprim.DepthValueFalloffSlider>
+  <Deeprim.DepthValueFalloffSliderTT>При увеличении этого значения глубинные слои меньше влияют на богатство колонии.</Deeprim.DepthValueFalloffSliderTT>
+  <Deeprim.Little>Очень маленький</Deeprim.Little>
+  <Deeprim.Tiny>Крошечный</Deeprim.Tiny>
+  <Deeprim.LayerDepthNamed>[{0}0m] {1}</Deeprim.LayerDepthNamed>
+  <Deeprim.ChangeLayerName>Измените название этого слоя</Deeprim.ChangeLayerName>
+  <Deeprim.ChangeLayerNameAtDepth>Измените название слоя на глубине: {0}0м</Deeprim.ChangeLayerNameAtDepth>
+  <Deeprim.LayerName>Имя слоя: {0}</Deeprim.LayerName>
+  <Deeprim.TargetNewLayerAtDepth>Цель: Новый слой на глубине {0} м</Deeprim.TargetNewLayerAtDepth>
+  <Deeprim.LayerNameRemoved>Имя слоя было очищено</Deeprim.LayerNameRemoved>
+  <Deeprim.LayerNameAdded>Имя слоя было изменено на "{0}".</Deeprim.LayerNameAdded>
+  <Deeprim.TargetLayerAtNamed>Цель: Слой на глубине {0}0 м ({1})</Deeprim.TargetLayerAtNamed>
+  <Deeprim.UnnamedLayer>[{0}0m] Неназванный слой</Deeprim.UnnamedLayer>
+  <Deeprim.TransferTargetAtNamed>Цель переноса: Слой на глубине {0}0 м ({1})</Deeprim.TransferTargetAtNamed>
+  <Deeprim.SendPowerToLayer>Отправить энергию</Deeprim.SendPowerToLayer>
+  <Deeprim.SendPowerToLayerTT>Переключите, передается ли питание на подземный лифт в слое</Deeprim.SendPowerToLayerTT>
+  <Deeprim.NoPowerPreventsLiftUse>Подъемники требуют электроэнергии</Deeprim.NoPowerPreventsLiftUse>
+  <Deeprim.NoPowerPreventsLiftUseTT>Переключает, нужно ли подавать питание на лифты для отправки сообщений. По умолчанию включено. Осторожно, вы можете попасть в ловушку!</Deeprim.NoPowerPreventsLiftUseTT>
+  <Deeprim.TransferLevelNone>Трансферная цель: Нет</Deeprim.TransferLevelNone>
+  <Deeprim.TargetLayerNone>Цель: Нет</Deeprim.TargetLayerNone>
+  <Deeprim.TargetLayerThis>Цель: Этот слой</Deeprim.TargetLayerThis>
+  <Deeprim.TargetLayerAtThis>[{0}0m] Этот слой</Deeprim.TargetLayerAtThis>
+  <Deeprim.Reset>Сброс</Deeprim.Reset>
 </LanguageData>

@@ -24,7 +24,7 @@ public class GenStep_ElevationFertility_Deep : GenStep
         var num = 1.8f;
         moduleBase = new Multiply(moduleBase, new Const(num));
         NoiseDebugUI.StoreNoiseRender(moduleBase, "elev world-factored");
-        ModuleBase moduleBase2 = new DistFromAxis(map.Size.x * 0.42f);
+        ModuleBase moduleBase2 = new DistFromAxis(map.Size.x * EdgeMountainSpan);
         moduleBase2 = new Clamp(0.0, 1.0, moduleBase2);
         moduleBase2 = new Invert(moduleBase2);
         moduleBase2 = new ScaleBias(1.0, 1.0, moduleBase2);

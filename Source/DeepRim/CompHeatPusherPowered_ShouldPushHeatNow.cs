@@ -3,7 +3,7 @@ using Verse;
 
 namespace DeepRim;
 
-[HarmonyPatch(typeof(CompHeatPusherPowered), "ShouldPushHeatNow", MethodType.Getter)]
+[HarmonyPatch(typeof(CompHeatPusherPowered), nameof(CompHeatPusherPowered.ShouldPushHeatNow), MethodType.Getter)]
 public static class CompHeatPusherPowered_ShouldPushHeatNow
 {
     private static void Postfix(CompHeatPusherPowered __instance, ref bool __result)

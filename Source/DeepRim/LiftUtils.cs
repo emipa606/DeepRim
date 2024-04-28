@@ -1,43 +1,44 @@
+using System.Collections.Generic;
 using System.Linq;
+using RimWorld;
 using UnityEngine;
 using Verse;
-using RimWorld;
-using System.Runtime.InteropServices;
-using System.Threading;
-using System.Collections.Generic;
 
 namespace DeepRim;
 
-public class LiftUtils()
+public class LiftUtils
 {
     private static readonly List<ThingCategory> invalidCategories =
     [
         ThingCategory.None, ThingCategory.Ethereal, ThingCategory.Filth, ThingCategory.Gas,
         ThingCategory.Mote, ThingCategory.Projectile
     ];
-    public static IntVec3 ConvertPosRelativeToLift(IntVec3 shaftCenter, IntVec3 itemPos, IntVec3 targetCenter) {
+
+    public static IntVec3 ConvertPosRelativeToLift(IntVec3 shaftCenter, IntVec3 itemPos, IntVec3 targetCenter)
+    {
         return targetCenter - (shaftCenter - itemPos);
     }
 
-    public static void Send(Map oMap, IntVec3 oPos, Map tMap, IntVec3 tPos, bool bringUp){
+    public static void Send(Map oMap, IntVec3 oPos, Map tMap, IntVec3 tPos, bool bringUp)
+    {
         var anythingSent = false;
-        var targetLayer = tMap;
+        _ = tMap;
         var cells = CellRect.CenteredOn(oPos, 1);
         foreach (var cell in cells)
         {
             var thingList = cell.GetThingList(oMap).Where(
                 thing => thing != null &&
-                (thing is Pawn ||
-                    (thing is not Building &&
-                    thing is not Blueprint &&
-                    !invalidCategories.Contains(thing.def.category)
-                    )
-                )
+                         (thing is Pawn ||
+                          thing is not Building &&
+                          thing is not Blueprint &&
+                          !invalidCategories.Contains(thing.def.category)
+                         )
             ).ToList();
             var convertedLocation = ConvertPosRelativeToLift(oPos, cell, tPos);
             foreach (var thing in thingList)
             {
-                if (thing is not Pawn && (thing is not ThingWithComps && thing == null || thing is Building || thing is Blueprint))
+                if (thing is not Pawn && (thing is not ThingWithComps && thing == null || thing is Building ||
+                                          thing is Blueprint))
                 {
                     continue;
                 }
@@ -56,6 +57,7 @@ public class LiftUtils()
             {
                 return;
             }
+
             Current.Game.CurrentMap = tMap;
             Find.Selector.Select(tPos);
 
@@ -71,41 +73,47 @@ public class LiftUtils()
         Map tMap;
         IntVec3 oPos;
         IntVec3 tPos;
-        
-        switch (sender){
-            case Building_MiningShaft:
-                var shaft = sender as Building_MiningShaft;
+
+        switch (sender)
+        {
+            case Building_MiningShaft shaft:
                 if (shaft.m_Power.PowerOn == false && DeepRimMod.instance.NoPowerPreventsLiftUse)
-            {
-                Messages.Message("Deeprim.NoPower".Translate(), MessageTypeDefOf.RejectInput);
-                return;
-            }
+                {
+                    Messages.Message("Deeprim.NoPower".Translate(), MessageTypeDefOf.RejectInput);
+                    return;
+                }
+
                 oMap = shaft.Map;
                 tMap = shaft.connectedLift.Map;
                 oPos = shaft.Position;
                 tPos = shaft.connectedLift.Position;
-                DeepRimMod.LogMessage($"Mineshaft wants to send items.\noMap: {oMap}\ntMap: {tMap}\noPos: {oPos}\ntPos: {tPos}");
+                DeepRimMod.LogMessage(
+                    $"Mineshaft wants to send items.\noMap: {oMap}\ntMap: {tMap}\noPos: {oPos}\ntPos: {tPos}");
                 Send(oMap, oPos, tMap, tPos, bringUp);
                 break;
 
-            case Building_SpawnedLift:
-                var lift = sender as Building_SpawnedLift;
+            case Building_SpawnedLift lift:
                 if (lift.m_Power.PowerOn == false && DeepRimMod.instance.NoPowerPreventsLiftUse)
                 {
                     Messages.Message("Deeprim.NoPower".Translate(), MessageTypeDefOf.RejectInput);
                     return;
                 }
+
                 oMap = lift.Map;
                 oPos = lift.Position;
-                if (bringUp){
+                if (bringUp)
+                {
                     tMap = lift.parentDrill.Map;
                     tPos = lift.parentDrill.Position;
                 }
-                else {
+                else
+                {
                     tMap = lift.parentDrill.connectedLift.Map;
                     tPos = lift.parentDrill.connectedLift.Position;
                 }
-                DeepRimMod.LogMessage($"Underground Lift wants to send items.\noMap: {oMap}\ntMap: {tMap}\noPos: {oPos}\ntPos: {tPos}");
+
+                DeepRimMod.LogMessage(
+                    $"Underground Lift wants to send items.\noMap: {oMap}\ntMap: {tMap}\noPos: {oPos}\ntPos: {tPos}");
                 Send(oMap, oPos, tMap, tPos, bringUp);
                 break;
         }

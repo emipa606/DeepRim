@@ -1,7 +1,4 @@
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -9,11 +6,10 @@ namespace DeepRim;
 
 public class Command_TransferLayer(Building building) : Command_Action
 {
+    public Building_SpawnedLift lift;
     public UndergroundManager manager;
 
     public Building_MiningShaft shaft;
-
-    public Building_SpawnedLift lift;
 
     public override void ProcessInput(Event ev)
     {
@@ -34,15 +30,19 @@ public class Command_TransferLayer(Building building) : Command_Action
                 while (enumerator.MoveNext())
                 {
                     var pair = enumerator.Current;
-                    if (pair.Value != null)
+                    if (pair.Value == null)
                     {
-                    var name = manager.GetLayerName(pair.Key);
-                    var label = name == "" ? "Deeprim.UnnamedLayer".Translate(pair.Key).ToString() : "Deeprim.LayerDepthNamed".Translate(pair.Key, manager.layerNames[pair.Key]).ToString();
-                        list.Add(new FloatMenuOption(label,
-                            delegate { shaft.transferLevel = pair.Key; }));
-
+                        continue;
                     }
+
+                    var name = manager.GetLayerName(pair.Key);
+                    var label = name == ""
+                        ? "Deeprim.UnnamedLayer".Translate(pair.Key).ToString()
+                        : "Deeprim.LayerDepthNamed".Translate(pair.Key, manager.layerNames[pair.Key]).ToString();
+                    list.Add(new FloatMenuOption(label,
+                        delegate { shaft.transferLevel = pair.Key; }));
                 }
+
                 return new FloatMenu(list);
             }
             case Building_SpawnedLift:
@@ -56,14 +56,19 @@ public class Command_TransferLayer(Building building) : Command_Action
                 while (enumerator.MoveNext())
                 {
                     var pair = enumerator.Current;
-                    if (pair.Value != null && pair.Key != lift.depth)
+                    if (pair.Value == null || pair.Key == lift.depth)
                     {
-                    var name = manager.GetLayerName(pair.Key);
-                    var label = name == "" ? "Deeprim.UnnamedLayer".Translate(pair.Key).ToString() : "Deeprim.LayerDepthNamed".Translate(pair.Key, manager.layerNames[pair.Key]).ToString();
-                        list.Add(new FloatMenuOption(label,
-                            delegate { lift.TransferLevel = pair.Key; }));
+                        continue;
                     }
+
+                    var name = manager.GetLayerName(pair.Key);
+                    var label = name == ""
+                        ? "Deeprim.UnnamedLayer".Translate(pair.Key).ToString()
+                        : "Deeprim.LayerDepthNamed".Translate(pair.Key, manager.layerNames[pair.Key]).ToString();
+                    list.Add(new FloatMenuOption(label,
+                        delegate { lift.TransferLevel = pair.Key; }));
                 }
+
                 return new FloatMenu(list);
             }
             default:

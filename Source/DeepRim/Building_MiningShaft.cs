@@ -1,13 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime;
-using System.Runtime.Versioning;
 using System.Text;
 using RimWorld;
 using RimWorld.Planet;
-using UnityEngine;
-using UnityEngine.Analytics;
 using Verse;
 
 namespace DeepRim;
@@ -98,40 +94,56 @@ public class Building_MiningShaft : Building
         Scribe_References.Look(ref connectedLift, "m_ConnectedLift");
     }
 
-    public void tryReconfigureAll(){
+    public void tryReconfigureAll()
+    {
         Log.Warning("Reset button was pressed!");
         Log.Warning("Iterating over maps to gather a list of buildings:");
 
         UndergroundManager?.layersState.Clear();
-        List<Map> maps = Current.Game.maps;
+        var maps = Current.Game.maps;
         //Get lifts and shaft from maps
-        foreach (Map map in maps){
+        foreach (var map in maps)
+        {
             Log.Warning($"Current map: {map}");
             var lift = map.listerBuildings.AllBuildingsColonistOfClass<Building_SpawnedLift>().FirstOrDefault();
-            if (lift != null){
+            if (lift != null)
+            {
                 lift.m_Flick.SwitchIsOn = true;
-                if (!lift.m_Flick.SwitchIsOn){lift.m_Flick.DoFlick();}
+                if (!lift.m_Flick.SwitchIsOn)
+                {
+                    lift.m_Flick.DoFlick();
+                }
+
                 var mapParent = map.Parent as UndergroundMapParent;
-                UndergroundManager.layersState.Add(lift.depth, mapParent);
+                UndergroundManager?.layersState.Add(lift.depth, mapParent);
                 Log.Warning($"Found lift: {lift}");
                 continue;
             }
+
             Log.Warning("Map didn't contain an underground lift.");
         }
-        UndergroundManager.ActiveLayers = UndergroundManager.layersState.Count();
+
+        if (UndergroundManager != null)
+        {
+            UndergroundManager.ActiveLayers = UndergroundManager.layersState.Count;
+        }
     }
+
     public override IEnumerable<Gizmo> GetGizmos()
     {
         foreach (var current in base.GetGizmos())
         {
             yield return current;
         }
-        if (Prefs.DevMode){
+
+        if (Prefs.DevMode)
+        {
             yield return new Command_Action
             {
-                        action = tryReconfigureAll,
-                        defaultLabel = "Reset States",
-                        defaultDesc = "This will attempt to reconnect all underground layers with one mineshaft. May fix some errors. Do not use if you have mineshafts on multiple maps."
+                action = tryReconfigureAll,
+                defaultLabel = "Reset States",
+                defaultDesc =
+                    "This will attempt to reconnect all underground layers with one mineshaft. May fix some errors. Do not use if you have mineshafts on multiple maps."
             };
         }
 
@@ -147,7 +159,8 @@ public class Building_MiningShaft : Building
             icon = HarmonyPatches.UI_Option
         };
 
-        var storages = this.CellsAdjacent8WayAndInside().Where(vec3 => vec3.GetFirstThing<Building_Storage>(Map) != null);
+        var storages = this.CellsAdjacent8WayAndInside()
+            .Where(vec3 => vec3.GetFirstThing<Building_Storage>(Map) != null);
         if (storages.Any())
         {
             yield return new Command_TransferLayer(this)
@@ -251,74 +264,86 @@ public class Building_MiningShaft : Building
         {
             yield break;
         }
-        if (m_Power.PowerOn){
+
+        if (m_Power.PowerOn)
+        {
             var lift = connectedLift as Building_SpawnedLift;
             yield return new Command_Toggle
+            {
+                icon = HarmonyPatches.UI_ToggleSendPower,
+                defaultLabel = "Deeprim.SendPowerToLayer".Translate(),
+                defaultDesc = "Deeprim.SendPowerToLayerTT".Translate(),
+                isActive = () => lift != null && lift.m_Flick.SwitchIsOn,
+                toggleAction = delegate
                 {
-                    icon = HarmonyPatches.UI_ToggleSendPower,
-                    defaultLabel = "Deeprim.SendPowerToLayer".Translate(),
-                    defaultDesc = "Deeprim.SendPowerToLayerTT".Translate(),
-                    isActive = () => lift.m_Flick.SwitchIsOn,
-                    toggleAction = delegate { 
-                        lift.TogglePower();
-                        if (lift.m_Flick.SwitchIsOn){
-                            UndergroundManager.ActiveLayers++;
-                            UndergroundManager.AnyLayersPowered = true;
-                            }
-                        else {
-                            UndergroundManager.ActiveLayers--;
-                            if (UndergroundManager.ActiveLayers == 0){
-                                UndergroundManager.AnyLayersPowered = false;
-                            }
-                            }
+                    lift?.TogglePower();
+                    if (lift != null && lift.m_Flick.SwitchIsOn)
+                    {
+                        UndergroundManager.ActiveLayers++;
+                        UndergroundManager.AnyLayersPowered = true;
+                    }
+                    else
+                    {
+                        UndergroundManager.ActiveLayers--;
+                        if (UndergroundManager.ActiveLayers == 0)
+                        {
+                            UndergroundManager.AnyLayersPowered = false;
                         }
-                };
+                    }
+                }
+            };
         }
 
-        if (UndergroundManager.ActiveLayers > 0){
-            if (extraPower > 0)
-            {
-                yield return new Command_Action
-                {
-                    action = () =>
-                    {
-                        extraPower -= 100;
-                        m_Power.Props.basePowerConsumption = idlePowerNeeded + baseExtraPower + extraPower;
-                        m_Power.SetUpPowerVars();
-                    },
-                    defaultLabel = "Deeprim.DecreasePower".Translate(),
-                    defaultDesc = "Deeprim.DecreasePowerTT".Translate(extraPower - 100),
-                    icon = HarmonyPatches.UI_DecreasePower
-                };
-            }
+        if (UndergroundManager.ActiveLayers <= 0)
+        {
+            yield break;
+        }
 
+        if (extraPower > 0)
+        {
             yield return new Command_Action
             {
                 action = () =>
                 {
-                    extraPower += 100;
+                    extraPower -= 100;
                     m_Power.Props.basePowerConsumption = idlePowerNeeded + baseExtraPower + extraPower;
                     m_Power.SetUpPowerVars();
                 },
-                defaultLabel = "Deeprim.IncreasePower".Translate(),
-                defaultDesc = "Deeprim.IncreasePowerTT".Translate(extraPower + 100),
-                icon = HarmonyPatches.UI_IncreasePower
+                defaultLabel = "Deeprim.DecreasePower".Translate(),
+                defaultDesc = "Deeprim.DecreasePowerTT".Translate(extraPower - 100),
+                icon = HarmonyPatches.UI_DecreasePower
             };
-            yield return new Command_Action(){
-                icon = ContentFinder<Texture2D>.Get("UI/Commands/RenameZone"),
-                defaultLabel = "CommandRenameZoneLabel".Translate(),
-                defaultDesc = "Deeprim.ChangeLayerNameAtDepth".Translate(targetedLevel),
-                action = delegate
-                {
-                    var manager = UndergroundManager;
-                    if (manager.layerNames.Count == 0 && manager.layersState.Count > 0){
-                        manager.InitLayerNames();
-                    }
-                    Dialog_RenameLayer dialog_RenameZone = new Dialog_RenameLayer((Building_SpawnedLift)connectedLift);
-                    Find.WindowStack.Add(dialog_RenameZone);
-                }
-        };
         }
+
+        yield return new Command_Action
+        {
+            action = () =>
+            {
+                extraPower += 100;
+                m_Power.Props.basePowerConsumption = idlePowerNeeded + baseExtraPower + extraPower;
+                m_Power.SetUpPowerVars();
+            },
+            defaultLabel = "Deeprim.IncreasePower".Translate(),
+            defaultDesc = "Deeprim.IncreasePowerTT".Translate(extraPower + 100),
+            icon = HarmonyPatches.UI_IncreasePower
+        };
+        yield return new Command_Action
+        {
+            icon = TexButton.Rename,
+            defaultLabel = "Rename".Translate(),
+            defaultDesc = "Deeprim.ChangeLayerNameAtDepth".Translate(targetedLevel),
+            action = delegate
+            {
+                var manager = UndergroundManager;
+                if (manager.layerNames.Count == 0 && manager.layersState.Count > 0)
+                {
+                    manager.InitLayerNames();
+                }
+
+                var dialog_RenameZone = new Dialog_RenameLayer((Building_SpawnedLift)connectedLift);
+                Find.WindowStack.Add(dialog_RenameZone);
+            }
+        };
     }
 
     private void Abandon()
@@ -349,6 +374,7 @@ public class Building_MiningShaft : Building
                 targetedLevel = key;
                 Abandon(true);
             }
+
             UndergroundManager.NextLayer = 1;
             UndergroundManager.ActiveLayers = 0;
             UndergroundManager.AnyLayersPowered = false;
@@ -363,32 +389,42 @@ public class Building_MiningShaft : Building
     public override string GetInspectString()
     {
         var stringBuilder = new StringBuilder();
-        int nextLayer = UndergroundManager != null ? UndergroundManager.NextLayer * 10 : 10;
-        var label = "";
-        if (drillNew){
+        var nextLayer = UndergroundManager != null ? UndergroundManager.NextLayer * 10 : 10;
+        string label;
+        if (drillNew)
+        {
             label = "Deeprim.TargetNewLayerAtDepth".Translate(nextLayer);
-            }
-        else if (UndergroundManager.GetLayerName(targetedLevel) != ""){
-            label = "Deeprim.TargetLayerAtNamed".Translate(targetedLevel, UndergroundManager.GetLayerName(targetedLevel));
         }
-        else {
+        else if (UndergroundManager?.GetLayerName(targetedLevel) != "")
+        {
+            label = "Deeprim.TargetLayerAtNamed".Translate(targetedLevel,
+                UndergroundManager?.GetLayerName(targetedLevel));
+        }
+        else
+        {
             label = "Deeprim.TargetLayerAt".Translate(targetedLevel);
         }
+
         stringBuilder.AppendLine(label);
 
-        var storages = this.CellsAdjacent8WayAndInside().Where(vec3 => vec3.GetFirstThing<Building_Storage>(Map) != null);
+        var storages = this.CellsAdjacent8WayAndInside()
+            .Where(vec3 => vec3.GetFirstThing<Building_Storage>(Map) != null);
         if (storages.Any())
         {
-            var name = UndergroundManager.GetLayerName(transferLevel);
-            if (transferLevel == 0){
+            var name = UndergroundManager?.GetLayerName(transferLevel);
+            if (transferLevel == 0)
+            {
                 label = "Deeprim.TransferLevelNone".Translate();
             }
-            else if (name != ""){
+            else if (name != "")
+            {
                 label = "Deeprim.TransferTargetAtNamed".Translate(transferLevel, name);
             }
-            else {
+            else
+            {
                 label = "Deeprim.TransferTargetAt".Translate(transferLevel);
             }
+
             stringBuilder.AppendLine(label);
         }
 
@@ -455,6 +491,7 @@ public class Building_MiningShaft : Building
         {
             return 0;
         }
+
         if (manager.ActiveLayers == 0)
         {
             return 0;
@@ -489,15 +526,18 @@ public class Building_MiningShaft : Building
 
         mode = 0;
         SyncConnectedMap();
-        var lift = connectedLift as Building_SpawnedLift;
-        if (lift != null){
-            if (lift.m_Flick.SwitchIsOn){
+        if (connectedLift is Building_SpawnedLift lift)
+        {
+            if (lift.m_Flick.SwitchIsOn)
+            {
                 UndergroundManager.ActiveLayers--;
-                if (UndergroundManager.ActiveLayers == 0){
+                if (UndergroundManager.ActiveLayers == 0)
+                {
                     UndergroundManager.AnyLayersPowered = false;
                 }
             }
         }
+
         connectedMapParent?.AbandonLift(connectedLift, force);
         targetedLevel = -1;
         var originalValue = allowDestroyNonDestroyable;
@@ -620,7 +660,6 @@ public class Building_MiningShaft : Building
     private void Send()
     {
         LiftUtils.StageSend(this);
-        return;
     }
 
     private void BringUp()
@@ -630,6 +669,7 @@ public class Building_MiningShaft : Building
             Messages.Message("Deeprim.NoPower".Translate(), MessageTypeDefOf.RejectInput);
             return;
         }
+
         var lift = connectedLift as Building_SpawnedLift;
         LiftUtils.StageSend(lift, true);
     }
@@ -647,7 +687,8 @@ public class Building_MiningShaft : Building
             }
 
             var itemList = items.ToList();
-            DeepRimMod.LogMessage($"Transferring {itemList.Count} items from {storage} by shaft {this} to layer at {transferLevel*10}m");
+            DeepRimMod.LogMessage(
+                $"Transferring {itemList.Count} items from {storage} by shaft {this} to layer at {transferLevel * 10}m");
             // ReSharper disable once ForCanBeConvertedToForeach, Things despawn, cannot use foreach
             for (var index = 0; index < itemList.Count; index++)
             {
@@ -658,67 +699,75 @@ public class Building_MiningShaft : Building
         }
     }
 
-    public void SendFromStorages(){
-            nearbyStorages = [];
-            foreach (var cell in this.OccupiedRect().AdjacentCells)
+    public void SendFromStorages()
+    {
+        nearbyStorages = [];
+        foreach (var cell in this.OccupiedRect().AdjacentCells)
+        {
+            var Storages = cell.GetThingList(Map).Where(thing => thing is Building_Storage);
+            foreach (var thing in Storages)
             {
-                var Storages = cell.GetThingList(Map).Where(thing => thing is Building_Storage);
-                foreach (Building_Storage storage in Storages){
-                    nearbyStorages.Add(storage);
-                }
+                var storage = (Building_Storage)thing;
+                nearbyStorages.Add(storage);
             }
+        }
 
-            Map targetMap = null;
-            var targetPostition = IntVec3.Invalid;
-            if (UndergroundManager?.layersState != null)
+        Map targetMap = null;
+        var targetPostition = IntVec3.Invalid;
+        if (UndergroundManager?.layersState != null)
+        {
+            if (transferLevel != 0)
             {
-                if (transferLevel != 0)
+                if (UndergroundManager?.layersState.ContainsKey(transferLevel) == true)
                 {
-                    if (UndergroundManager?.layersState.ContainsKey(transferLevel) == true)
+                    targetMap = UndergroundManager.layersState[transferLevel]?.Map;
+                    var transferLifts =
+                        targetMap?.listerBuildings.AllBuildingsColonistOfDef(ThingDef.Named("undergroundlift"));
+                    if (transferLifts != null && transferLifts.Any())
                     {
-                        targetMap = UndergroundManager.layersState[transferLevel]?.Map;
-                        var transferLifts =
-                            targetMap?.listerBuildings.AllBuildingsColonistOfDef(ThingDef.Named("undergroundlift"));
-                        if (transferLifts != null && transferLifts.Any())
-                        {
-                            targetPostition = transferLifts.First().Position;
-                        }
-                        else
-                        {
-                            DeepRimMod.LogMessage("Found no spawned lift in targeted layer");
-                            return;
-                        }
+                        targetPostition = transferLifts.First().Position;
+                    }
+                    else
+                    {
+                        DeepRimMod.LogMessage("Found no spawned lift in targeted layer");
+                        return;
                     }
                 }
             }
+        }
 
-            if (targetMap == null || targetPostition == IntVec3.Invalid || !nearbyStorages.Any())
-            {
-                return;
-            }
+        if (targetMap == null || targetPostition == IntVec3.Invalid || !nearbyStorages.Any())
+        {
+            return;
+        }
 
-            DeepRimMod.LogMessage($"Found {nearbyStorages.Count} storages to transfer items from");
-            if (m_Power is not { PowerOn: false })
-            {
-                Transfer(targetMap, targetPostition, nearbyStorages.ToList());
-            }
-            else
-            {
-                DeepRimMod.LogMessage("Unpowered mining shaft refuses to send items");
-            }
+        DeepRimMod.LogMessage($"Found {nearbyStorages.Count} storages to transfer items from");
+        if (m_Power is not { PowerOn: false })
+        {
+            Transfer(targetMap, targetPostition, nearbyStorages.ToList());
+        }
+        else
+        {
+            DeepRimMod.LogMessage("Unpowered mining shaft refuses to send items");
+        }
     }
 
     public void SyncConnectedMap()
     {
         connectedMapParent = UndergroundManager?.layersState[targetedLevel];
         connectedMap = UndergroundManager?.layersState[targetedLevel]?.Map;
-        connectedLift = connectedMap?.listerBuildings.AllBuildingsColonistOfClass<Building_SpawnedLift>().FirstOrDefault();
+        connectedLift = connectedMap?.listerBuildings.AllBuildingsColonistOfClass<Building_SpawnedLift>()
+            .FirstOrDefault();
     }
-    public void recountWealthSometimes(){
-        if(Find.TickManager.TicksGame % 5000f == 0){
+
+    public void recountWealthSometimes()
+    {
+        if (Find.TickManager.TicksGame % 5000f == 0)
+        {
             Map.wealthWatcher.ForceRecount();
-        }       
+        }
     }
+
     public override void Tick()
     {
         base.Tick();
@@ -726,33 +775,41 @@ public class Building_MiningShaft : Building
         {
             ((Building_SpawnedLift)connectedLift).surfaceMap = Map;
         }
-        if (!DeepRimMod.instance.DeepRimSettings.LowTechMode){
+
+        if (!DeepRimMod.instance.DeepRimSettings.LowTechMode)
+        {
             //handle a case where the mod is updated in an existing save and ActiveLayers becomes 0 for some reason when it shouldn't be
-            if(UndergroundManager.ActiveLayers == 0 && UndergroundManager.AnyLayersPowered == true){
-                DeepRimMod.LogWarn($"UndergroundManager.ActiveLayers was not initialized. Setting variable to {UndergroundManager.layersState.Count()}.");
-                UndergroundManager.ActiveLayers = UndergroundManager.layersState.Count();
-                if (UndergroundManager.layersState.Count() == 0){
+            if (UndergroundManager.ActiveLayers == 0 && UndergroundManager.AnyLayersPowered)
+            {
+                DeepRimMod.LogWarn(
+                    $"UndergroundManager.ActiveLayers was not initialized. Setting variable to {UndergroundManager.layersState.Count}.");
+                UndergroundManager.ActiveLayers = UndergroundManager.layersState.Count;
+                if (UndergroundManager.layersState.Count == 0)
+                {
                     UndergroundManager.AnyLayersPowered = false;
                 }
             }
-            
-            if (m_Power.PowerOn && UndergroundManager.ActiveLayers > 0 
-            && m_Power.Props.basePowerConsumption != idlePowerNeeded + baseExtraPower + extraPower)
+
+            if (m_Power.PowerOn && UndergroundManager.ActiveLayers > 0
+                                && m_Power.Props.basePowerConsumption != idlePowerNeeded + baseExtraPower + extraPower)
             {
                 DeepRimMod.LogWarn("Updating power to ON state");
-                m_Power.Props.basePowerConsumption = idlePowerNeeded + baseExtraPower + extraPower;          
+                m_Power.Props.basePowerConsumption = idlePowerNeeded + baseExtraPower + extraPower;
                 m_Power.SetUpPowerVars();
             }
-            else if (UndergroundManager.ActiveLayers < 1 && m_Power.Props.basePowerConsumption != idlePowerNeeded){
+            else if (UndergroundManager.ActiveLayers < 1 && m_Power.Props.basePowerConsumption != idlePowerNeeded)
+            {
                 DeepRimMod.LogWarn("Updating power to OFF state.");
                 m_Power.Props.basePowerConsumption = idlePowerNeeded;
                 m_Power.SetUpPowerVars();
             }
         }
+
         if (GenTicks.TicksGame % GenTicks.TickRareInterval == 0)
         {
-            this.SendFromStorages();
+            SendFromStorages();
         }
+
         recountWealthSometimes();
         if (DeepRimMod.instance.DeepRimSettings.LowTechMode)
         {

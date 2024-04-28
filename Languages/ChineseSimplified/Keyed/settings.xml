@@ -65,4 +65,33 @@
   <Deeprim.AbandonAll>您即将解构主竖井。所有层和其中的任何东西都将被永久废弃。没有退路。你确定要继续解构吗？</Deeprim.AbandonAll>
   <Deeprim.AbandonAllYes>是的，全部摧毁</Deeprim.AbandonAllYes>
   <Deeprim.AbandonAllNo>否，中止</Deeprim.AbandonAllNo>
+  <Deeprim.MapSizeSlider>新图层的地图大小：{0}</Deeprim.MapSizeSlider>
+  <Deeprim.MapSizeSliderTT>控制为地下图层生成的地图大小 [默认值：75］</Deeprim.MapSizeSliderTT>
+  <Deeprim.OreDensitySlider>新矿层的矿石密度：{0}</Deeprim.OreDensitySlider>
+  <Deeprim.OreDensitySliderTT>新矿层中会产生多少矿石 [默认值：16]。数值越大，稀有矿石越常见。</Deeprim.OreDensitySliderTT>
+  <Deeprim.DepthValueBaseSlider>井下地层值：{0}%</Deeprim.DepthValueBaseSlider>
+  <Deeprim.DepthValueBaseSliderTT>无论深度如何，每层地下财富的基本百分比。</Deeprim.DepthValueBaseSliderTT>
+  <Deeprim.DepthValueFalloffSlider>每个深度的值衰减：{0}%</Deeprim.DepthValueFalloffSlider>
+  <Deeprim.DepthValueFalloffSliderTT>随着该值的增加，越深的层数对殖民地财富的影响越小。</Deeprim.DepthValueFalloffSliderTT>
+  <Deeprim.Little>非常小</Deeprim.Little>
+  <Deeprim.Tiny>微小</Deeprim.Tiny>
+  <Deeprim.LayerDepthNamed>[{0}0m] {1}</Deeprim.LayerDepthNamed>
+  <Deeprim.ChangeLayerName>更改该图层的名称</Deeprim.ChangeLayerName>
+  <Deeprim.ChangeLayerNameAtDepth>更改深度层名称：{0}0 米</Deeprim.ChangeLayerNameAtDepth>
+  <Deeprim.LayerName>图层名称：{0}</Deeprim.LayerName>
+  <Deeprim.TargetNewLayerAtDepth>目标深度 {0}m 的新层</Deeprim.TargetNewLayerAtDepth>
+  <Deeprim.LayerNameRemoved>图层名称已清除</Deeprim.LayerNameRemoved>
+  <Deeprim.LayerNameAdded>图层名称更改为"{0}"</Deeprim.LayerNameAdded>
+  <Deeprim.TargetLayerAtNamed>目标：深度为 {0}0m 的层 ({1})</Deeprim.TargetLayerAtNamed>
+  <Deeprim.UnnamedLayer>[无名层</Deeprim.UnnamedLayer>
+  <Deeprim.TransferTargetAtNamed>转移目标：深度为 {0}0m 的层 ({1})</Deeprim.TransferTargetAtNamed>
+  <Deeprim.SendPowerToLayer>发送功率</Deeprim.SendPowerToLayer>
+  <Deeprim.SendPowerToLayerTT>切换是否向某一层的地下提升机供电</Deeprim.SendPowerToLayerTT>
+  <Deeprim.NoPowerPreventsLiftUse>升降机需要动力</Deeprim.NoPowerPreventsLiftUse>
+  <Deeprim.NoPowerPreventsLiftUseTT>切换升降机是否需要通电才能发送信息。默认已启用。小心，你可能会被困住！</Deeprim.NoPowerPreventsLiftUseTT>
+  <Deeprim.TransferLevelNone>转学目标：无</Deeprim.TransferLevelNone>
+  <Deeprim.TargetLayerNone>目标：无</Deeprim.TargetLayerNone>
+  <Deeprim.TargetLayerThis>目标：本层</Deeprim.TargetLayerThis>
+  <Deeprim.TargetLayerAtThis>本层</Deeprim.TargetLayerAtThis>
+  <Deeprim.Reset>重置</Deeprim.Reset>
 </LanguageData>

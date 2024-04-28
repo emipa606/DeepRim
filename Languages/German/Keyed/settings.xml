@@ -65,4 +65,33 @@ HINWEIS: Der Mod ist nicht dafür ausgelegt, mehr als eine Welle zu haben, die P
   <Deeprim.AbandonAll>Sie sind im Begriff, den Hauptschacht zu dekonstruieren. Alle Schichten und alles, was sich in ihnen befindet, werden endgültig aufgegeben. Es gibt keinen Weg zurück. Sind Sie sicher, dass Sie mit dem Rückbau fortfahren wollen?</Deeprim.AbandonAll>
   <Deeprim.AbandonAllYes>Ja, zerstören Sie alles</Deeprim.AbandonAllYes>
   <Deeprim.AbandonAllNo>Nein, Abbruch</Deeprim.AbandonAllNo>
+  <Deeprim.MapSizeSlider>Kartengröße für neue Ebenen: {0}</Deeprim.MapSizeSlider>
+  <Deeprim.MapSizeSliderTT>Steuert die Größe der Karten, die für unterirdische Ebenen erstellt werden [Standard: 75].</Deeprim.MapSizeSliderTT>
+  <Deeprim.OreDensitySlider>Erzdichte für neue Schichten: {0}</Deeprim.OreDensitySlider>
+  <Deeprim.OreDensitySliderTT>Wie viel Erz in neuen Schichten spawnen wird [Standard: 16]. Höhere Werte machen seltene Erze häufiger.</Deeprim.OreDensitySliderTT>
+  <Deeprim.DepthValueBaseSlider>Wert der unterirdischen Schichten: {0}%</Deeprim.DepthValueBaseSlider>
+  <Deeprim.DepthValueBaseSliderTT>Der Basisprozentsatz des unterirdischen Reichtums, der pro Schicht unabhängig von der Tiefe berücksichtigt wird.</Deeprim.DepthValueBaseSliderTT>
+  <Deeprim.DepthValueFalloffSlider>Wertabfall pro Tiefe: {0}%</Deeprim.DepthValueFalloffSlider>
+  <Deeprim.DepthValueFalloffSliderTT>Je tiefer die Schichten sind, desto weniger zählt dieser Wert für den Reichtum Ihrer Kolonie.</Deeprim.DepthValueFalloffSliderTT>
+  <Deeprim.Little>Sehr klein</Deeprim.Little>
+  <Deeprim.Tiny>Winzig klein</Deeprim.Tiny>
+  <Deeprim.LayerDepthNamed>[{0}0m] {1}</Deeprim.LayerDepthNamed>
+  <Deeprim.ChangeLayerName>Ändern Sie den Namen dieser Ebene</Deeprim.ChangeLayerName>
+  <Deeprim.ChangeLayerNameAtDepth>Ändern Sie den Namen der Ebene in der Tiefe: {0}0m</Deeprim.ChangeLayerNameAtDepth>
+  <Deeprim.LayerName>Ebene Name: {0}</Deeprim.LayerName>
+  <Deeprim.TargetNewLayerAtDepth>Ziel: Neue Schicht in Tiefe {0}m</Deeprim.TargetNewLayerAtDepth>
+  <Deeprim.LayerNameRemoved>Ebenenname wurde gelöscht</Deeprim.LayerNameRemoved>
+  <Deeprim.LayerNameAdded>Der Name der Ebene wurde in "{0}" geändert.</Deeprim.LayerNameAdded>
+  <Deeprim.TargetLayerAtNamed>Ziel: Schicht in Tiefe {0}0m ({1})</Deeprim.TargetLayerAtNamed>
+  <Deeprim.UnnamedLayer>[{0}0m] Unbenannte-Schicht</Deeprim.UnnamedLayer>
+  <Deeprim.TransferTargetAtNamed>Ziel übertragen: Schicht in Tiefe {0}0m ({1})</Deeprim.TransferTargetAtNamed>
+  <Deeprim.SendPowerToLayer>Strom senden</Deeprim.SendPowerToLayer>
+  <Deeprim.SendPowerToLayerTT>Schaltet um, ob Strom an den unterirdischen Aufzug in einer Schicht gesendet wird</Deeprim.SendPowerToLayerTT>
+  <Deeprim.NoPowerPreventsLiftUse>Aufzüge benötigen Strom</Deeprim.NoPowerPreventsLiftUse>
+  <Deeprim.NoPowerPreventsLiftUseTT>Schaltet um, ob die Aufzüge mit Strom versorgt werden müssen, um Dinge zu senden. Standardmäßig aktiviert. Vorsicht, Sie könnten in eine Falle geraten!</Deeprim.NoPowerPreventsLiftUseTT>
+  <Deeprim.TransferLevelNone>Ziel übertragen: Keine</Deeprim.TransferLevelNone>
+  <Deeprim.TargetLayerNone>Ziel: Keine</Deeprim.TargetLayerNone>
+  <Deeprim.TargetLayerThis>Ziel: Diese Ebene</Deeprim.TargetLayerThis>
+  <Deeprim.TargetLayerAtThis>[{0}0m] Diese Schicht</Deeprim.TargetLayerAtThis>
+  <Deeprim.Reset>Zurücksetzen</Deeprim.Reset>
 </LanguageData>

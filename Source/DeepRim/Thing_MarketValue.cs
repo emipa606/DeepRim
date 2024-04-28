@@ -3,7 +3,7 @@ using Verse;
 
 namespace DeepRim;
 
-[HarmonyPatch(typeof(Thing), "MarketValue", MethodType.Getter)]
+[HarmonyPatch(typeof(Thing), nameof(Thing.MarketValue), MethodType.Getter)]
 public static class Thing_MarketValue
 {
     private static void Postfix(Thing __instance, ref float __result)

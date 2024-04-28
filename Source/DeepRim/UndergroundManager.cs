@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine.PlayerLoop;
 using Verse;
 
 namespace DeepRim;
@@ -10,24 +8,12 @@ public class UndergroundManager(Map map) : MapComponent(map)
 {
     private const int targetversion = 1;
 
-    public Dictionary<int, UndergroundMapParent> layersState = new Dictionary<int, UndergroundMapParent>();
-    public Dictionary<int, string> layerNames = new Dictionary<int, string>();
-
     private int activeLayers = -1;
 
     public bool AnyLayersPowered = true;
+    public Dictionary<int, string> layerNames = new Dictionary<int, string>();
 
-    public int ActiveLayers {
-        get {
-            if (activeLayers == -1){
-                activeLayers = layersState.Count;
-            }
-            return activeLayers;
-        }
-        set {
-            activeLayers = value;
-        }
-    }
+    public Dictionary<int, UndergroundMapParent> layersState = new Dictionary<int, UndergroundMapParent>();
 
     private List<int> list2;
 
@@ -36,71 +22,82 @@ public class UndergroundManager(Map map) : MapComponent(map)
 
     private List<string> list5;
 
-    private int nextLayer = 0;
+    private int nextLayer;
 
-    public void InitLayerNames(){
-        DeepRimMod.LogMessage("Initializing layerNames variable");
-        layerNames = new Dictionary<int, string>();
-        foreach (var layer in layersState){
-            layerNames[layer.Key] = "";
-        }
-    }
+    private int spawned;
 
-    public string GetLayerName(int key){
-        if (layerNames == null){
-            InitLayerNames();
+    public int ActiveLayers
+    {
+        get
+        {
+            if (activeLayers == -1)
+            {
+                activeLayers = layersState.Count;
+            }
+
+            return activeLayers;
         }
-        if (layerNames.ContainsKey(key)){
-            return layerNames[key];
-        }
-        return "";
+        set => activeLayers = value;
     }
 
     public int NextLayer
     {
         get
         {
-            if (nextLayer == 0)
-            {
-                DeepRimMod.LogMessage("nextlayer is 0, trying to find deepest layer".ToString());
-                if (layersState.Any())
-                {
-                    int deepest = 0;
-                    var enumerator = layersState.GetEnumerator();
-                    while (enumerator.MoveNext())
-                    {
-                        DeepRimMod.LogMessage($"Layer: {enumerator.Current}");
-                        if (enumerator.Current.Key > nextLayer)
-                        {
-                            deepest = enumerator.Current.Key;
-                        }
-                    }
-                    nextLayer = deepest + 1;
-                    DeepRimMod.LogMessage($"nextLayer is being set to: {nextLayer}");
-                    return nextLayer;
-                }
-                else
-                {
-                    nextLayer = 1;
-                    return nextLayer;
-                }
-            }
-            else
+            if (nextLayer != 0)
             {
                 return nextLayer;
             }
+
+            DeepRimMod.LogMessage("nextlayer is 0, trying to find deepest layer");
+            if (layersState.Any())
+            {
+                var deepest = 0;
+                var enumerator = layersState.GetEnumerator();
+                while (enumerator.MoveNext())
+                {
+                    DeepRimMod.LogMessage($"Layer: {enumerator.Current}");
+                    if (enumerator.Current.Key > nextLayer)
+                    {
+                        deepest = enumerator.Current.Key;
+                    }
+                }
+
+                nextLayer = deepest + 1;
+                DeepRimMod.LogMessage($"nextLayer is being set to: {nextLayer}");
+                return nextLayer;
+            }
+
+            nextLayer = 1;
+            return nextLayer;
         }
-        set
+        set => nextLayer = value;
+    }
+
+    public void InitLayerNames()
+    {
+        DeepRimMod.LogMessage("Initializing layerNames variable");
+        layerNames = new Dictionary<int, string>();
+        foreach (var layer in layersState)
         {
-            nextLayer = value;
+            layerNames[layer.Key] = "";
         }
     }
 
-    private int spawned;
+    public string GetLayerName(int key)
+    {
+        if (layerNames == null)
+        {
+            InitLayerNames();
+        }
+
+        return layerNames != null && layerNames.TryGetValue(key, out var name) ? name : "";
+    }
 
     public void InsertLayer(UndergroundMapParent mp)
     {
-        DeepRimMod.LogMessage($"Drilled new layer at depth {NextLayer} with ore density {DeepRimMod.instance.DeepRimSettings.OreDensity}");
+        DeepRimMod.LogMessage(
+            $"Drilled new layer at depth {NextLayer} with ore density {DeepRimMod.instance.DeepRimSettings.OreDensity}");
         ActiveLayers++;
         layersState.Add(NextLayer, mp);
         mp.depth = NextLayer;
@@ -142,7 +139,7 @@ public class UndergroundManager(Map map) : MapComponent(map)
         {
             Log.Error("Destroyed layer doesn't have correct depth");
         }
-        
+
         layersState.Remove(depth);
     }
 

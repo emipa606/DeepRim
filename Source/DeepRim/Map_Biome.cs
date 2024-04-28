@@ -4,7 +4,7 @@ using Verse;
 
 namespace DeepRim;
 
-[HarmonyPatch(typeof(Map), "Biome", MethodType.Getter)]
+[HarmonyPatch(typeof(Map), nameof(Map.Biome), MethodType.Getter)]
 public static class Map_Biome
 {
     private static void Postfix(Map __instance, ref BiomeDef __result)
