@@ -1,12 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
   <Deeprim.MapSize>Map-size for new layers</Deeprim.MapSize>
+  <Deeprim.MapSizeSlider>Map-size for new layers: {0}</Deeprim.MapSizeSlider>
+  <Deeprim.MapSizeSliderTT>Controls the size of the maps generated for underground layers [Default: 75]</Deeprim.MapSizeSliderTT>
+  <Deeprim.OreDensitySlider>Ore density for new layers: {0}</Deeprim.OreDensitySlider>
+  <Deeprim.OreDensitySliderTT>How much ore will spawn in new layers [Default: 16]. Higher values make rare ores more common.</Deeprim.OreDensitySliderTT>
+  <Deeprim.DepthValueBaseSlider>Value of underground layers: {0}%</Deeprim.DepthValueBaseSlider>
+  <Deeprim.DepthValueBaseSliderTT>The base percentage of underground wealth that will be considered per layer regardless of depth.</Deeprim.DepthValueBaseSliderTT>
+  <Deeprim.DepthValueFalloffSlider>Value fall-off per depth: {0}%</Deeprim.DepthValueFalloffSlider>
+  <Deeprim.DepthValueFalloffSliderTT>Deeper layers count less toward your colony wealth as this value increases.</Deeprim.DepthValueFalloffSliderTT>
   <Deeprim.CurrentModVersion>Installed mod-version: {0}</Deeprim.CurrentModVersion>
   <Deeprim.VerboseLogging>Verbose logging</Deeprim.VerboseLogging>
   <Deeprim.VerboseLogging.Tooltip>More logging for finding issues</Deeprim.VerboseLogging.Tooltip>
   <Deeprim.Inherited>Inherited</Deeprim.Inherited>
   <Deeprim.Same>Same as colony-map</Deeprim.Same>
   <Deeprim.Incident>Incident-size</Deeprim.Incident>
+  <Deeprim.Little>Very small</Deeprim.Little>
+  <Deeprim.Tiny>Tiny</Deeprim.Tiny>
   <Deeprim.NoPowerDesc>Allows digging deep into the planet for exploration and mining. Requires a miner.</Deeprim.NoPowerDesc>
   <Deeprim.PowerDesc>Allows digging deep into the planet for exploration and mining. Requires power.</Deeprim.PowerDesc>
   <Deeprim.Lowtech>Use low-tech drills</Deeprim.Lowtech>
@@ -16,13 +26,27 @@
   <Deeprim.LowtechInfo.Tooltip>This option can not be changed while a game is active. Save and return to the main menu to be able to change this option. Upon loading drills will convert to the selected tech-level.</Deeprim.LowtechInfo.Tooltip>
   <Deeprim.BringingUp>Bringing Up</Deeprim.BringingUp>
   <Deeprim.LayerDepth>Layer Depth: {0}0m</Deeprim.LayerDepth>
+  <Deeprim.LayerDepthNamed>[{0}0m] {1}</Deeprim.LayerDepthNamed>
+  <Deeprim.ChangeLayerName>Change the name of this layer</Deeprim.ChangeLayerName>
+  <Deeprim.ChangeLayerNameAtDepth>Change the name of the layer at depth: {0}0m</Deeprim.ChangeLayerNameAtDepth>
+  <Deeprim.LayerName>Layer Name: {0}</Deeprim.LayerName>
   <Deeprim.TargetNewLayer>Target: New layer</Deeprim.TargetNewLayer>
+  <Deeprim.TargetNewLayerAtDepth>Target: New layer at depth {0}m</Deeprim.TargetNewLayerAtDepth>
+  <Deeprim.LayerNameRemoved>Layer name was cleared</Deeprim.LayerNameRemoved>
+  <Deeprim.LayerNameAdded>Layer name was changed to "{0}"</Deeprim.LayerNameAdded>
   <Deeprim.TargetLayerAt>Target: Layer at depth {0}0m</Deeprim.TargetLayerAt>
+  <Deeprim.TargetLayerAtNamed>Target: Layer at depth {0}0m ({1})</Deeprim.TargetLayerAtNamed>
+  <Deeprim.UnnamedLayer>[{0}0m] Unnamed-Layer</Deeprim.UnnamedLayer>
   <Deeprim.TransferTargetAt>Transfer target: Layer at depth {0}0m</Deeprim.TransferTargetAt>
+  <Deeprim.TransferTargetAtNamed>Transfer target: Layer at depth {0}0m ({1})</Deeprim.TransferTargetAtNamed>
   <Deeprim.Progress>Progress: {0}%</Deeprim.Progress>
   <Deeprim.DrillingComplete>Drilling complete. Depth: {0}0m</Deeprim.DrillingComplete>
   <Deeprim.DrillingCompleteTT>Drilling complete</Deeprim.DrillingCompleteTT>
   <Deeprim.NoPower>No power</Deeprim.NoPower>
+  <Deeprim.SendPowerToLayer>Send Power</Deeprim.SendPowerToLayer>
+  <Deeprim.SendPowerToLayerTT>Toggle whether power is sent to the underground lift in a layer</Deeprim.SendPowerToLayerTT>
+  <Deeprim.NoPowerPreventsLiftUse>Lifts require power</Deeprim.NoPowerPreventsLiftUse>
+  <Deeprim.NoPowerPreventsLiftUseTT>Toggles whether lifts need to be powered to send things. Enabled by default. Careful, you might get trapped!</Deeprim.NoPowerPreventsLiftUseTT>
   <Deeprim.NothingToSend>Nothing to send</Deeprim.NothingToSend>
   <Deeprim.SendingDown>Sending down</Deeprim.SendingDown>
   <Deeprim.NewLayer>New Layer</Deeprim.NewLayer>
@@ -31,6 +55,10 @@
   <Deeprim.NoMoreShafts>You cannot place more than one shaft. You can hold SHIFT while placing to override this.
 NOTE: The mod is not designed to have more than one shaft, placing this may have unintended consequences!</Deeprim.NoMoreShafts>
   <Deeprim.None>None</Deeprim.None>
+  <Deeprim.TransferLevelNone>Transfer target: None</Deeprim.TransferLevelNone>
+  <Deeprim.TargetLayerNone>Target: None</Deeprim.TargetLayerNone>
+  <Deeprim.TargetLayerThis>Target: This layer</Deeprim.TargetLayerThis>
+  <Deeprim.TargetLayerAtThis>[{0}0m] This layer</Deeprim.TargetLayerAtThis>
   <Deeprim.Surface>Up to surface</Deeprim.Surface>
   <Deeprim.TransferSurface>Transfer target: Up to surface</Deeprim.TransferSurface>
   <Deeprim.GeneratingMap>Drilling is complete, generating new map. This may take a while depending on the map-size used.</Deeprim.GeneratingMap>
@@ -64,4 +92,5 @@ NOTE: The mod is not designed to have more than one shaft, placing this may have
   <Deeprim.ChangeTarget>Target depth</Deeprim.ChangeTarget>
   <Deeprim.ChangeTargetNewTT>Toggle target between new layer and old layers. Currently, mining shaft is set to dig new layer.</Deeprim.ChangeTargetNewTT>
   <Deeprim.ChangeTargetExistingTT>Toggle target between new layer and old layers. Currently, mining shaft is set to old layer, depth: {0}m</Deeprim.ChangeTargetExistingTT>
+  <Deeprim.Reset>Reset</Deeprim.Reset>
 </LanguageData>
