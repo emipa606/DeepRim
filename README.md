@@ -1,7 +1,6 @@
-# DeepRim
+# [DeepRim (Continued)](https://steamcommunity.com/sharedfiles/filedetails/?id=2164179860)
 
 ![Image](https://i.imgur.com/buuPQel.png)
-
 Update of meowmeows mod
 https://ludeon.com/forums/index.php?topic=39262.0
 
@@ -12,19 +11,24 @@ https://ludeon.com/forums/index.php?topic=39262.0
 - Added mod-setting for low-tech mode where the drill is operated manually and don't require power
 - Added option for transfering items between layers automatically if they are in nearby built storages. You need storage-buildings built both on the top level as well as on a lower level, next to the shaft. You will then get an added option on the shaft to automatically transfer items between them. 
 - Added power-transfer from the top layer to the lower layers. A set amount of power is split equally to each layer.
-- sk4p3g04t made retexture for this mod: https://steamcommunity.com/sharedfiles/filedetails/?id=2965262893]DeepRim Retexture
+- sk4p3g04t made retexture for this mod: [https://steamcommunity.com/sharedfiles/filedetails/?id=2965262893](DeepRim Retexture)
 - Holding CTRL while transferring pawns/items will now also switch the map to the targeted map
 - New icon textures made by Ontheheavens
 - New drill texture made by Ontheheavens based on the the retexture mod by sk4p3g04t. The old texture will be used when selecting the "Low-tech"-option in the mod-settings.
 - Manual drilling should now only be possible when the "Low-tech" option is on, as the new modern texture does not really allow manual drilling.
 
-Will now generate versions of cave biomes in https://steamcommunity.com/sharedfiles/filedetails/?id=2969748433]Biomes! Caverns  (Thanks to m00nl1ght-dev for the fix) and https://steamcommunity.com/sharedfiles/filedetails/?id=2259124387]CaveBiome if loaded.
+Will now generate versions of cave biomes in [https://steamcommunity.com/sharedfiles/filedetails/?id=2969748433]Biomes! Caverns[/url]  (Thanks to m00nl1ght-dev for the fix) and [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2259124387](CaveBiome) if loaded.
+
+**The 1.5 update brings a lot of new features and QoL additions, all done by SunPraise**
+- Layers can now be renamed
+- Abandoned layer depth will not be reused
+- Items can be transfered between layers and not just via the surface
+- Ore density of the underground layers can be adjusted
+- More flexibility with the power-transfer between layers
 
 ![Image](https://i.imgur.com/pufA0kM.png)
-
 	
 ![Image](https://i.imgur.com/Z4GOv8H.png)
-
 
 Allows construction of mining shaft, which can drill down and bring you new maps to explore and mine for resource.  
 Never run out of ores! 
@@ -63,16 +67,14 @@ Oh, wait. Asset by jabbamonkey is used.
 ![Image](https://i.imgur.com/PwoNOj4.png)
 
 
-
 -  See if the the error persists if you just have this mod and its requirements active.
 -  If not, try adding your other mods until it happens again.
--  Post your error-log using https://steamcommunity.com/workshop/filedetails/?id=818773962]HugsLib or the standalone https://steamcommunity.com/sharedfiles/filedetails/?id=2873415404]Uploader and command Ctrl+F12
+-  Post your error-log using [https://steamcommunity.com/workshop/filedetails/?id=818773962]HugsLib[/url] or the standalone [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2873415404](Uploader) and command Ctrl+F12
 -  For best support, please use the Discord-channel for error-reporting.
 -  Do not report errors by making a discussion-thread, I get no notification of that.
 -  If you have the solution for a problem, please post it to the GitHub repository.
--  Use https://github.com/RimSort/RimSort/releases/latest]RimSort to sort your mods
+-  Use [https://github.com/RimSort/RimSort/releases/latest](RimSort) to sort your mods
 
 
 
-https://steamcommunity.com/sharedfiles/filedetails/changelog/2164179860]![Image](https://img.shields.io/github/v/release/emipa606/DeepRim?label=latest%20version&style=plastic&color=9f1111&labelColor=black)
-
+[https://steamcommunity.com/sharedfiles/filedetails/changelog/2164179860]![Image]((https://img.shields.io/github/v/release/emipa606/DeepRim?label=latest%20version&style=plastic&color=9f1111&labelColor=black))

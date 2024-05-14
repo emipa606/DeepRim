@@ -1,5 +1,10 @@
 # Changelog for DeepRim
 
+1.5.1 - Item transfer now works with storage buildings and zones
+Items will prefer to spawn in nearby allowed storages. If none are available, they will spawn next to the drill instead of on it.
+Fixed some gui-issues with the item-transfers
+
+
 1.5.0 - Large addition of features, added by SunPraise
 Used DeepL to update translations for ChineseSimplified, French, German, Russian
 

@@ -36,6 +36,21 @@ public class UndergroundMapParent : MapParent
         }
     }
 
+    public Building_SpawnedLift GetSpawnedLift()
+    {
+        foreach (var building in Map.listerBuildings.allBuildingsColonist)
+        {
+            if (building is not Building_SpawnedLift spawnedLift)
+            {
+                continue;
+            }
+
+            return spawnedLift;
+        }
+
+        return null;
+    }
+
     public void AbandonLift(Thing lift, bool force = false)
     {
         lift.DeSpawn();

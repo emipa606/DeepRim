@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Defs>
   <TabulaRasa.UpdateDef Abstract="true" Name="DeepRim_UpdateInfoBase">
     <linkUrl>https://steamcommunity.com/sharedfiles/filedetails/?id=2164179860</linkUrl>
@@ -13,15 +13,15 @@ The old drill-texture is still used if the low-tech option is enabled in the mod
 If the low-tech option is changed any already built drills will now convert to the selected tech-level upon loading a save.
 The manual drilling is now only possible on the low-tech drill as the new graphic does not really allow manual drilling.</content>
   </TabulaRasa.UpdateDef>
-	<TabulaRasa.UpdateDef ParentName="DeepRim_UpdateInfoBase">
-		<defName>DeepRim_1_4_16</defName>
-		<date>2024/4/28</date>
-		<content>The 1.5 update brings a lot of new features and QoL additions, all done by SunPraise
+  <TabulaRasa.UpdateDef ParentName="DeepRim_UpdateInfoBase">
+    <defName>DeepRim_1_4_16</defName>
+    <date>2024/4/28</date>
+    <content>The 1.5 update brings a lot of new features and QoL additions, all done by SunPraise
 Layers can now be renamed
 Abandoned layer depth will not be reused
 Items can be transfered between layers and not just via the surface
 Ore density of the underground layers can be adjusted
 More flexibility with the power-transfer between layers
 Hope it helps!</content>
-	</TabulaRasa.UpdateDef>
+  </TabulaRasa.UpdateDef>
 </Defs>

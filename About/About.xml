@@ -45,6 +45,13 @@ https://ludeon.com/forums/index.php?topic=39262.0
 
 Will now generate versions of cave biomes in [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2969748433]Biomes! Caverns[/url]  (Thanks to m00nl1ght-dev for the fix) and [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2259124387]CaveBiome[/url] if loaded.
 
+[b]The 1.5 update brings a lot of new features and QoL additions, all done by SunPraise[/b]
+- Layers can now be renamed
+- Abandoned layer depth will not be reused
+- Items can be transfered between layers and not just via the surface
+- Ore density of the underground layers can be adjusted
+- More flexibility with the power-transfer between layers
+
 [img]https://i.imgur.com/pufA0kM.png[/img]
 
 [table]
@@ -106,5 +113,5 @@ Oh, wait. Asset by jabbamonkey is used.
 [/list]
 
 [url=https://steamcommunity.com/sharedfiles/filedetails/changelog/2164179860][img]https://img.shields.io/github/v/release/emipa606/DeepRim?label=latest%20version&amp;style=plastic&amp;color=9f1111&amp;labelColor=black[/img][/url]</description>
-  <modVersion IgnoreIfNoMatchingField="True">1.5.0</modVersion>
+  <modVersion IgnoreIfNoMatchingField="True">1.5.1</modVersion>
 </ModMetaData>

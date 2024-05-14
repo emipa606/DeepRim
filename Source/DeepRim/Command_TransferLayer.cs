@@ -40,7 +40,15 @@ public class Command_TransferLayer(Building building) : Command_Action
                         ? "Deeprim.UnnamedLayer".Translate(pair.Key).ToString()
                         : "Deeprim.LayerDepthNamed".Translate(pair.Key, manager.layerNames[pair.Key]).ToString();
                     list.Add(new FloatMenuOption(label,
-                        delegate { shaft.transferLevel = pair.Key; }));
+                        delegate
+                        {
+                            shaft.transferLevel = pair.Key;
+                            var spawnedLift = pair.Value.GetSpawnedLift();
+                            if (spawnedLift is { TransferLevel: 0 })
+                            {
+                                spawnedLift.TransferLevel = pair.Key;
+                            }
+                        }));
                 }
 
                 return new FloatMenu(list);
@@ -50,7 +58,14 @@ public class Command_TransferLayer(Building building) : Command_Action
                 var list = new List<FloatMenuOption>
                 {
                     new FloatMenuOption("Deeprim.None".Translate(), delegate { lift.TransferLevel = lift.depth; }),
-                    new FloatMenuOption("Deeprim.Surface".Translate(), delegate { lift.TransferLevel = 0; })
+                    new FloatMenuOption("Deeprim.Surface".Translate(), delegate
+                    {
+                        lift.TransferLevel = 0;
+                        if (lift.parentDrill.transferLevel == lift.depth)
+                        {
+                            lift.parentDrill.transferLevel = 0;
+                        }
+                    })
                 };
                 var enumerator = manager.layersState.GetEnumerator();
                 while (enumerator.MoveNext())
@@ -66,7 +81,15 @@ public class Command_TransferLayer(Building building) : Command_Action
                         ? "Deeprim.UnnamedLayer".Translate(pair.Key).ToString()
                         : "Deeprim.LayerDepthNamed".Translate(pair.Key, manager.layerNames[pair.Key]).ToString();
                     list.Add(new FloatMenuOption(label,
-                        delegate { lift.TransferLevel = pair.Key; }));
+                        delegate
+                        {
+                            lift.TransferLevel = pair.Key;
+                            var spawnedLift = pair.Value.GetSpawnedLift();
+                            if (spawnedLift != null && spawnedLift.TransferLevel == lift.depth)
+                            {
+                                spawnedLift.TransferLevel = pair.Key;
+                            }
+                        }));
                 }
 
                 return new FloatMenu(list);

@@ -18,6 +18,12 @@ public static class WealthWatcherForceRecount_Patch
             return;
         }
 
+        if (Current.ProgramState == ProgramState.MapInitializing)
+        {
+            DeepRimMod.LogMessage("Skipping wealth recount as map is still initializing");
+            return;
+        }
+
         var DepthValueBase = (float)Math.Round((float)DeepRimMod.instance.DeepRimSettings.DepthValueBase / 100, 2);
         var DepthValueFalloff =
             (float)Math.Round((float)DeepRimMod.instance.DeepRimSettings.DepthValueFalloff / 100, 2);

@@ -30,6 +30,10 @@ public class Command_TargetLayer(Building_SpawnedLift lift = null) : Command_Act
                     shaft.PauseDrilling();
                 }));
             }
+            else
+            {
+                list.Add(new FloatMenuOption("Deeprim.Surface".Translate(), delegate { shaft.targetedLevel = 0; }));
+            }
 
             using var enumerator = manager.layersState.OrderBy(x => x.Key).GetEnumerator();
             while (enumerator.MoveNext())
