@@ -59,7 +59,7 @@ internal class DeepRimMod : Mod
 
     public bool NoPowerPreventsLiftUse
     {
-        get => instance.DeepRimSettings.NoPowerPreventsLiftUse;
+        get => !instance.DeepRimSettings.LowTechMode && instance.DeepRimSettings.NoPowerPreventsLiftUse;
         set => instance.DeepRimSettings.NoPowerPreventsLiftUse = value;
     }
 
@@ -96,9 +96,12 @@ internal class DeepRimMod : Mod
                 "Deeprim.LowtechInfo.Tooltip".Translate());
         }
 
-        listing_Standard.CheckboxLabeled("Deeprim.NoPowerPreventsLiftUse".Translate(),
-            ref instance.DeepRimSettings.NoPowerPreventsLiftUse,
-            "Deeprim.NoPowerPreventsLiftUseTT".Translate());
+        if (!instance.DeepRimSettings.LowTechMode)
+        {
+            listing_Standard.CheckboxLabeled("Deeprim.NoPowerPreventsLiftUse".Translate(),
+                ref instance.DeepRimSettings.NoPowerPreventsLiftUse,
+                "Deeprim.NoPowerPreventsLiftUseTT".Translate());
+        }
 
         listing_Standard.Gap();
         listing_Standard.CheckboxLabeled("Deeprim.VerboseLogging".Translate(),

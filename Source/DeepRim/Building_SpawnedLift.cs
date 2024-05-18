@@ -115,34 +115,6 @@ public class Building_SpawnedLift : Building_ShaftLiftParent
             yield break;
         }
 
-        if (!TemporaryOffState)
-        {
-            yield return new Command_Toggle
-            {
-                icon = HarmonyPatches.UI_ToggleSendPower,
-                defaultLabel = "Deeprim.SendPowerToLayer".Translate(),
-                defaultDesc = "Deeprim.SendPowerToLayerTT".Translate(),
-                isActive = () => m_Flick.SwitchIsOn,
-                toggleAction = delegate
-                {
-                    TogglePower();
-                    if (m_Flick.SwitchIsOn)
-                    {
-                        parentDrill.UndergroundManager.ActiveLayers++;
-                        parentDrill.UndergroundManager.AnyLayersPowered = true;
-                    }
-                    else
-                    {
-                        parentDrill.UndergroundManager.ActiveLayers--;
-                        if (parentDrill.UndergroundManager.ActiveLayers == 0)
-                        {
-                            parentDrill.UndergroundManager.AnyLayersPowered = false;
-                        }
-                    }
-                }
-            };
-        }
-
         yield return new Command_Action
         {
             icon = TexButton.Rename,
@@ -199,6 +171,40 @@ public class Building_SpawnedLift : Building_ShaftLiftParent
                 defaultLabel = "Deeprim.SendDown".Translate(),
                 defaultDesc = "Deeprim.SendDownTT".Translate(parentDrill.targetedLevel * 10),
                 icon = HarmonyPatches.UI_Send
+            };
+        }
+
+
+        if (DeepRimMod.instance.DeepRimSettings.LowTechMode)
+        {
+            yield break;
+        }
+
+        if (!TemporaryOffState)
+        {
+            yield return new Command_Toggle
+            {
+                icon = HarmonyPatches.UI_ToggleSendPower,
+                defaultLabel = "Deeprim.SendPowerToLayer".Translate(),
+                defaultDesc = "Deeprim.SendPowerToLayerTT".Translate(),
+                isActive = () => m_Flick.SwitchIsOn,
+                toggleAction = delegate
+                {
+                    TogglePower();
+                    if (m_Flick.SwitchIsOn)
+                    {
+                        parentDrill.UndergroundManager.ActiveLayers++;
+                        parentDrill.UndergroundManager.AnyLayersPowered = true;
+                    }
+                    else
+                    {
+                        parentDrill.UndergroundManager.ActiveLayers--;
+                        if (parentDrill.UndergroundManager.ActiveLayers == 0)
+                        {
+                            parentDrill.UndergroundManager.AnyLayersPowered = false;
+                        }
+                    }
+                }
             };
         }
     }

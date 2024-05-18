@@ -1,5 +1,8 @@
 # Changelog for DeepRim
 
+1.5.2 - Fixed Low-tech drills trying to use powercomps
+
+
 1.5.1 - Item transfer now works with storage buildings and zones
 Items will prefer to spawn in nearby allowed storages. If none are available, they will spawn next to the drill instead of on it.
 Fixed some gui-issues with the item-transfers

@@ -77,7 +77,7 @@ public class LiftUtils
         switch (sender)
         {
             case Building_MiningShaft shaft:
-                if (shaft.m_Power.PowerOn == false && DeepRimMod.instance.NoPowerPreventsLiftUse)
+                if (DeepRimMod.instance.NoPowerPreventsLiftUse && shaft.m_Power.PowerOn == false)
                 {
                     Messages.Message("Deeprim.NoPower".Translate(), MessageTypeDefOf.RejectInput);
                     return;
@@ -93,7 +93,7 @@ public class LiftUtils
                 break;
 
             case Building_SpawnedLift lift:
-                if (lift.m_Power.PowerOn == false && DeepRimMod.instance.NoPowerPreventsLiftUse)
+                if (DeepRimMod.instance.NoPowerPreventsLiftUse && lift.m_Power.PowerOn == false)
                 {
                     Messages.Message("Deeprim.NoPower".Translate(), MessageTypeDefOf.RejectInput);
                     return;
