@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using HarmonyLib;
 using RimWorld;
@@ -94,15 +93,45 @@ public static class HarmonyPatches
                 if (liftThingDef.HasComp(typeof(CompPowerPlant)))
                 {
                     var powerComp =
-                        shaftThingDef.comps.First(properties => properties.GetType() == typeof(CompProperties_Power));
-                    liftThingDef.comps.Remove(powerComp);
+                        shaftThingDef.comps.FirstOrDefault(properties =>
+                            properties.GetType() == typeof(CompProperties_Power));
+                    if (powerComp != null)
+                    {
+                        liftThingDef.comps.Remove(powerComp);
+                    }
                 }
 
                 if (shaftThingDef.HasComp(typeof(CompPowerTrader)))
                 {
                     var powerComp =
-                        shaftThingDef.comps.First(properties => properties.GetType() == typeof(CompProperties_Power));
-                    shaftThingDef.comps.Remove(powerComp);
+                        shaftThingDef.comps.FirstOrDefault(properties =>
+                            properties.GetType() == typeof(CompProperties_Power));
+                    if (powerComp != null)
+                    {
+                        shaftThingDef.comps.Remove(powerComp);
+                    }
+                }
+
+                if (liftThingDef.HasComp(typeof(CompGlower)))
+                {
+                    var glowerComp =
+                        liftThingDef.comps.FirstOrDefault(properties =>
+                            properties.GetType() == typeof(CompProperties_Glower));
+                    if (glowerComp != null)
+                    {
+                        liftThingDef.comps.Remove(glowerComp);
+                    }
+                }
+
+                if (shaftThingDef.HasComp(typeof(CompGlower)))
+                {
+                    var glowerComp =
+                        shaftThingDef.comps.FirstOrDefault(properties =>
+                            properties.GetType() == typeof(CompProperties_Glower));
+                    if (glowerComp != null)
+                    {
+                        shaftThingDef.comps.Remove(glowerComp);
+                    }
                 }
 
                 shaftThingDef.description = "Deeprim.NoPowerDesc".Translate();
@@ -132,6 +161,20 @@ public static class HarmonyPatches
                 var powerComp = new CompProperties_Power
                     { compClass = typeof(CompPowerTrader), basePowerConsumption = 1200 };
                 shaftThingDef.comps.Add(powerComp);
+            }
+
+            if (!liftThingDef.HasComp(typeof(CompGlower)))
+            {
+                var glowerComp = new CompProperties_Glower
+                    { compClass = typeof(CompGlower), glowRadius = 4, glowColor = new ColorInt(255, 0, 0, 0) };
+                liftThingDef.comps.Add(glowerComp);
+            }
+
+            if (!shaftThingDef.HasComp(typeof(CompGlower)))
+            {
+                var glowerComp = new CompProperties_Glower
+                    { compClass = typeof(CompGlower), glowRadius = 4, glowColor = new ColorInt(255, 0, 0, 0) };
+                shaftThingDef.comps.Add(glowerComp);
             }
 
             shaftThingDef.description = "Deeprim.PowerDesc".Translate();

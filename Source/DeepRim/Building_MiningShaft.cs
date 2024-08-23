@@ -28,6 +28,8 @@ public class Building_MiningShaft : Building_ShaftLiftParent
     public bool drillNew = true;
 
     private float extraPower;
+    private ThingComp m_Flick;
+    private CompGlower m_Glow;
 
     public CompPowerTrader m_Power;
 
@@ -449,20 +451,44 @@ public class Building_MiningShaft : Building_ShaftLiftParent
     public override void SpawnSetup(Map map, bool respawningAfterLoad)
     {
         base.SpawnSetup(map, respawningAfterLoad);
-        if (def.HasComp(typeof(CompPowerTrader)))
+
+        m_Power = GetComp<CompPowerPlant>();
+        m_Flick = GetComp<CompFlickable>();
+        m_Glow = GetComp<CompGlower>();
+
+        if (DeepRimMod.instance.DeepRimSettings.LowTechMode)
         {
-            m_Power = GetComp<CompPowerTrader>();
+            if (m_Power != null)
+            {
+                DeepRimMod.LogMessage($"{this} had powercomp when it should not, removing");
+                comps.Remove(m_Power);
+            }
+
+            if (m_Flick != null)
+            {
+                DeepRimMod.LogMessage($"{this} had flicker when it should not, removing");
+                comps.Remove(m_Flick);
+            }
+
+            if (m_Glow != null)
+            {
+                DeepRimMod.LogMessage($"{this} had glower when it should not, removing");
+                comps.Remove(m_Glow);
+            }
+
+            m_Power = null;
+            m_Flick = null;
+            m_Glow = null;
+
+            if (stuffInt == null)
+            {
+                stuffInt = ThingDefOf.WoodLog;
+            }
+
+            return;
         }
 
-        if (DeepRimMod.instance.DeepRimSettings.LowTechMode && stuffInt == null)
-        {
-            stuffInt = ThingDefOf.WoodLog;
-        }
-
-        if (!DeepRimMod.instance.DeepRimSettings.LowTechMode && stuffInt != null)
-        {
-            stuffInt = null;
-        }
+        stuffInt = null;
     }
 
     private void StartDrilling()
@@ -521,7 +547,7 @@ public class Building_MiningShaft : Building_ShaftLiftParent
 
         mode = 0;
         SyncConnectedMap();
-        if (connectedLift is Building_SpawnedLift lift)
+        if (!DeepRimMod.instance.DeepRimSettings.LowTechMode && connectedLift is Building_SpawnedLift lift)
         {
             if (lift.m_Flick.SwitchIsOn)
             {
@@ -599,6 +625,7 @@ public class Building_MiningShaft : Building_ShaftLiftParent
             lift.depth = connectedMapParent.depth;
             lift.surfaceMap = Map;
             lift.parentDrill = this;
+            lift.RefreshComps();
         }
         else
         {
@@ -745,14 +772,16 @@ public class Building_MiningShaft : Building_ShaftLiftParent
                 }
             }
 
-            if (m_Power.PowerOn && UndergroundManager.ActiveLayers > 0
-                                && m_Power.Props.basePowerConsumption != idlePowerNeeded + baseExtraPower + extraPower)
+            if (m_Power is { PowerOn: true } && UndergroundManager.ActiveLayers > 0
+                                             && m_Power.Props.basePowerConsumption !=
+                                             idlePowerNeeded + baseExtraPower + extraPower)
             {
                 DeepRimMod.LogWarn("Updating power to ON state");
                 m_Power.Props.basePowerConsumption = idlePowerNeeded + baseExtraPower + extraPower;
                 m_Power.SetUpPowerVars();
             }
-            else if (UndergroundManager.ActiveLayers < 1 && m_Power.Props.basePowerConsumption != idlePowerNeeded)
+            else if (UndergroundManager.ActiveLayers < 1 && m_Power != null &&
+                     m_Power.Props.basePowerConsumption != idlePowerNeeded)
             {
                 DeepRimMod.LogWarn("Updating power to OFF state.");
                 m_Power.Props.basePowerConsumption = idlePowerNeeded;
@@ -789,7 +818,7 @@ public class Building_MiningShaft : Building_ShaftLiftParent
             return;
         }
 
-        if (m_Power.PowerOn)
+        if (m_Power is { PowerOn: true })
         {
             FleckMaker.ThrowSmoke(DrawPos, Map, 1f);
             ticksCounter = 0;

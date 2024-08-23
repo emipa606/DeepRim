@@ -11,6 +11,7 @@ public class Building_SpawnedLift : Building_ShaftLiftParent
     public int depth;
 
     public CompFlickable m_Flick;
+    private CompGlower m_Glow;
 
     public CompPowerPlant m_Power;
 
@@ -317,21 +318,21 @@ public class Building_SpawnedLift : Building_ShaftLiftParent
 
         //DeepRimMod.LogWarn($"tempOffState: {TemporaryOffState}\nPrior Power: {PriorPowerState}\nFlick State: {m_Flick.SwitchIsOn}\nPower Available: {parentDrill.PowerAvailable()}");
         //Handle cutting power to the lifts if the parent loses power
-        if (parentDrill != null && TemporaryOffState && parentDrill.m_Power.PowerOn)
+        if (parentDrill != null && TemporaryOffState && parentDrill.m_Power?.PowerOn == true)
         {
             DeepRimMod.LogWarn($"Lift {this} is no longer disabled due to lack of power");
             TemporaryOffState = false;
-            if (PriorPowerState && !m_Flick.SwitchIsOn)
+            if (PriorPowerState && !m_Flick?.SwitchIsOn == false)
             {
                 m_Flick.DoFlick();
             }
         }
-        else if (parentDrill != null && !TemporaryOffState && !parentDrill.m_Power.PowerOn)
+        else if (parentDrill != null && !TemporaryOffState && !parentDrill.m_Power?.PowerOn == true)
         {
             DeepRimMod.LogMessage($"Temporarily disabling lift {this} due to lack of power");
             TemporaryOffState = true;
             PriorPowerState = m_Flick.SwitchIsOn;
-            if (m_Flick.SwitchIsOn)
+            if (m_Flick?.SwitchIsOn == true)
             {
                 m_Flick.DoFlick();
             }
@@ -385,21 +386,10 @@ public class Building_SpawnedLift : Building_ShaftLiftParent
             stuffInt = null;
         }
 
-        m_Power = GetComp<CompPowerPlant>();
-        m_Flick = GetComp<CompFlickable>();
-
-        if (m_Power == null || m_Flick == null)
-        {
-            return;
-        }
+        RefreshComps();
 
         if (DeepRimMod.instance.DeepRimSettings.LowTechMode)
         {
-            DeepRimMod.LogMessage($"{this} had powercomp when it should not, removing");
-            comps.Remove(m_Power);
-            comps.Remove(m_Flick);
-            m_Power = null;
-            m_Flick = null;
             return;
         }
 
@@ -411,5 +401,39 @@ public class Building_SpawnedLift : Building_ShaftLiftParent
         {
             DeepRimMod.LogMessage($"Failed to find parent drill for {this}");
         }
+    }
+
+    public void RefreshComps()
+    {
+        m_Power = GetComp<CompPowerPlant>();
+        m_Flick = GetComp<CompFlickable>();
+        m_Glow = GetComp<CompGlower>();
+
+        if (!DeepRimMod.instance.DeepRimSettings.LowTechMode)
+        {
+            return;
+        }
+
+        if (m_Power != null)
+        {
+            DeepRimMod.LogMessage($"{this} had powercomp when it should not, removing");
+            comps.Remove(m_Power);
+        }
+
+        if (m_Flick != null)
+        {
+            DeepRimMod.LogMessage($"{this} had flicker when it should not, removing");
+            comps.Remove(m_Flick);
+        }
+
+        if (m_Glow != null)
+        {
+            DeepRimMod.LogMessage($"{this} had glower when it should not, removing");
+            comps.Remove(m_Glow);
+        }
+
+        m_Power = null;
+        m_Flick = null;
+        m_Glow = null;
     }
 }

@@ -1,5 +1,8 @@
 # Changelog for DeepRim
 
+1.5.3 - Fixed shaft-spawning, removing comps if in low-tech mode. Fixed abandoning layer when in low-tech mode. Removed glower in low-tech mode.
+
+
 1.5.2 - Fixed Low-tech drills trying to use powercomps
 
 
