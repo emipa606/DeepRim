@@ -188,11 +188,11 @@ public class Building_SpawnedLift : Building_ShaftLiftParent
                 icon = HarmonyPatches.UI_ToggleSendPower,
                 defaultLabel = "Deeprim.SendPowerToLayer".Translate(),
                 defaultDesc = "Deeprim.SendPowerToLayerTT".Translate(),
-                isActive = () => m_Flick.SwitchIsOn,
+                isActive = () => m_Flick?.SwitchIsOn is true,
                 toggleAction = delegate
                 {
                     TogglePower();
-                    if (m_Flick.SwitchIsOn)
+                    if (m_Flick?.SwitchIsOn == true)
                     {
                         parentDrill.UndergroundManager.ActiveLayers++;
                         parentDrill.UndergroundManager.AnyLayersPowered = true;

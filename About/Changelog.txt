@@ -1,5 +1,8 @@
 # Changelog for DeepRim
 
+1.5.4 - Added some nullchecks for the gizmos, hopefully this will fix the issues reported.
+
+
 1.5.3 - Fixed shaft-spawning, removing comps if in low-tech mode. Fixed abandoning layer when in low-tech mode. Removed glower in low-tech mode.
 
 

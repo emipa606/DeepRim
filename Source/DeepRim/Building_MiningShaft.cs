@@ -264,7 +264,7 @@ public class Building_MiningShaft : Building_ShaftLiftParent
             yield break;
         }
 
-        if (m_Power.PowerOn)
+        if (m_Power?.PowerOn == true)
         {
             var lift = connectedLift as Building_SpawnedLift;
             yield return new Command_Toggle
@@ -305,6 +305,11 @@ public class Building_MiningShaft : Building_ShaftLiftParent
                 action = () =>
                 {
                     extraPower -= 100;
+                    if (m_Power == null)
+                    {
+                        return;
+                    }
+
                     m_Power.Props.basePowerConsumption = idlePowerNeeded + baseExtraPower + extraPower;
                     m_Power.SetUpPowerVars();
                 },
@@ -319,6 +324,11 @@ public class Building_MiningShaft : Building_ShaftLiftParent
             action = () =>
             {
                 extraPower += 100;
+                if (m_Power == null)
+                {
+                    return;
+                }
+
                 m_Power.Props.basePowerConsumption = idlePowerNeeded + baseExtraPower + extraPower;
                 m_Power.SetUpPowerVars();
             },
