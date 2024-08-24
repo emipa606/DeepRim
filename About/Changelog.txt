@@ -1,5 +1,8 @@
 # Changelog for DeepRim
 
+1.5.5 - Fixes the issues with transfering between layers, also fixed the comps when switching between low and normal tech-mode
+
+
 1.5.4 - Added some nullchecks for the gizmos, hopefully this will fix the issues reported.
 
 

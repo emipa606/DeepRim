@@ -7,8 +7,75 @@ namespace DeepRim;
 
 public class Building_ShaftLiftParent : Building
 {
+    private CompFlickable flickableComp;
+    private CompGlower glowerComp;
+
     private HashSet<ISlotGroupParent> nearbyStorages = [];
     public int transferLevel = -1;
+
+    protected CompGlower GlowerComp
+    {
+        get
+        {
+            if (DeepRimMod.instance.DeepRimSettings.LowTechMode)
+            {
+                if (glowerComp != null)
+                {
+                    comps.Remove(glowerComp);
+                }
+
+                return null;
+            }
+
+            if (glowerComp == null)
+            {
+                glowerComp = GetComp<CompGlower>();
+            }
+
+            if (glowerComp != null)
+            {
+                return glowerComp;
+            }
+
+            InitializeComps();
+            glowerComp = GetComp<CompGlower>();
+
+            return glowerComp;
+        }
+    }
+
+    public CompFlickable FlickableComp
+    {
+        get
+        {
+            if (DeepRimMod.instance.DeepRimSettings.LowTechMode)
+            {
+                if (flickableComp != null)
+                {
+                    comps.Remove(flickableComp);
+                }
+
+                return null;
+            }
+
+            if (flickableComp == null)
+            {
+                flickableComp = GetComp<CompFlickable>();
+            }
+
+
+            if (flickableComp != null)
+            {
+                return flickableComp;
+            }
+
+            InitializeComps();
+            flickableComp = GetComp<CompFlickable>();
+
+            return flickableComp;
+        }
+    }
+
 
     protected HashSet<ISlotGroupParent> NearbyStorages
     {
@@ -100,5 +167,13 @@ public class Building_ShaftLiftParent : Building
                 }
             }
         }
+    }
+
+    public override void SpawnSetup(Map map, bool respawningAfterLoad)
+    {
+        base.SpawnSetup(map, respawningAfterLoad);
+
+        _ = GlowerComp;
+        _ = FlickableComp;
     }
 }

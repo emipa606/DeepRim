@@ -10,17 +10,45 @@ public class Building_SpawnedLift : Building_ShaftLiftParent
 {
     public int depth;
 
-    public CompFlickable m_Flick;
-    private CompGlower m_Glow;
-
-    public CompPowerPlant m_Power;
-
     public Building_MiningShaft parentDrill;
+    private CompPowerPlant powerComp;
     public bool PriorPowerState = true;
 
     public Map surfaceMap;
 
     public bool TemporaryOffState;
+
+
+    public CompPowerPlant PowwerComp
+    {
+        get
+        {
+            if (DeepRimMod.instance.DeepRimSettings.LowTechMode)
+            {
+                if (powerComp != null)
+                {
+                    comps.Remove(powerComp);
+                }
+
+                return null;
+            }
+
+            if (powerComp == null)
+            {
+                powerComp = GetComp<CompPowerPlant>();
+            }
+
+            if (powerComp != null)
+            {
+                return powerComp;
+            }
+
+            InitializeComps();
+            powerComp = GetComp<CompPowerPlant>();
+
+            return powerComp;
+        }
+    }
 
     public int TransferLevel
     {
@@ -35,7 +63,6 @@ public class Building_SpawnedLift : Building_ShaftLiftParent
         }
         set => transferLevel = value;
     }
-
 
     public override void ExposeData()
     {
@@ -188,11 +215,11 @@ public class Building_SpawnedLift : Building_ShaftLiftParent
                 icon = HarmonyPatches.UI_ToggleSendPower,
                 defaultLabel = "Deeprim.SendPowerToLayer".Translate(),
                 defaultDesc = "Deeprim.SendPowerToLayerTT".Translate(),
-                isActive = () => m_Flick?.SwitchIsOn is true,
+                isActive = () => FlickableComp?.SwitchIsOn is true,
                 toggleAction = delegate
                 {
                     TogglePower();
-                    if (m_Flick?.SwitchIsOn == true)
+                    if (FlickableComp?.SwitchIsOn == true)
                     {
                         parentDrill.UndergroundManager.ActiveLayers++;
                         parentDrill.UndergroundManager.AnyLayersPowered = true;
@@ -277,7 +304,7 @@ public class Building_SpawnedLift : Building_ShaftLiftParent
         }
 
         DeepRimMod.LogMessage($"Lift {this} Found {NearbyStorages.Count} storages to transfer items from");
-        if (m_Power is not { PowerOn: false })
+        if (PowwerComp is not { PowerOn: false })
         {
             Transfer(targetShaft, NearbyStorages.ToList());
         }
@@ -311,38 +338,38 @@ public class Building_SpawnedLift : Building_ShaftLiftParent
             return;
         }
 
-        if (m_Power != null && parentDrill != null)
+        if (PowwerComp != null && parentDrill != null)
         {
-            m_Power.Props.basePowerConsumption = 0 - parentDrill.PowerAvailable();
+            PowwerComp.Props.basePowerConsumption = 0 - parentDrill.PowerAvailable();
         }
 
         //DeepRimMod.LogWarn($"tempOffState: {TemporaryOffState}\nPrior Power: {PriorPowerState}\nFlick State: {m_Flick.SwitchIsOn}\nPower Available: {parentDrill.PowerAvailable()}");
         //Handle cutting power to the lifts if the parent loses power
-        if (parentDrill != null && TemporaryOffState && parentDrill.m_Power?.PowerOn == true)
+        if (parentDrill != null && TemporaryOffState && parentDrill.PowwerComp is { PowerOn: true })
         {
             DeepRimMod.LogWarn($"Lift {this} is no longer disabled due to lack of power");
             TemporaryOffState = false;
-            if (PriorPowerState && !m_Flick?.SwitchIsOn == false)
+            if (PriorPowerState && !FlickableComp.SwitchIsOn)
             {
-                m_Flick.DoFlick();
+                FlickableComp.DoFlick();
             }
         }
-        else if (parentDrill != null && !TemporaryOffState && !parentDrill.m_Power?.PowerOn == true)
+        else if (parentDrill != null && !TemporaryOffState && parentDrill.PowwerComp is not { PowerOn: true })
         {
             DeepRimMod.LogMessage($"Temporarily disabling lift {this} due to lack of power");
             TemporaryOffState = true;
-            PriorPowerState = m_Flick.SwitchIsOn;
-            if (m_Flick?.SwitchIsOn == true)
+            PriorPowerState = FlickableComp.SwitchIsOn;
+            if (FlickableComp?.SwitchIsOn == true)
             {
-                m_Flick.DoFlick();
+                FlickableComp.DoFlick();
             }
         }
     }
 
     public void TogglePower()
     {
-        m_Flick.DoFlick();
-        if (m_Flick.SwitchIsOn)
+        FlickableComp.DoFlick();
+        if (FlickableComp.SwitchIsOn)
         {
             parentDrill.UndergroundManager.AnyLayersPowered = true;
         }
@@ -375,18 +402,17 @@ public class Building_SpawnedLift : Building_ShaftLiftParent
                 .GetForCell(convertedLocation, 5, ShaftThingDefOf.miningshaft).FirstOrDefault();
         }
 
+        _ = PowwerComp;
 
-        if (DeepRimMod.instance.DeepRimSettings.LowTechMode && stuffInt == null)
+        switch (DeepRimMod.instance.DeepRimSettings.LowTechMode)
         {
-            stuffInt = ThingDefOf.WoodLog;
+            case true when stuffInt == null:
+                stuffInt = ThingDefOf.WoodLog;
+                break;
+            case false when stuffInt != null:
+                stuffInt = null;
+                break;
         }
-
-        if (!DeepRimMod.instance.DeepRimSettings.LowTechMode && stuffInt != null)
-        {
-            stuffInt = null;
-        }
-
-        RefreshComps();
 
         if (DeepRimMod.instance.DeepRimSettings.LowTechMode)
         {
@@ -395,45 +421,11 @@ public class Building_SpawnedLift : Building_ShaftLiftParent
 
         if (parentDrill != null)
         {
-            m_Power.Props.basePowerConsumption = 0 - parentDrill.PowerAvailable();
+            PowwerComp.Props.basePowerConsumption = 0 - parentDrill.PowerAvailable();
         }
         else
         {
             DeepRimMod.LogMessage($"Failed to find parent drill for {this}");
         }
-    }
-
-    public void RefreshComps()
-    {
-        m_Power = GetComp<CompPowerPlant>();
-        m_Flick = GetComp<CompFlickable>();
-        m_Glow = GetComp<CompGlower>();
-
-        if (!DeepRimMod.instance.DeepRimSettings.LowTechMode)
-        {
-            return;
-        }
-
-        if (m_Power != null)
-        {
-            DeepRimMod.LogMessage($"{this} had powercomp when it should not, removing");
-            comps.Remove(m_Power);
-        }
-
-        if (m_Flick != null)
-        {
-            DeepRimMod.LogMessage($"{this} had flicker when it should not, removing");
-            comps.Remove(m_Flick);
-        }
-
-        if (m_Glow != null)
-        {
-            DeepRimMod.LogMessage($"{this} had glower when it should not, removing");
-            comps.Remove(m_Glow);
-        }
-
-        m_Power = null;
-        m_Flick = null;
-        m_Glow = null;
     }
 }
