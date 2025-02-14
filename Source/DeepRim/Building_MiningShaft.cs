@@ -445,7 +445,7 @@ public class Building_MiningShaft : Building_ShaftLiftParent
         if (NearbyStorages.Any())
         {
             var name = UndergroundManager?.GetLayerName(transferLevel);
-            if (transferLevel == 0)
+            if (transferLevel == 0 | transferLevel == -1)
             {
                 label = "Deeprim.TransferLevelNone".Translate();
             }
