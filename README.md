@@ -17,6 +17,8 @@ https://ludeon.com/forums/index.php?topic=39262.0
 - New icon textures made by Ontheheavens
 - New drill texture made by Ontheheavens based on the the retexture mod by sk4p3g04t. The old texture will be used when selecting the "Low-tech"-option in the mod-settings.
 - Manual drilling should now only be possible when the "Low-tech" option is on, as the new modern texture does not really allow manual drilling.
+- For a more medieval look of the low tech drill, take a look at [Van's Retexture : DeepRim](https://steamcommunity.com/sharedfiles/filedetails/?id=3320967700) by Sir Van
+- If you want all you power distributed freely between your layers instead of the set amount defined in the lifts you can use [Cross Dimensional Power 2](https://steamcommunity.com/workshop/filedetails/?id=2934265284) by Vex
 
 Will now generate versions of cave biomes in [Biomes! Caverns](https://steamcommunity.com/sharedfiles/filedetails/?id=2969748433)  (Thanks to m00nl1ght-dev for the fix) and [CaveBiome](https://steamcommunity.com/sharedfiles/filedetails/?id=2259124387) if loaded.
 
@@ -77,6 +79,6 @@ Oh, wait. Asset by jabbamonkey is used.
 -  If you have the solution for a problem, please post it to the GitHub repository.
 -  Use [RimSort](https://github.com/RimSort/RimSort/releases/latest) to sort your mods
 
+ 
 
-
-[![Image](https://img.shields.io/github/v/release/emipa606/DeepRim?label=latest%20version&style=plastic&color=9f1111&labelColor=black)](https://steamcommunity.com/sharedfiles/filedetails/changelog/2164179860)
+[![Image](https://img.shields.io/github/v/release/emipa606/DeepRim?label=latest%20version&style=plastic&color=9f1111&labelColor=black)](https://steamcommunity.com/sharedfiles/filedetails/changelog/2164179860) | tags:  underground exploration,  resource management

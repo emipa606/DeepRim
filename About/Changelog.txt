@@ -1,5 +1,8 @@
 # Changelog for DeepRim
 
+1.5.6 - Fixed transfer layer saving and error-handling, thanks SunPraise
+
+
 1.5.5 - Fixes the issues with transfering between layers, also fixed the comps when switching between low and normal tech-mode
 
 

@@ -42,6 +42,8 @@ https://ludeon.com/forums/index.php?topic=39262.0
 - New icon textures made by Ontheheavens
 - New drill texture made by Ontheheavens based on the the retexture mod by sk4p3g04t. The old texture will be used when selecting the "Low-tech"-option in the mod-settings.
 - Manual drilling should now only be possible when the "Low-tech" option is on, as the new modern texture does not really allow manual drilling.
+- For a more medieval look of the low tech drill, take a look at [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3320967700]Van's Retexture : DeepRim[/url] by Sir Van
+- If you want all you power distributed freely between your layers instead of the set amount defined in the lifts you can use [url=https://steamcommunity.com/workshop/filedetails/?id=2934265284]Cross Dimensional Power 2[/url] by Vex
 
 Will now generate versions of cave biomes in [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2969748433]Biomes! Caverns[/url]  (Thanks to m00nl1ght-dev for the fix) and [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2259124387]CaveBiome[/url] if loaded.
 
@@ -110,8 +112,8 @@ Oh, wait. Asset by jabbamonkey is used.
 [*] Do not report errors by making a discussion-thread, I get no notification of that.
 [*] If you have the solution for a problem, please post it to the GitHub repository.
 [*] Use [url=https://github.com/RimSort/RimSort/releases/latest]RimSort[/url] to sort your mods
-[/list]
+[/list] 
 
-[url=https://steamcommunity.com/sharedfiles/filedetails/changelog/2164179860][img]https://img.shields.io/github/v/release/emipa606/DeepRim?label=latest%20version&amp;style=plastic&amp;color=9f1111&amp;labelColor=black[/img][/url]</description>
-  <modVersion IgnoreIfNoMatchingField="True">1.5.5</modVersion>
+[url=https://steamcommunity.com/sharedfiles/filedetails/changelog/2164179860][img]https://img.shields.io/github/v/release/emipa606/DeepRim?label=latest%20version&amp;style=plastic&amp;color=9f1111&amp;labelColor=black[/img][/url] | tags:  underground exploration,  resource management</description>
+  <modVersion IgnoreIfNoMatchingField="True">1.5.6</modVersion>
 </ModMetaData>
