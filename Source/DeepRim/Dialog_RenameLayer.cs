@@ -6,7 +6,7 @@ using Verse;
 public class Dialog_RenameLayer : Window
 {
     private readonly Building_SpawnedLift lift;
-    protected string curName;
+    private string curName;
 
     private bool focusedRenameField;
 
@@ -24,21 +24,21 @@ public class Dialog_RenameLayer : Window
 
     private bool AcceptsInput => startAcceptingInputAtFrame <= Time.frameCount;
 
-    protected int MaxNameLength => 28;
+    private static int MaxNameLength => 28;
 
-    public override Vector2 InitialSize => new Vector2(280f, 175f);
+    public override Vector2 InitialSize => new(280f, 175f);
 
     public void WasOpenedByHotkey()
     {
         startAcceptingInputAtFrame = Time.frameCount + 1;
     }
 
-    protected AcceptanceReport NameIsValid(string name)
+    private static AcceptanceReport nameIsValid(string name)
     {
         return name.Length != 0;
     }
 
-    public void SetName(string name)
+    private void setName(string name)
     {
         lift.parentDrill.UndergroundManager.layerNames[lift.depth] = name;
         Messages.Message(
@@ -58,13 +58,14 @@ public class Dialog_RenameLayer : Window
 
         GUI.SetNextControlName("RenameField");
         var text = Widgets.TextField(new Rect(0f, 15f, inRect.width, 35f), curName);
-        if (AcceptsInput && text.Length < MaxNameLength)
+        switch (AcceptsInput)
         {
-            curName = text;
-        }
-        else if (!AcceptsInput)
-        {
-            ((TextEditor)GUIUtility.GetStateObject(typeof(TextEditor), GUIUtility.keyboardControl)).SelectAll();
+            case true when text.Length < MaxNameLength:
+                curName = text;
+                break;
+            case false:
+                ((TextEditor)GUIUtility.GetStateObject(typeof(TextEditor), GUIUtility.keyboardControl)).SelectAll();
+                break;
         }
 
         if (!focusedRenameField)
@@ -75,7 +76,7 @@ public class Dialog_RenameLayer : Window
 
         if (Widgets.ButtonText(new Rect(15f, inRect.height - 35f - 35f - 5f, inRect.width - 15f - 15f, 35f), "RESET"))
         {
-            SetName("");
+            setName("");
             Find.WindowStack.TryRemove(this);
         }
 
@@ -85,7 +86,7 @@ public class Dialog_RenameLayer : Window
             return;
         }
 
-        var acceptanceReport = NameIsValid(curName);
+        var acceptanceReport = nameIsValid(curName);
         if (!acceptanceReport.Accepted)
         {
             if (acceptanceReport.Reason.NullOrEmpty())
@@ -99,7 +100,7 @@ public class Dialog_RenameLayer : Window
         }
         else
         {
-            SetName(curName);
+            setName(curName);
             Find.WindowStack.TryRemove(this);
         }
     }

@@ -1,4 +1,7 @@
-﻿using Mlie;
+﻿using System.Reflection;
+using HarmonyLib;
+using Mlie;
+using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -10,9 +13,19 @@ internal class DeepRimMod : Mod
     /// <summary>
     ///     The instance of the deepRimSettings to be read by the mod
     /// </summary>
-    public static DeepRimMod instance;
+    public static DeepRimMod Instance;
 
     private static string currentVersion;
+
+
+    public static readonly FieldInfo CompsFieldInfo = AccessTools.Field(typeof(ThingWithComps), "comps");
+    public static readonly FieldInfo StuffIntFieldInfo = AccessTools.Field(typeof(Thing), "stuffInt");
+    public static readonly FieldInfo MapFieldInfo = AccessTools.Field(typeof(MapComponent), "map");
+
+    public static readonly FieldInfo BasePowerConsumptionFieldInfo =
+        AccessTools.Field(typeof(CompProperties_Power), "basePowerConsumption");
+
+    public static readonly MethodInfo InitMethodInfo = AccessTools.Method(typeof(GraphicData), "Init");
 
     /// <summary>
     ///     The private deepRimSettings
@@ -25,7 +38,7 @@ internal class DeepRimMod : Mod
     /// <param name="content"></param>
     public DeepRimMod(ModContentPack content) : base(content)
     {
-        instance = this;
+        Instance = this;
 
         currentVersion =
             VersionFromManifest.GetVersionFromModMetaData(content.ModMetaData);
@@ -33,34 +46,34 @@ internal class DeepRimMod : Mod
     }
 
     //References to the variables in DeepRimSettings
-    public int MapSize
+    private static int MapSize
     {
-        get => instance.DeepRimSettings.SpawnedMapSize;
-        set => instance.DeepRimSettings.SpawnedMapSize = value;
+        get => Instance.DeepRimSettings.SpawnedMapSize;
+        set => Instance.DeepRimSettings.SpawnedMapSize = value;
     }
 
-    public int OreDensity
+    private static int OreDensity
     {
-        get => instance.DeepRimSettings.OreDensity;
-        set => instance.DeepRimSettings.OreDensity = value;
+        get => Instance.DeepRimSettings.OreDensity;
+        set => Instance.DeepRimSettings.OreDensity = value;
     }
 
-    public int DepthValueBase
+    private static int DepthValueBase
     {
-        get => instance.DeepRimSettings.DepthValueBase;
-        set => instance.DeepRimSettings.DepthValueBase = value;
+        get => Instance.DeepRimSettings.DepthValueBase;
+        set => Instance.DeepRimSettings.DepthValueBase = value;
     }
 
-    public int DepthValueFalloff
+    private static int DepthValueFalloff
     {
-        get => instance.DeepRimSettings.DepthValueFalloff;
-        set => instance.DeepRimSettings.DepthValueFalloff = value;
+        get => Instance.DeepRimSettings.DepthValueFalloff;
+        set => Instance.DeepRimSettings.DepthValueFalloff = value;
     }
 
-    public bool NoPowerPreventsLiftUse
+    public static bool NoPowerPreventsLiftUse
     {
-        get => !instance.DeepRimSettings.LowTechMode && instance.DeepRimSettings.NoPowerPreventsLiftUse;
-        set => instance.DeepRimSettings.NoPowerPreventsLiftUse = value;
+        get => !Instance.DeepRimSettings.LowTechMode && Instance.DeepRimSettings.NoPowerPreventsLiftUse;
+        private set => Instance.DeepRimSettings.NoPowerPreventsLiftUse = value;
     }
 
     /// <summary>
@@ -79,42 +92,42 @@ internal class DeepRimMod : Mod
     /// <param name="rect"></param>
     public override void DoSettingsWindowContents(Rect rect)
     {
-        var listing_Standard = new Listing_Standard();
-        listing_Standard.Begin(rect);
+        var listingStandard = new Listing_Standard();
+        listingStandard.Begin(rect);
 
         if (Current.Game == null)
         {
-            listing_Standard.CheckboxLabeled("Deeprim.Lowtech".Translate(), ref instance.DeepRimSettings.LowTechMode,
+            listingStandard.CheckboxLabeled("Deeprim.Lowtech".Translate(), ref Instance.DeepRimSettings.LowTechMode,
                 "Deeprim.Lowtech.Tooltip".Translate());
         }
         else
         {
-            listing_Standard.Label(
-                instance.DeepRimSettings.LowTechMode
+            listingStandard.Label(
+                Instance.DeepRimSettings.LowTechMode
                     ? "Deeprim.LowtechInfo.Enabled".Translate()
                     : "Deeprim.LowtechInfo.Disabled".Translate(), -1,
                 "Deeprim.LowtechInfo.Tooltip".Translate());
         }
 
-        if (!instance.DeepRimSettings.LowTechMode)
+        if (!Instance.DeepRimSettings.LowTechMode)
         {
-            listing_Standard.CheckboxLabeled("Deeprim.NoPowerPreventsLiftUse".Translate(),
-                ref instance.DeepRimSettings.NoPowerPreventsLiftUse,
+            listingStandard.CheckboxLabeled("Deeprim.NoPowerPreventsLiftUse".Translate(),
+                ref Instance.DeepRimSettings.NoPowerPreventsLiftUse,
                 "Deeprim.NoPowerPreventsLiftUseTT".Translate());
         }
 
-        listing_Standard.Gap();
-        listing_Standard.CheckboxLabeled("Deeprim.VerboseLogging".Translate(),
-            ref instance.DeepRimSettings.VerboseLogging,
+        listingStandard.Gap();
+        listingStandard.CheckboxLabeled("Deeprim.VerboseLogging".Translate(),
+            ref Instance.DeepRimSettings.VerboseLogging,
             "Deeprim.VerboseLogging.Tooltip".Translate());
-        listing_Standard.Gap(24);
-        OreDensity = (int)listing_Standard.SliderLabeled("Deeprim.OreDensitySlider".Translate(OreDensity), OreDensity,
+        listingStandard.Gap(24);
+        OreDensity = (int)listingStandard.SliderLabeled("Deeprim.OreDensitySlider".Translate(OreDensity), OreDensity,
             0, 500, 0.3f, "Deeprim.OreDensitySliderTT".Translate());
-        listing_Standard.Gap();
+        listingStandard.Gap();
         var label = MapSize >= 50
             ? "Deeprim.MapSizeSlider".Translate(MapSize)
             : "Deeprim.MapSizeSlider".Translate("Deeprim.Inherited".Translate());
-        MapSize = (int)listing_Standard.SliderLabeled(label, MapSize, 0, 500, 0.3f,
+        MapSize = (int)listingStandard.SliderLabeled(label, MapSize, 0, 500, 0.3f,
             "Deeprim.MapSizeSliderTT".Translate());
         label = "MapSizeDesc".Translate(MapSize, MapSize * MapSize);
         switch (MapSize)
@@ -142,33 +155,33 @@ internal class DeepRimMod : Mod
                 break;
         }
 
-        listing_Standard.Label(label);
-        listing_Standard.Gap();
-        DepthValueBase = (int)listing_Standard.SliderLabeled("Deeprim.DepthValueBaseSlider".Translate(DepthValueBase),
+        listingStandard.Label(label);
+        listingStandard.Gap();
+        DepthValueBase = (int)listingStandard.SliderLabeled("Deeprim.DepthValueBaseSlider".Translate(DepthValueBase),
             DepthValueBase, 0, 100, 0.3f, "Deeprim.DepthValueBaseSliderTT".Translate());
-        listing_Standard.Gap();
-        DepthValueFalloff = (int)listing_Standard.SliderLabeled(
+        listingStandard.Gap();
+        DepthValueFalloff = (int)listingStandard.SliderLabeled(
             "Deeprim.DepthValueFalloffSlider".Translate(DepthValueFalloff), DepthValueFalloff, 0, 100, 0.3f,
             "Deeprim.DepthValueFalloffSliderTT".Translate());
-        listing_Standard.Gap();
+        listingStandard.Gap();
 
-        var resetPlace = listing_Standard.GetRect(25f);
+        var resetPlace = listingStandard.GetRect(25f);
         if (Widgets.ButtonText(resetPlace.RightHalf().RightHalf().RightHalf(), "Deeprim.Reset".Translate()))
         {
-            Reset();
+            reset();
         }
 
-        listing_Standard.Gap();
+        listingStandard.Gap();
 
         if (currentVersion != null)
         {
-            listing_Standard.Gap();
+            listingStandard.Gap();
             GUI.contentColor = Color.gray;
-            listing_Standard.Label("Deeprim.CurrentModVersion".Translate(currentVersion));
+            listingStandard.Label("Deeprim.CurrentModVersion".Translate(currentVersion));
             GUI.contentColor = Color.white;
         }
 
-        listing_Standard.End();
+        listingStandard.End();
     }
 
     public override void WriteSettings()
@@ -179,7 +192,7 @@ internal class DeepRimMod : Mod
 
     public static void LogMessage(string message, bool force = false)
     {
-        if (!force && !instance.DeepRimSettings.VerboseLogging)
+        if (!force && !Instance.DeepRimSettings.VerboseLogging)
         {
             return;
         }
@@ -189,7 +202,7 @@ internal class DeepRimMod : Mod
 
     public static void LogWarn(string message, bool force = false)
     {
-        if (!force && !instance.DeepRimSettings.VerboseLogging)
+        if (!force && !Instance.DeepRimSettings.VerboseLogging)
         {
             return;
         }
@@ -197,9 +210,9 @@ internal class DeepRimMod : Mod
         Log.Warning($"[DeepRim]: {message}");
     }
 
-    public void Reset()
+    private static void reset()
     {
-        instance.DeepRimSettings.OreDensity = 16;
+        Instance.DeepRimSettings.OreDensity = 16;
         DepthValueBase = 100;
         DepthValueFalloff = 0;
         OreDensity = 16;

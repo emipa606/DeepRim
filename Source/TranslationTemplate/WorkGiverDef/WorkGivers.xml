@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+  <!-- EN: drill with deepminer -->
+  <DrillDown.label>drill with deepminer</DrillDown.label>
+  <!-- EN: drilling -->
+  <DrillDown.gerund>drilling</DrillDown.gerund>
+  <!-- EN: drill -->
+  <DrillDown.verb>drill</DrillDown.verb>
+</LanguageData>

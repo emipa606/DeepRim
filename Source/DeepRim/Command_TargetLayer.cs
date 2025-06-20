@@ -13,10 +13,10 @@ public class Command_TargetLayer(Building_SpawnedLift lift = null) : Command_Act
 
     public override void ProcessInput(Event ev)
     {
-        Find.WindowStack.Add(MakeMenu());
+        Find.WindowStack.Add(makeMenu());
     }
 
-    private FloatMenu MakeMenu()
+    private FloatMenu makeMenu()
     {
         var list = new List<FloatMenuOption>();
         if (shaft.CurMode != 1)

@@ -1,0 +1,37 @@
+ManifestFileVersion: 0
+CRC: 36006457
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 276a17f2021123fd7fce8124dac7b65c
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 2612ac43db082a73502ee80f2eceb73f
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: 276a17f2021123fd7fce8124dac7b65c
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Data/Mlie.DeepRim/Textures/UI/IncreasePower.png
+- Assets/Data/Mlie.DeepRim/Textures/Things/industrialmine.png
+- Assets/Data/Mlie.DeepRim/Textures/UI/bringUp.png
+- Assets/Data/Mlie.DeepRim/Textures/UI/drillup.png
+- Assets/Data/Mlie.DeepRim/Textures/Things/hightechmine.png
+- Assets/Data/Mlie.DeepRim/Textures/Things/hightechshaft.png
+- Assets/Data/Mlie.DeepRim/Textures/UI/drilldown.png
+- Assets/Data/Mlie.DeepRim/Textures/UI/ToggleSendPower.png
+- Assets/Data/Mlie.DeepRim/Textures/UI/Abandon.png
+- Assets/Data/Mlie.DeepRim/Textures/UI/Start.png
+- Assets/Data/Mlie.DeepRim/Textures/UI/Pause.png
+- Assets/Data/Mlie.DeepRim/Textures/Things/shaft.png
+- Assets/Data/Mlie.DeepRim/Textures/UI/optionsIcon.png
+- Assets/Data/Mlie.DeepRim/Textures/UpdateInfo/DeepRim.png
+- Assets/Data/Mlie.DeepRim/Textures/UI/transferIcon.png
+- Assets/Data/Mlie.DeepRim/Textures/UI/Placeholder.png
+- Assets/Data/Mlie.DeepRim/Textures/UI/DecreasePower.png
+- Assets/Data/Mlie.DeepRim/Textures/UI/sendDown.png
+Dependencies: []

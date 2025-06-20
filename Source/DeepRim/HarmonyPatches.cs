@@ -11,28 +11,25 @@ namespace DeepRim;
 [StaticConstructorOnStartup]
 public static class HarmonyPatches
 {
-    private static readonly Type patchType = typeof(HarmonyPatches);
+    public static readonly Texture2D UISend = ContentFinder<Texture2D>.Get("UI/sendDown");
 
+    public static readonly Texture2D UIBringUp = ContentFinder<Texture2D>.Get("UI/bringUp");
 
-    public static readonly Texture2D UI_Send = ContentFinder<Texture2D>.Get("UI/sendDown");
+    public static readonly Texture2D UIStart = ContentFinder<Texture2D>.Get("UI/Start");
 
-    public static readonly Texture2D UI_BringUp = ContentFinder<Texture2D>.Get("UI/bringUp");
+    public static readonly Texture2D UIPause = ContentFinder<Texture2D>.Get("UI/Pause");
 
-    public static readonly Texture2D UI_Start = ContentFinder<Texture2D>.Get("UI/Start");
+    public static readonly Texture2D UIIncreasePower = ContentFinder<Texture2D>.Get("UI/IncreasePower");
 
-    public static readonly Texture2D UI_Pause = ContentFinder<Texture2D>.Get("UI/Pause");
+    public static readonly Texture2D UIDecreasePower = ContentFinder<Texture2D>.Get("UI/DecreasePower");
 
-    public static readonly Texture2D UI_IncreasePower = ContentFinder<Texture2D>.Get("UI/IncreasePower");
+    public static readonly Texture2D UIAbandon = ContentFinder<Texture2D>.Get("UI/Abandon");
 
-    public static readonly Texture2D UI_DecreasePower = ContentFinder<Texture2D>.Get("UI/DecreasePower");
+    public static readonly Texture2D UIOption = ContentFinder<Texture2D>.Get("UI/optionsIcon");
 
-    public static readonly Texture2D UI_Abandon = ContentFinder<Texture2D>.Get("UI/Abandon");
+    public static readonly Texture2D UIToggleSendPower = ContentFinder<Texture2D>.Get("UI/ToggleSendPower");
 
-    public static readonly Texture2D UI_Option = ContentFinder<Texture2D>.Get("UI/optionsIcon");
-
-    public static readonly Texture2D UI_ToggleSendPower = ContentFinder<Texture2D>.Get("UI/ToggleSendPower");
-
-    public static readonly Texture2D UI_Transfer = ContentFinder<Texture2D>.Get("UI/transferIcon");
+    public static readonly Texture2D UITransfer = ContentFinder<Texture2D>.Get("UI/transferIcon");
 
     public static readonly List<BiomeDef> PossibleBiomeDefs;
 
@@ -88,7 +85,7 @@ public static class HarmonyPatches
                 return;
             }
 
-            if (DeepRimMod.instance.DeepRimSettings.LowTechMode)
+            if (DeepRimMod.Instance.DeepRimSettings.LowTechMode)
             {
                 if (liftThingDef.HasComp(typeof(CompPowerPlant)))
                 {
@@ -144,22 +141,24 @@ public static class HarmonyPatches
                 liftThingDef.graphicData.texPath = "Things/shaft";
                 shaftThingDef.uiIcon = ContentFinder<Texture2D>.Get("Things/industrialmine");
                 liftThingDef.uiIcon = ContentFinder<Texture2D>.Get("Things/shaft");
-                shaftThingDef.graphicData.Init();
-                liftThingDef.graphicData.Init();
+                DeepRimMod.InitMethodInfo.Invoke(shaftThingDef.graphicData, null);
+                DeepRimMod.InitMethodInfo.Invoke(liftThingDef.graphicData, null);
                 return;
             }
 
             if (!liftThingDef.HasComp(typeof(CompPowerPlant)))
             {
                 var powerComp = new CompProperties_Power
-                    { compClass = typeof(CompPowerPlant), basePowerConsumption = 0, transmitsPower = true };
+                    { compClass = typeof(CompPowerPlant), transmitsPower = true };
+                DeepRimMod.BasePowerConsumptionFieldInfo.SetValue(powerComp, 0);
                 liftThingDef.comps.Add(powerComp);
             }
 
             if (!shaftThingDef.HasComp(typeof(CompPowerTrader)))
             {
                 var powerComp = new CompProperties_Power
-                    { compClass = typeof(CompPowerTrader), basePowerConsumption = 1200 };
+                    { compClass = typeof(CompPowerTrader), transmitsPower = true };
+                DeepRimMod.BasePowerConsumptionFieldInfo.SetValue(powerComp, 1200);
                 shaftThingDef.comps.Add(powerComp);
             }
 
@@ -189,8 +188,8 @@ public static class HarmonyPatches
             liftThingDef.graphicData.texPath = "Things/hightechshaft";
             shaftThingDef.uiIcon = ContentFinder<Texture2D>.Get("Things/hightechmine");
             liftThingDef.uiIcon = ContentFinder<Texture2D>.Get("Things/hightechshaft");
-            shaftThingDef.graphicData.Init();
-            liftThingDef.graphicData.Init();
+            DeepRimMod.InitMethodInfo.Invoke(shaftThingDef.graphicData, null);
+            DeepRimMod.InitMethodInfo.Invoke(liftThingDef.graphicData, null);
         }
         catch (Exception exception)
         {

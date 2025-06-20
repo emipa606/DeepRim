@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <ThingDef ParentName="BuildingBase">
+    <defName>miningshaft</defName>
+    <label>mining shaft</label>
+    <description>Allows digging deep into the planet for exploration and mining. Requires power.</description>
+    <thingClass>DeepRim.Building_MiningShaft</thingClass>
+    <graphicData>
+      <texPath>Things/hightechmine</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(3.1,3.1)</drawSize>
+    </graphicData>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>Standable</passability>
+    <castEdgeShadows>true</castEdgeShadows>
+    <fillPercent>0.7</fillPercent>
+    <canOverlapZones>true</canOverlapZones>
+    <useHitPoints>false</useHitPoints>
+    <destroyable>false</destroyable>
+    <statBases>
+      <WorkToBuild>12500</WorkToBuild>
+      <Flammability>0</Flammability>
+      <Beauty>-60</Beauty>
+      <Cleanliness>-20</Cleanliness>
+    </statBases>
+    <tickerType>Normal</tickerType>
+    <comps>
+      <li Class="CompProperties_HeatPusher">
+        <compClass>CompHeatPusherPowered</compClass>
+        <heatPerSecond>55</heatPerSecond>
+        <heatPushMaxTemperature>1500</heatPushMaxTemperature>
+      </li>
+      <li Class="CompProperties_Glower">
+        <glowRadius>4</glowRadius>
+        <glowColor>(255,0,0,0)</glowColor>
+      </li>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>200</basePowerConsumption>
+      </li>
+      <li Class="CompProperties_Flickable" />
+    </comps>
+    <size>(3,3)</size>
+    <costList>
+      <ComponentIndustrial>5</ComponentIndustrial>
+      <Steel>245</Steel>
+    </costList>
+    <building>
+      <ai_neverTrashThis>true</ai_neverTrashThis>
+      <deconstructible>true</deconstructible>
+    </building>
+    <killedLeavings>
+      <ChunkSlagSteel>6</ChunkSlagSteel>
+    </killedLeavings>
+    <leaveResourcesWhenKilled>false</leaveResourcesWhenKilled>
+    <designationCategory>Production</designationCategory>
+    <staticSunShadowHeight>0.6</staticSunShadowHeight>
+    <hasInteractionCell>false</hasInteractionCell>
+    <researchPrerequisites>
+      <li>Smithing</li>
+    </researchPrerequisites>
+    <placeWorkers>
+      <li>DeepRim.PlaceWorker_AboveGround</li>
+    </placeWorkers>
+  </ThingDef>
+</Defs>

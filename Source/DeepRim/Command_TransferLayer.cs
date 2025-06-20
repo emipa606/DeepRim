@@ -13,10 +13,10 @@ public class Command_TransferLayer(Building building) : Command_Action
 
     public override void ProcessInput(Event ev)
     {
-        Find.WindowStack.Add(MakeMenu());
+        Find.WindowStack.Add(makeMenu());
     }
 
-    private FloatMenu MakeMenu()
+    private FloatMenu makeMenu()
     {
         switch (building)
         {
@@ -24,7 +24,7 @@ public class Command_TransferLayer(Building building) : Command_Action
             {
                 var list = new List<FloatMenuOption>
                 {
-                    new FloatMenuOption("Deeprim.None".Translate(), delegate { shaft.transferLevel = 0; })
+                    new("Deeprim.None".Translate(), delegate { shaft.transferLevel = 0; })
                 };
                 var enumerator = manager.layersState.GetEnumerator();
                 while (enumerator.MoveNext())
@@ -57,8 +57,8 @@ public class Command_TransferLayer(Building building) : Command_Action
             {
                 var list = new List<FloatMenuOption>
                 {
-                    new FloatMenuOption("Deeprim.None".Translate(), delegate { lift.TransferLevel = lift.depth; }),
-                    new FloatMenuOption("Deeprim.Surface".Translate(), delegate
+                    new("Deeprim.None".Translate(), delegate { lift.TransferLevel = lift.depth; }),
+                    new("Deeprim.Surface".Translate(), delegate
                     {
                         lift.TransferLevel = 0;
                         if (lift.parentDrill.transferLevel == lift.depth)

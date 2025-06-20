@@ -6,10 +6,6 @@ namespace DeepRim;
 
 public class GenStep_ElevationFertility_Deep : GenStep
 {
-    private const float ElevationFreq = 0.021f;
-
-    private const float FertilityFreq = 0.021f;
-
     private const float EdgeMountainSpan = 0.42f;
 
     public override int SeedPart => 9285618;

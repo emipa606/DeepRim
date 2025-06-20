@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+  <!-- EN: underground mining camp -->
+  <UndergroundMapParent.label>underground mining camp</UndergroundMapParent.label>
+  <!-- EN: A mining camp set up in some underground cavern. -->
+  <UndergroundMapParent.description>A mining camp set up in some underground cavern.</UndergroundMapParent.description>
+</LanguageData>

@@ -13,24 +13,25 @@ public class Building_ShaftLiftParent : Building
     private HashSet<ISlotGroupParent> nearbyStorages = [];
     public int transferLevel = -1;
 
-    protected CompGlower GlowerComp
+    private CompGlower GlowerComp
     {
         get
         {
-            if (DeepRimMod.instance.DeepRimSettings.LowTechMode)
+            if (DeepRimMod.Instance.DeepRimSettings.LowTechMode)
             {
-                if (glowerComp != null)
+                if (glowerComp == null)
                 {
-                    comps.Remove(glowerComp);
+                    return null;
                 }
+
+                var currentComps = (List<ThingComp>)DeepRimMod.CompsFieldInfo.GetValue(this);
+                currentComps.Remove(glowerComp);
+                DeepRimMod.CompsFieldInfo.SetValue(this, currentComps);
 
                 return null;
             }
 
-            if (glowerComp == null)
-            {
-                glowerComp = GetComp<CompGlower>();
-            }
+            glowerComp ??= GetComp<CompGlower>();
 
             if (glowerComp != null)
             {
@@ -48,20 +49,21 @@ public class Building_ShaftLiftParent : Building
     {
         get
         {
-            if (DeepRimMod.instance.DeepRimSettings.LowTechMode)
+            if (DeepRimMod.Instance.DeepRimSettings.LowTechMode)
             {
-                if (flickableComp != null)
+                if (flickableComp == null)
                 {
-                    comps.Remove(flickableComp);
+                    return null;
                 }
+
+                var currentComps = (List<ThingComp>)DeepRimMod.CompsFieldInfo.GetValue(this);
+                currentComps.Remove(flickableComp);
+                DeepRimMod.CompsFieldInfo.SetValue(this, currentComps);
 
                 return null;
             }
 
-            if (flickableComp == null)
-            {
-                flickableComp = GetComp<CompFlickable>();
-            }
+            flickableComp ??= GetComp<CompFlickable>();
 
 
             if (flickableComp != null)
@@ -113,13 +115,14 @@ public class Building_ShaftLiftParent : Building
         foreach (var storage in connectedStorages)
         {
             var items = storage.GetSlotGroup().HeldThings;
-            if (items == null || items.Any() == false)
+            var itemsArray = items as Thing[] ?? items.ToArray();
+            if (!itemsArray.Any())
             {
                 DeepRimMod.LogMessage($"{storage} has no items");
                 continue;
             }
 
-            var itemList = items.ToList();
+            var itemList = itemsArray.ToList();
             DeepRimMod.LogMessage(
                 $"Transferring {itemList.Count} items from {storage} by shaft {this} to layer at {transferLevel * 10}m");
 
@@ -143,8 +146,8 @@ public class Building_ShaftLiftParent : Building
                         continue;
                     }
 
-                    foreach (var validStorageCell in possibleStorage.AllSlotCells().Where(
-                                 vec3 => vec3.IsValidStorageFor(targetLift.Map, thing)))
+                    foreach (var validStorageCell in possibleStorage.AllSlotCells()
+                                 .Where(vec3 => vec3.IsValidStorageFor(targetLift.Map, thing)))
                     {
                         if (!GenPlace.TryPlaceThing(thing, validStorageCell, targetLift.Map, ThingPlaceMode.Direct))
                         {

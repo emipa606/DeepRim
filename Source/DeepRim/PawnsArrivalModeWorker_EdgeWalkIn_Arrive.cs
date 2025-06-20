@@ -6,7 +6,7 @@ using RimWorld;
 using Verse;
 
 [HarmonyPatch(typeof(PawnsArrivalModeWorker_EdgeWalkIn), nameof(PawnsArrivalModeWorker_EdgeWalkIn.Arrive))]
-public static class PawnsArrivalModeWorker_EdgeWalkIn_Patch
+public static class PawnsArrivalModeWorker_EdgeWalkIn_Arrive
 {
     public static bool Prefix(ref List<Pawn> pawns, ref IncidentParms parms)
     {

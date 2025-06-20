@@ -1,5 +1,8 @@
 # Changelog for DeepRim
 
+1.6.0 - Mod updated for 1.6 and passed autotests
+
+
 1.5.6 - Fixed transfer layer saving and error-handling, thanks SunPraise
 
 

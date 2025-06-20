@@ -12,11 +12,11 @@ public class UndergroundMapParent : MapParent
 
     public IntVec3 holeLocation;
 
-    public bool shouldBeDeleted;
+    private bool shouldBeDeleted;
 
-    public bool shouldRiver = true;
+    private bool shouldRiver = true;
 
-    public override bool UseGenericEnterMapFloatMenuOption => false;
+    protected override bool UseGenericEnterMapFloatMenuOption => false;
 
     public override void ExposeData()
     {
@@ -68,10 +68,10 @@ public class UndergroundMapParent : MapParent
             }
         }
 
-        Abandon();
+        Abandon(false);
     }
 
-    public override void Abandon()
+    public override void Abandon(bool wasGravshipLaunch)
     {
         Log.Message("Utter destruction of a layer. GG. Never going to get it back now XDD");
         shouldBeDeleted = true;

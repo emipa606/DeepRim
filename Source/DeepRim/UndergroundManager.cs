@@ -6,14 +6,12 @@ namespace DeepRim;
 
 public class UndergroundManager(Map map) : MapComponent(map)
 {
-    private const int targetversion = 1;
-
     private int activeLayers = -1;
 
     public bool AnyLayersPowered = true;
-    public Dictionary<int, string> layerNames = new Dictionary<int, string>();
+    public Dictionary<int, string> layerNames = new();
 
-    public Dictionary<int, UndergroundMapParent> layersState = new Dictionary<int, UndergroundMapParent>();
+    public Dictionary<int, UndergroundMapParent> layersState = new();
 
     private List<int> list2;
 
@@ -21,6 +19,7 @@ public class UndergroundManager(Map map) : MapComponent(map)
     private List<int> list4;
 
     private List<string> list5;
+
 
     private int nextLayer;
 
@@ -97,26 +96,26 @@ public class UndergroundManager(Map map) : MapComponent(map)
     public void InsertLayer(UndergroundMapParent mp)
     {
         DeepRimMod.LogMessage(
-            $"Drilled new layer at depth {NextLayer} with ore density {DeepRimMod.instance.DeepRimSettings.OreDensity}");
+            $"Drilled new layer at depth {NextLayer} with ore density {DeepRimMod.Instance.DeepRimSettings.OreDensity}");
         ActiveLayers++;
         layersState.Add(NextLayer, mp);
         mp.depth = NextLayer;
         NextLayer++;
     }
 
-    public void PinAllUnderground()
+    private void pinAllUnderground()
     {
         var num = 1;
         foreach (var building in map.listerBuildings.allBuildingsColonist)
         {
-            Building_MiningShaft building_MiningShaft;
-            if ((building_MiningShaft = building as Building_MiningShaft) == null ||
-                !building_MiningShaft.IsConnected)
+            Building_MiningShaft buildingMiningShaft;
+            if ((buildingMiningShaft = building as Building_MiningShaft) == null ||
+                !buildingMiningShaft.IsConnected)
             {
                 continue;
             }
 
-            var linkedMapParent = building_MiningShaft.LinkedMapParent;
+            var linkedMapParent = buildingMiningShaft.LinkedMapParent;
             if (linkedMapParent.depth != -1)
             {
                 continue;
@@ -152,7 +151,9 @@ public class UndergroundManager(Map map) : MapComponent(map)
         Scribe_Collections.Look(ref layersState, "layers", LookMode.Value, LookMode.Reference, ref list2,
             ref list3);
         Scribe_Collections.Look(ref layerNames, "layerNames", LookMode.Value, LookMode.Value, ref list4, ref list5);
-        Scribe_References.Look(ref map, "map");
+        var localMap = (Map)DeepRimMod.MapFieldInfo.GetValue(this);
+        Scribe_References.Look(ref localMap, "map");
+        DeepRimMod.MapFieldInfo.SetValue(this, localMap);
     }
 
     public override void MapComponentTick()
@@ -167,7 +168,7 @@ public class UndergroundManager(Map map) : MapComponent(map)
             return;
         }
 
-        PinAllUnderground();
+        pinAllUnderground();
         spawned = 1;
     }
 }

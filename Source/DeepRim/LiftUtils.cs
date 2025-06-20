@@ -14,27 +14,26 @@ public class LiftUtils
         ThingCategory.Mote, ThingCategory.Projectile
     ];
 
-    public static IntVec3 ConvertPosRelativeToLift(IntVec3 shaftCenter, IntVec3 itemPos, IntVec3 targetCenter)
+    private static IntVec3 convertPosRelativeToLift(IntVec3 shaftCenter, IntVec3 itemPos, IntVec3 targetCenter)
     {
         return targetCenter - (shaftCenter - itemPos);
     }
 
-    public static void Send(Map oMap, IntVec3 oPos, Map tMap, IntVec3 tPos, bool bringUp)
+    private static void send(Map oMap, IntVec3 oPos, Map tMap, IntVec3 tPos, bool bringUp)
     {
         var anythingSent = false;
         _ = tMap;
         var cells = CellRect.CenteredOn(oPos, 1);
         foreach (var cell in cells)
         {
-            var thingList = cell.GetThingList(oMap).Where(
-                thing => thing != null &&
-                         (thing is Pawn ||
-                          thing is not Building &&
-                          thing is not Blueprint &&
-                          !invalidCategories.Contains(thing.def.category)
-                         )
+            var thingList = cell.GetThingList(oMap).Where(thing => thing != null &&
+                                                                   (thing is Pawn ||
+                                                                    thing is not Building &&
+                                                                    thing is not Blueprint &&
+                                                                    !invalidCategories.Contains(thing.def.category)
+                                                                   )
             ).ToList();
-            var convertedLocation = ConvertPosRelativeToLift(oPos, cell, tPos);
+            var convertedLocation = convertPosRelativeToLift(oPos, cell, tPos);
             foreach (var thing in thingList)
             {
                 if (thing is not Pawn && (thing is not ThingWithComps && thing == null || thing is Building ||
@@ -77,7 +76,7 @@ public class LiftUtils
         switch (sender)
         {
             case Building_MiningShaft shaft:
-                if (DeepRimMod.instance.NoPowerPreventsLiftUse && shaft.PowwerComp?.PowerOn == false)
+                if (DeepRimMod.NoPowerPreventsLiftUse && shaft.PowwerComp?.PowerOn == false)
                 {
                     Messages.Message("Deeprim.NoPower".Translate(), MessageTypeDefOf.RejectInput);
                     return;
@@ -89,11 +88,11 @@ public class LiftUtils
                 tPos = shaft.connectedLift.Position;
                 DeepRimMod.LogMessage(
                     $"Mineshaft wants to send items.\noMap: {oMap}\ntMap: {tMap}\noPos: {oPos}\ntPos: {tPos}");
-                Send(oMap, oPos, tMap, tPos, bringUp);
+                send(oMap, oPos, tMap, tPos, bringUp);
                 break;
 
             case Building_SpawnedLift lift:
-                if (DeepRimMod.instance.NoPowerPreventsLiftUse && lift.PowwerComp?.PowerOn == false)
+                if (DeepRimMod.NoPowerPreventsLiftUse && lift.PowwerComp?.PowerOn == false)
                 {
                     Messages.Message("Deeprim.NoPower".Translate(), MessageTypeDefOf.RejectInput);
                     return;
@@ -114,7 +113,7 @@ public class LiftUtils
 
                 DeepRimMod.LogMessage(
                     $"Underground Lift wants to send items.\noMap: {oMap}\ntMap: {tMap}\noPos: {oPos}\ntPos: {tPos}");
-                Send(oMap, oPos, tMap, tPos, bringUp);
+                send(oMap, oPos, tMap, tPos, bringUp);
                 break;
         }
     }

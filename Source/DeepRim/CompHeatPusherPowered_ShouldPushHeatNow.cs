@@ -18,7 +18,7 @@ public static class CompHeatPusherPowered_ShouldPushHeatNow
             return;
         }
 
-        if (DeepRimMod.instance.DeepRimSettings.LowTechMode)
+        if (DeepRimMod.Instance.DeepRimSettings.LowTechMode)
         {
             __result = false;
             return;

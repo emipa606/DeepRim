@@ -5,8 +5,6 @@ namespace DeepRim;
 
 public class GenStep_RocksFromGrid_Deep : GenStep
 {
-    private const int MinRoofedCellsPerGroup = 20;
-
     public override int SeedPart => 8204671;
 
     public static ThingDef RockDefAt(IntVec3 c)
@@ -57,16 +55,11 @@ public class GenStep_RocksFromGrid_Deep : GenStep
         }
 
         var genStep_ScatterLumpsMineable = new GenStep_ScatterLumpsMineable();
-        var num = DeepRimMod.instance.DeepRimSettings?.OreDensity != null
-            ? DeepRimMod.instance.DeepRimSettings.OreDensity
+        var num = DeepRimMod.Instance.DeepRimSettings?.OreDensity != null
+            ? DeepRimMod.Instance.DeepRimSettings.OreDensity
             : 16f;
         genStep_ScatterLumpsMineable.countPer10kCellsRange = new FloatRange(num, num);
         genStep_ScatterLumpsMineable.Generate(map, default);
         map.regionAndRoomUpdater.Enabled = true;
-    }
-
-    private bool IsNaturalRoofAt(IntVec3 c, Map map)
-    {
-        return c.Roofed(map) && c.GetRoof(map).isNatural;
     }
 }
