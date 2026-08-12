@@ -1,5 +1,9 @@
 # Changelog for DeepRim
 
+1.6.1 - Fixed low-tech stuff-error
+Used DeepL to update translations for ChineseSimplified, French, German, Russian
+
+
 1.6.0 - Mod updated for 1.6 and passed autotests
 
 

@@ -133,15 +133,20 @@ public static class HarmonyPatches
 
                 shaftThingDef.description = "Deeprim.NoPowerDesc".Translate();
                 shaftThingDef.costStuffCount = 300;
+                ShaftThingDefOf.Frame_miningshaft.costStuffCount = 300;
                 shaftThingDef.costList = null;
+                ShaftThingDefOf.Frame_miningshaft.costList = null;
                 liftThingDef.costList = null;
                 shaftThingDef.stuffCategories = [StuffCategoryDefOf.Metallic, StuffCategoryDefOf.Woody];
+                ShaftThingDefOf.Frame_miningshaft.stuffCategories =
+                    [StuffCategoryDefOf.Metallic, StuffCategoryDefOf.Woody];
                 liftThingDef.stuffCategories = [StuffCategoryDefOf.Metallic, StuffCategoryDefOf.Woody];
                 shaftThingDef.graphicData.texPath = "Things/industrialmine";
                 liftThingDef.graphicData.texPath = "Things/shaft";
                 shaftThingDef.uiIcon = ContentFinder<Texture2D>.Get("Things/industrialmine");
                 liftThingDef.uiIcon = ContentFinder<Texture2D>.Get("Things/shaft");
                 DeepRimMod.InitMethodInfo.Invoke(shaftThingDef.graphicData, null);
+                DeepRimMod.InitMethodInfo.Invoke(ShaftThingDefOf.Frame_miningshaft.graphicData, null);
                 DeepRimMod.InitMethodInfo.Invoke(liftThingDef.graphicData, null);
                 return;
             }
@@ -178,9 +183,15 @@ public static class HarmonyPatches
 
             shaftThingDef.description = "Deeprim.PowerDesc".Translate();
             shaftThingDef.costStuffCount = 0;
+            ShaftThingDefOf.Frame_miningshaft.costStuffCount = 0;
             shaftThingDef.stuffCategories = null;
+            ShaftThingDefOf.Frame_miningshaft.stuffCategories = null;
             liftThingDef.stuffCategories = null;
             shaftThingDef.costList =
+            [
+                new ThingDefCountClass(ThingDefOf.ComponentIndustrial, 5), new ThingDefCountClass(ThingDefOf.Steel, 245)
+            ];
+            ShaftThingDefOf.Frame_miningshaft.costList =
             [
                 new ThingDefCountClass(ThingDefOf.ComponentIndustrial, 5), new ThingDefCountClass(ThingDefOf.Steel, 245)
             ];
@@ -189,6 +200,7 @@ public static class HarmonyPatches
             shaftThingDef.uiIcon = ContentFinder<Texture2D>.Get("Things/hightechmine");
             liftThingDef.uiIcon = ContentFinder<Texture2D>.Get("Things/hightechshaft");
             DeepRimMod.InitMethodInfo.Invoke(shaftThingDef.graphicData, null);
+            DeepRimMod.InitMethodInfo.Invoke(ShaftThingDefOf.Frame_miningshaft.graphicData, null);
             DeepRimMod.InitMethodInfo.Invoke(liftThingDef.graphicData, null);
         }
         catch (Exception exception)

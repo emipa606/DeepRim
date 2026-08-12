@@ -7,6 +7,7 @@ namespace DeepRim;
 public static class ShaftThingDefOf
 {
     public static ThingDef miningshaft;
+    public static ThingDef Frame_miningshaft;
     public static ThingDef undergroundlift;
 
     static ShaftThingDefOf()

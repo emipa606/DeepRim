@@ -2,12 +2,12 @@
   <PropertyGroup>
     <OutputPath>../1.6/Assemblies/</OutputPath>
     <TargetFramework>net481</TargetFramework>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <DebugType>None</DebugType>
     <LangVersion>latest</LangVersion>
-    <FileVersion>1.6.0</FileVersion>
+    <FileVersion>1.6.1</FileVersion>
+    <Copyright>© meowmeow 2026 - MIT License</Copyright>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Krafs.Rimworld.Ref">
