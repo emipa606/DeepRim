@@ -1,9 +1,10 @@
 using System;
 using System.Linq;
-using DeepRim;
 using HarmonyLib;
 using RimWorld;
 using Verse;
+
+namespace DeepRim;
 
 [HarmonyPatch(typeof(WealthWatcher), nameof(WealthWatcher.ForceRecount))]
 public static class WealthWatcher_ForceRecount

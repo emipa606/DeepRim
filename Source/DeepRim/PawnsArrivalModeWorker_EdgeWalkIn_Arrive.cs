@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using DeepRim;
 using HarmonyLib;
 using RimWorld;
 using Verse;
+
+namespace DeepRim;
 
 [HarmonyPatch(typeof(PawnsArrivalModeWorker_EdgeWalkIn), nameof(PawnsArrivalModeWorker_EdgeWalkIn.Arrive))]
 public static class PawnsArrivalModeWorker_EdgeWalkIn_Arrive

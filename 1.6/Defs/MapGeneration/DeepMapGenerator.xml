@@ -15,10 +15,15 @@
       <li>ElevationFertilityDeep</li>
       <li>RocksFromGridDeep</li>
       <li>TerrainDeep</li>
-      <li>FindDrillLocation</li>
+      <li>MutatorPostTerrain</li>
       <li>RockChunks</li>
+      <li>MutatorCriticalStructures</li>
+      <li>MutatorNonCriticalStructures</li>
+      <li MayRequire="Ludeon.RimWorld.Ideology">ScatterCaveDebris</li>
+      <li>FindDrillLocation</li>
       <li>ScenParts</li>
       <li>Plants</li>
+      <li>MutatorFinal</li>
       <li>Animals</li>
       <li>FogDeep</li>
     </genSteps>

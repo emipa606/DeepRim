@@ -7,7 +7,7 @@ namespace DeepRim;
 [HarmonyPatch(typeof(Map), nameof(Map.Biome), MethodType.Getter)]
 public static class Map_Biome
 {
-    private static void Postfix(Map __instance, ref BiomeDef __result)
+    public static void Postfix(Map __instance, ref BiomeDef __result)
     {
         if (__instance.ParentHolder is UndergroundMapParent mapParent)
         {

@@ -7,10 +7,6 @@ namespace DeepRim;
 
 public class Building_ShaftLiftParent : Building
 {
-    private CompFlickable flickableComp;
-    private CompGlower glowerComp;
-
-    private HashSet<ISlotGroupParent> nearbyStorages = [];
     public int transferLevel = -1;
 
     private CompGlower GlowerComp
@@ -19,29 +15,29 @@ public class Building_ShaftLiftParent : Building
         {
             if (DeepRimMod.Instance.DeepRimSettings.LowTechMode)
             {
-                if (glowerComp == null)
+                if (field == null)
                 {
                     return null;
                 }
 
                 var currentComps = (List<ThingComp>)DeepRimMod.CompsFieldInfo.GetValue(this);
-                currentComps.Remove(glowerComp);
+                currentComps.Remove(field);
                 DeepRimMod.CompsFieldInfo.SetValue(this, currentComps);
 
                 return null;
             }
 
-            glowerComp ??= GetComp<CompGlower>();
+            field ??= GetComp<CompGlower>();
 
-            if (glowerComp != null)
+            if (field != null)
             {
-                return glowerComp;
+                return field;
             }
 
             InitializeComps();
-            glowerComp = GetComp<CompGlower>();
+            field = GetComp<CompGlower>();
 
-            return glowerComp;
+            return field;
         }
     }
 
@@ -51,30 +47,30 @@ public class Building_ShaftLiftParent : Building
         {
             if (DeepRimMod.Instance.DeepRimSettings.LowTechMode)
             {
-                if (flickableComp == null)
+                if (field == null)
                 {
                     return null;
                 }
 
                 var currentComps = (List<ThingComp>)DeepRimMod.CompsFieldInfo.GetValue(this);
-                currentComps.Remove(flickableComp);
+                currentComps.Remove(field);
                 DeepRimMod.CompsFieldInfo.SetValue(this, currentComps);
 
                 return null;
             }
 
-            flickableComp ??= GetComp<CompFlickable>();
+            field ??= GetComp<CompFlickable>();
 
 
-            if (flickableComp != null)
+            if (field != null)
             {
-                return flickableComp;
+                return field;
             }
 
             InitializeComps();
-            flickableComp = GetComp<CompFlickable>();
+            field = GetComp<CompFlickable>();
 
-            return flickableComp;
+            return field;
         }
     }
 
@@ -83,18 +79,18 @@ public class Building_ShaftLiftParent : Building
     {
         get
         {
-            if (nearbyStorages.Any() && !this.IsHashIntervalTick(GenTicks.TickRareInterval))
+            if (field.Any() && !this.IsHashIntervalTick(GenTicks.TickRareInterval))
             {
-                return nearbyStorages;
+                return field;
             }
 
-            nearbyStorages = [];
+            field = [];
             foreach (var cell in this.OccupiedRect().AdjacentCells)
             {
                 var storages = cell.GetThingList(Map).Where(thing => thing is ISlotGroupParent);
                 foreach (var thing in storages)
                 {
-                    nearbyStorages.Add((ISlotGroupParent)thing);
+                    field.Add((ISlotGroupParent)thing);
                 }
 
                 if (cell.GetZone(Map) is not ISlotGroupParent stockpile)
@@ -102,12 +98,12 @@ public class Building_ShaftLiftParent : Building
                     continue;
                 }
 
-                nearbyStorages.Add(stockpile);
+                field.Add(stockpile);
             }
 
-            return nearbyStorages;
+            return field;
         }
-    }
+    } = [];
 
 
     protected void Transfer(Building_ShaftLiftParent targetLift, List<ISlotGroupParent> connectedStorages)

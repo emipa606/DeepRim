@@ -31,13 +31,9 @@ public class Building_MiningShaft : Building_ShaftLiftParent
 
     private int mode;
 
-    private CompPowerTrader powerComp;
-
     public int targetedLevel;
 
     private int ticksCounter;
-
-    private UndergroundManager undergroundManager;
 
     public CompPowerTrader PowwerComp
     {
@@ -45,29 +41,29 @@ public class Building_MiningShaft : Building_ShaftLiftParent
         {
             if (DeepRimMod.Instance.DeepRimSettings.LowTechMode)
             {
-                if (powerComp == null)
+                if (field == null)
                 {
                     return null;
                 }
 
                 var currentComps = (List<ThingComp>)DeepRimMod.CompsFieldInfo.GetValue(this);
-                currentComps.Remove(powerComp);
+                currentComps.Remove(field);
                 DeepRimMod.CompsFieldInfo.SetValue(this, currentComps);
 
                 return null;
             }
 
-            powerComp ??= GetComp<CompPowerTrader>();
+            field ??= GetComp<CompPowerTrader>();
 
-            if (powerComp != null)
+            if (field != null)
             {
-                return powerComp;
+                return field;
             }
 
             InitializeComps();
-            powerComp = GetComp<CompPowerTrader>();
+            field = GetComp<CompPowerTrader>();
 
-            return powerComp;
+            return field;
         }
     }
 
@@ -75,9 +71,9 @@ public class Building_MiningShaft : Building_ShaftLiftParent
     {
         get
         {
-            undergroundManager ??= Map.components.Find(item => item is UndergroundManager) as UndergroundManager;
+            field ??= Map.components.Find(item => item is UndergroundManager) as UndergroundManager;
 
-            return undergroundManager;
+            return field;
         }
     }
 
@@ -445,7 +441,7 @@ public class Building_MiningShaft : Building_ShaftLiftParent
         if (NearbyStorages.Any())
         {
             var name = UndergroundManager?.GetLayerName(transferLevel);
-            if ((transferLevel == 0) | (transferLevel == -1))
+            if (transferLevel == 0 || transferLevel == -1)
             {
                 label = "Deeprim.TransferLevelNone".Translate();
             }
@@ -555,15 +551,13 @@ public class Building_MiningShaft : Building_ShaftLiftParent
 
         mode = 0;
         SyncConnectedMap();
-        if (!DeepRimMod.Instance.DeepRimSettings.LowTechMode && connectedLift is Building_SpawnedLift lift)
+        if (!DeepRimMod.Instance.DeepRimSettings.LowTechMode && connectedLift is Building_SpawnedLift lift &&
+            lift.FlickableComp.SwitchIsOn)
         {
-            if (lift.FlickableComp.SwitchIsOn)
+            UndergroundManager.ActiveLayers--;
+            if (UndergroundManager.ActiveLayers == 0)
             {
-                UndergroundManager.ActiveLayers--;
-                if (UndergroundManager.ActiveLayers == 0)
-                {
-                    UndergroundManager.AnyLayersPowered = false;
-                }
+                UndergroundManager.AnyLayersPowered = false;
             }
         }
 
@@ -785,14 +779,14 @@ public class Building_MiningShaft : Building_ShaftLiftParent
                 switch (UndergroundManager.ActiveLayers)
                 {
                     case > 0
-                        when basePowerConsumption != idlePowerNeeded + baseExtraPower + extraPower:
+                        when !basePowerConsumption.Equals(idlePowerNeeded + baseExtraPower + extraPower):
                         DeepRimMod.LogWarn("Updating power to ON state");
                         DeepRimMod.BasePowerConsumptionFieldInfo.SetValue(PowwerComp.Props,
                             idlePowerNeeded + baseExtraPower + extraPower);
                         PowwerComp.SetUpPowerVars();
                         break;
                     case < 1 when PowwerComp != null &&
-                                  basePowerConsumption != idlePowerNeeded:
+                                  !basePowerConsumption.Equals(idlePowerNeeded):
                         DeepRimMod.LogWarn("Updating power to OFF state.");
                         DeepRimMod.BasePowerConsumptionFieldInfo.SetValue(PowwerComp.Props, idlePowerNeeded);
                         PowwerComp.SetUpPowerVars();
@@ -802,7 +796,7 @@ public class Building_MiningShaft : Building_ShaftLiftParent
             else if (UndergroundManager.ActiveLayers < 1 && PowwerComp != null)
             {
                 var basePowerConsumption = (float)DeepRimMod.BasePowerConsumptionFieldInfo.GetValue(PowwerComp.Props);
-                if (basePowerConsumption != idlePowerNeeded)
+                if (!basePowerConsumption.Equals(idlePowerNeeded))
                 {
                     DeepRimMod.LogWarn("Updating power to OFF state.");
                     DeepRimMod.BasePowerConsumptionFieldInfo.SetValue(PowwerComp.Props, idlePowerNeeded);

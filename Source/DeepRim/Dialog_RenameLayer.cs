@@ -1,7 +1,8 @@
-using DeepRim;
 using RimWorld;
 using UnityEngine;
 using Verse;
+
+namespace DeepRim;
 
 public class Dialog_RenameLayer : Window
 {

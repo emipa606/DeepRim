@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using RimWorld;
 using Verse;
 using Verse.AI;
@@ -19,14 +20,14 @@ public class WorkGiver_DrillDown : WorkGiver_Scanner
     public override bool ShouldSkip(Pawn pawn, bool forced = false)
     {
         var allBuildingsColonist = pawn.Map.listerBuildings.allBuildingsColonist;
-        foreach (var buildings in allBuildingsColonist)
+        foreach (var building in allBuildingsColonist.Select(building => building.def))
         {
-            if (buildings.def != ShaftThingDefOf.miningshaft)
+            if (building != ShaftThingDefOf.miningshaft)
             {
                 continue;
             }
 
-            if (buildings.def.HasComp(typeof(CompPowerTrader)))
+            if (building.HasComp(typeof(CompPowerTrader)))
             {
                 continue;
             }

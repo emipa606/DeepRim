@@ -26,8 +26,8 @@ public class PlaceWorker_AboveGround : PlaceWorker
         return true;
     }
 
-    public override bool ForceAllowPlaceOver(BuildableDef otherDef)
+    public override bool ForceAllowPlaceOver(BuildableDef other)
     {
-        return otherDef == ThingDefOf.SteamGeyser;
+        return other == ThingDefOf.SteamGeyser;
     }
 }

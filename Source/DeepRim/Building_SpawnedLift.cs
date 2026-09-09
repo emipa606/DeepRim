@@ -11,7 +11,6 @@ public class Building_SpawnedLift : Building_ShaftLiftParent
     public int depth;
 
     public Building_MiningShaft parentDrill;
-    private CompPowerPlant powerComp;
     private bool priorPowerState = true;
 
     public Map surfaceMap;
@@ -25,29 +24,29 @@ public class Building_SpawnedLift : Building_ShaftLiftParent
         {
             if (DeepRimMod.Instance.DeepRimSettings.LowTechMode)
             {
-                if (powerComp == null)
+                if (field == null)
                 {
                     return null;
                 }
 
                 var currentComps = (List<ThingComp>)DeepRimMod.CompsFieldInfo.GetValue(this);
-                currentComps.Remove(powerComp);
+                currentComps.Remove(field);
                 DeepRimMod.CompsFieldInfo.SetValue(this, currentComps);
 
                 return null;
             }
 
-            powerComp ??= GetComp<CompPowerPlant>();
+            field ??= GetComp<CompPowerPlant>();
 
-            if (powerComp != null)
+            if (field != null)
             {
-                return powerComp;
+                return field;
             }
 
             InitializeComps();
-            powerComp = GetComp<CompPowerPlant>();
+            field = GetComp<CompPowerPlant>();
 
-            return powerComp;
+            return field;
         }
     }
 
@@ -108,7 +107,11 @@ public class Building_SpawnedLift : Building_ShaftLiftParent
 
         if (NearbyStorages.Any())
         {
-            name = parentDrill.UndergroundManager.GetLayerName(transferLevel);
+            if (parentDrill != null)
+            {
+                name = parentDrill.UndergroundManager?.GetLayerName(transferLevel);
+            }
+
             if (transferLevel == 0)
             {
                 label = "Deeprim.TransferSurface".Translate();
@@ -275,7 +278,7 @@ public class Building_SpawnedLift : Building_ShaftLiftParent
                 parentDrill.Map?.listerBuildings.AllBuildingsColonistOfDef(ShaftThingDefOf.miningshaft);
             if (transferShafts != null && transferShafts.Any())
             {
-                targetShaft = transferShafts.First() as Building_ShaftLiftParent;
+                targetShaft = transferShafts[0] as Building_ShaftLiftParent;
                 if (targetShaft == null)
                 {
                     DeepRimMod.LogMessage("Parent mineshaft was not found. How did we get here?");
@@ -292,7 +295,7 @@ public class Building_SpawnedLift : Building_ShaftLiftParent
         {
             if (manager?.layersState.ContainsKey(TransferLevel) == true)
             {
-                targetShaft = manager?.layersState[TransferLevel]?.GetSpawnedLift();
+                targetShaft = manager.layersState[TransferLevel]?.GetSpawnedLift();
                 if (targetShaft == null)
                 {
                     DeepRimMod.LogMessage("Found no spawned lift in targeted layer");
@@ -345,7 +348,6 @@ public class Building_SpawnedLift : Building_ShaftLiftParent
             DeepRimMod.BasePowerConsumptionFieldInfo.SetValue(PowwerComp.Props, 0 - parentDrill.PowerAvailable());
         }
 
-        //DeepRimMod.LogWarn($"tempOffState: {TemporaryOffState}\nPrior Power: {PriorPowerState}\nFlick State: {m_Flick.SwitchIsOn}\nPower Available: {parentDrill.PowerAvailable()}");
         //Handle cutting power to the lifts if the parent loses power
         if (parentDrill != null && temporaryOffState && parentDrill.PowwerComp is { PowerOn: true })
         {

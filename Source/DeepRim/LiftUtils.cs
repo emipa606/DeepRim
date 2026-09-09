@@ -6,7 +6,7 @@ using Verse;
 
 namespace DeepRim;
 
-public class LiftUtils
+public static class LiftUtils
 {
     private static readonly List<ThingCategory> invalidCategories =
     [

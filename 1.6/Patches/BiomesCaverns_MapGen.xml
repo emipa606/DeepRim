@@ -10,10 +10,10 @@
           <defName>Deep_BMT_Cavern</defName>
           <genSteps>
             <li>ElevationFertility</li>
-            <li>Caves</li>
+            <!-- <li>Caves</li> -->
             <li>RocksFromGrid</li>
             <li>Terrain</li>
-            <li>CavesTerrain</li>
+            <!-- <li>CavesTerrain</li> -->
             <li>RockChunks</li>
             <li>SteamGeysers</li>
             <li>FindDrillLocation</li>

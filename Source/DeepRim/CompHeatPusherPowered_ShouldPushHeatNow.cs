@@ -6,7 +6,7 @@ namespace DeepRim;
 [HarmonyPatch(typeof(CompHeatPusherPowered), nameof(CompHeatPusherPowered.ShouldPushHeatNow), MethodType.Getter)]
 public static class CompHeatPusherPowered_ShouldPushHeatNow
 {
-    private static void Postfix(CompHeatPusherPowered __instance, ref bool __result)
+    public static void Postfix(CompHeatPusherPowered __instance, ref bool __result)
     {
         if (!__result)
         {
