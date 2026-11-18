@@ -1,48 +1,50 @@
-# DeepRim (Continued) - GitHub Copilot Instructions
+# GitHub Copilot Instructions for DeepRim (Continued)
 
 ## Mod Overview and Purpose
 
-DeepRim (Continued) enhances the mining experience in RimWorld, allowing players to construct mining shafts and explore new underground maps rich with resources. This mod updates the original by meowmeow and incorporates new features for better gameplay immersion and quality of life improvements.
+DeepRim is a RimWorld mod that allows players to construct mining shafts, enabling them to drill down and explore new underground maps filled with resources. The mod introduces various features to enhance underground exploration and resource management, such as automatic item transfer between layers, power distribution, and manual drilling options.
 
 ## Key Features and Systems
 
-- **Drill Smoke Effect**: The drill now emits smoke, adding a visual cue while drilling.
-- **Send Up-button**: Allows easy transfer of materials from underground to the surface through a button interface.
-- **Multi-language Support**: Russian translation available, courtesy of WolF8RocK.
-- **Custom Map Layer Sizes**: Mod-settings enable players to adjust generated map layer sizes to their preference.
-- **Low-tech Mode**: Offers a manual operation mode for drills that do not require power.
-- **Automatic Item Transfer**: Seamless item transfer between layers if storage is built both at the surface and underground.
-- **Power Transfer System**: Shares power supply between layers, distributing it equitably across all underground levels.
-- **New Textures**: Retextures for drills and icons to enhance the mod aesthetics.
-- **Layer Renaming**: Improves layer management by naming them.
-- **Ore Density Adjustment**: Customize ore density across underground layers.
-- **Cave Biome Compatibility**: Generates customized cave biomes when using mods like Biomes! Caverns and CaveBiome.
+1. **Mining Shafts**: Players can build mining shafts that drill down into the earth, revealing new underground maps.
+2. **Automatic Item Transfer**: Items can be automatically transferred between layers using storage buildings.
+3. **Power Distribution**: Power can be transferred from the surface to lower layers, allowing for more efficient operation of mining equipment.
+4. **Manual Drilling**: An option for manual drilling when the "Low-tech" setting is enabled.
+5. **Layer Renaming**: Players can rename underground layers for better organization.
+6. **Cave Biome Generation**: Compatibility with mods that generate cave biomes, such as Biomes! Caverns and CaveBiome.
+7. **Ore Density Adjustment**: Players can adjust the ore density of underground layers.
 
 ## Coding Patterns and Conventions
 
-- Follow standard C# and XML naming conventions (PascalCase for classes, camelCase for methods, and UPPER_SNAKE_CASE for constants).
-- Organize code by functionality, segregating it into classes with clear responsibilities.
-- Use comments to document complex logic and provide context for future developers.
+- **Consistent Naming**: Variables, methods, and classes should be named descriptively and consistently.
+- **Modular Code**: Code should be organized into logical modules, such as separate classes for different features (e.g., `Building_MiningShaft`, `Dialog_RenameLayer`).
+- **Comments and Documentation**: Include comments and documentation to explain complex logic and system interactions.
+- **Error Handling**: Implement robust error handling to manage unexpected scenarios gracefully.
 
 ## XML Integration
 
-- Utilize XML for defining various game entities such as biomes and building configurations. Regularly validate XML files with the RimWorld schema.
-- Ensure XML files are organized and follow a consistent structure for readability and maintainability.
+DeepRim uses XML files to define various game elements such as biomes, job definitions, map generators, and thing definitions. When working with XML files, ensure that:
+
+- **Correct Def Types**: Each XML file should contain the appropriate def type (e.g., `BiomeDef`, `JobDef`, `MapGeneratorDef`, `ThingDef`).
+- **Valid Definitions**: Definitions should be valid and follow RimWorld's XML schema.
+- **Consistent Attributes**: Attributes should be consistent and follow RimWorld's conventions.
 
 ## Harmony Patching
 
-- Utilize Harmony for patching existing RimWorld methods. Responsible patching ensures compatibility with other mods and prevents unexpected behaviors.
-- Always include a descriptive prefix when creating Harmony patches to maintain a unique namespace.
-- Properly categorize patches into `Postfix`, `Prefix`, and `Transpiler` to maintain clear code logic.
+DeepRim uses Harmony for patching existing RimWorld code to add new functionality. When creating Harmony patches, ensure that:
+
+- **Patch Location**: Patches should be located in the appropriate namespace and class.
+- **Patch Metadata**: Use the `[HarmonyPatch]` attribute to specify the target method and patch type.
+- **Patch Logic**: Implement the patch logic carefully to avoid unintended side effects.
 
 ## Suggestions for Copilot
 
-- **Autogenerate XML Templates**: Leverage Copilot to assist with generating XML templates for new game definitions.
-- **Implement New Methods**: Propose new methods for enhanced features such as improved item transfer algorithms or optimized layer generation logic.
-- **Suggest Optimizations**: Analyze current implementations and suggest performance optimizations, particularly in code responsible for map generation and resource handling.
-- **Code Cleanliness**: Aid in maintaining code cleanliness by automatically formatting and identifying redundant code snippets.
+- **Feature Requests**: If you have a specific feature in mind, feel free to suggest it in the GitHub Discussions.
+- **Code Contributions**: If you have improvements or bug fixes, consider contributing your code to the project.
+- **Error Reporting**: If you encounter any issues, please report them using the provided Discord channel or Log Uploader.
+- **Mod Sorting**: Use RimSort to manage your mods for better compatibility and performance.
 
-This guide provides the necessary instructions for contributors working with GitHub Copilot on the DeepRim (Continued) mod. This comprehensive coverage supports efficient updates, maintenance, and expansion of the project while ensuring high-quality coding standards.
+By following these guidelines, you can contribute effectively to the DeepRim (Continued) mod and enhance your experience in RimWorld.
 
 ## Project Solution Guidelines
 - Relevant mod XML files are included as Solution Items under the solution folder named XML, these can be read and modified from within the solution.
@@ -56,4 +58,6 @@ This guide provides the necessary instructions for contributors working with Git
 ## Hard rules (must follow)
 - Do NOT run commands that modify the repo (no git commit, git apply, dotnet format) unless explicitly asked.
 - Prefer minimal reads: read only the smallest code region needed (around the suspicious lines).
+- When mentioning SonarQube issues, automatically use the SonarQube MCP service to fetch and address issues instead of making inferred fixes without querying SonarQube first.
+- When mentioning the rimworld log, automatically use the Rimworld MCP service to fetch the log.
 

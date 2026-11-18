@@ -6,9 +6,8 @@ namespace DeepRim;
 
 public class UndergroundManager(Map map) : MapComponent(map)
 {
-    private int activeLayers = -1;
-
     public bool AnyLayersPowered = true;
+    private int activeLayers = -1;
     public Dictionary<int, string> layerNames = new();
 
     public Dictionary<int, UndergroundMapParent> layersState = new();

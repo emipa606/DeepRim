@@ -47,7 +47,7 @@ public class Building_MiningShaft : Building_ShaftLiftParent
                 }
 
                 var currentComps = (List<ThingComp>)DeepRimMod.CompsFieldInfo.GetValue(this);
-                currentComps.Remove(field);
+                currentComps?.Remove(field);
                 DeepRimMod.CompsFieldInfo.SetValue(this, currentComps);
 
                 return null;
@@ -144,10 +144,7 @@ public class Building_MiningShaft : Building_ShaftLiftParent
             Log.Warning("Map didn't contain an underground lift.");
         }
 
-        if (UndergroundManager != null)
-        {
-            UndergroundManager.ActiveLayers = UndergroundManager.layersState.Count;
-        }
+        UndergroundManager?.ActiveLayers = UndergroundManager.layersState.Count;
     }
 
     public override IEnumerable<Gizmo> GetGizmos()
@@ -775,7 +772,8 @@ public class Building_MiningShaft : Building_ShaftLiftParent
 
             if (PowwerComp is { PowerOn: true })
             {
-                var basePowerConsumption = (float)DeepRimMod.BasePowerConsumptionFieldInfo.GetValue(PowwerComp.Props);
+                var basePowerConsumption =
+                    (float)(DeepRimMod.BasePowerConsumptionFieldInfo.GetValue(PowwerComp.Props) ?? 10f);
                 switch (UndergroundManager.ActiveLayers)
                 {
                     case > 0
@@ -795,7 +793,8 @@ public class Building_MiningShaft : Building_ShaftLiftParent
             }
             else if (UndergroundManager.ActiveLayers < 1 && PowwerComp != null)
             {
-                var basePowerConsumption = (float)DeepRimMod.BasePowerConsumptionFieldInfo.GetValue(PowwerComp.Props);
+                var basePowerConsumption =
+                    (float)(DeepRimMod.BasePowerConsumptionFieldInfo.GetValue(PowwerComp.Props) ?? 10f);
                 if (!basePowerConsumption.Equals(idlePowerNeeded))
                 {
                     DeepRimMod.LogWarn("Updating power to OFF state.");

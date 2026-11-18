@@ -21,7 +21,7 @@ public class Building_ShaftLiftParent : Building
                 }
 
                 var currentComps = (List<ThingComp>)DeepRimMod.CompsFieldInfo.GetValue(this);
-                currentComps.Remove(field);
+                currentComps?.Remove(field);
                 DeepRimMod.CompsFieldInfo.SetValue(this, currentComps);
 
                 return null;
@@ -53,7 +53,7 @@ public class Building_ShaftLiftParent : Building
                 }
 
                 var currentComps = (List<ThingComp>)DeepRimMod.CompsFieldInfo.GetValue(this);
-                currentComps.Remove(field);
+                currentComps?.Remove(field);
                 DeepRimMod.CompsFieldInfo.SetValue(this, currentComps);
 
                 return null;

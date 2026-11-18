@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+  <Operation Class="PatchOperationConditional">
+    <xpath>/Defs/BiomeDef[defName="Cave"]</xpath>
+    <success>Always</success>
+    <match Class="PatchOperationAdd">
+      <xpath>/Defs</xpath>
+      <value>
+        <MapGeneratorDef ParentName="Deep_MapCommonBase">
+          <defName>DeepCave</defName>
+          <genSteps>
+            <li>CaveElevation</li>
+            <li>CaveRiver</li>
+            <li>CaveInitializeWeatherAndLight</li>
+          </genSteps>
+        </MapGeneratorDef>
+      </value>
+    </match>
+  </Operation>
+</Patch>

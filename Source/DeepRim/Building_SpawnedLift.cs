@@ -30,7 +30,7 @@ public class Building_SpawnedLift : Building_ShaftLiftParent
                 }
 
                 var currentComps = (List<ThingComp>)DeepRimMod.CompsFieldInfo.GetValue(this);
-                currentComps.Remove(field);
+                currentComps?.Remove(field);
                 DeepRimMod.CompsFieldInfo.SetValue(this, currentComps);
 
                 return null;

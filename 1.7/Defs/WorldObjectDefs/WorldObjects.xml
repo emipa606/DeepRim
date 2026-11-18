@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <WorldObjectDef>
+    <defName>UndergroundMapParent</defName>
+    <label>underground mining camp</label>
+    <description>A mining camp set up in some underground cavern.</description>
+    <worldObjectClass>DeepRim.UndergroundMapParent</worldObjectClass>
+    <texture>UI/drilldown</texture>
+    <expandingIcon>true</expandingIcon>
+    <expandingIconTexture>UI/drilldown</expandingIconTexture>
+    <expandingIconPriority>8</expandingIconPriority>
+    <comps>
+    </comps>
+    <mapGenerator>DeepMap</mapGenerator>
+  </WorldObjectDef>
+</Defs>

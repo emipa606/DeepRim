@@ -9,33 +9,33 @@
   <Folder Name="/XML/Languages/English/Keyed/">
     <File Path="../Languages/English/Keyed/settings.xml" />
   </Folder>
-  <Folder Name="/XML/1.6/Defs/">
-    <File Path="../1.6/Defs/UpdateInfo.xml" />
-  </Folder>
-  <Folder Name="/XML/1.6/Defs/WorldObjectDefs/">
-    <File Path="../1.6/Defs/WorldObjectDefs/WorldObjects.xml" />
-  </Folder>
   <Folder Name="/XML/About/">
     <File Path="../About/about.xml" />
   </Folder>
-  <Folder Name="/XML/1.6/Defs/MapGeneration/">
-    <File Path="../1.6/Defs/MapGeneration/DeepMapGenerator.xml" />
+  <Folder Name="/XML/1.7/Defs/">
+    <File Path="../1.7/Defs/UpdateInfo.xml" />
   </Folder>
-  <Folder Name="/XML/1.6/Defs/JobDefs/">
-    <File Path="../1.6/Defs/JobDefs/Jobs_Work.xml" />
+  <Folder Name="/XML/1.7/Defs/ThingDefs_Buildings/">
+    <File Path="../1.7/Defs/ThingDefs_Buildings/Building_Buildable.xml" />
+    <File Path="../1.7/Defs/ThingDefs_Buildings/Building_Spawned.xml" />
   </Folder>
-  <Folder Name="/XML/1.6/Patches/">
-    <File Path="../1.6/Patches/BiomesCaverns_MapGen.xml" />
-    <File Path="../1.6/Patches/CaveBiome_MapGen.xml" />
+  <Folder Name="/XML/1.7/Defs/WorkGiverDefs/">
+    <File Path="../1.7/Defs/WorkGiverDefs/WorkGivers.xml" />
   </Folder>
-  <Folder Name="/XML/1.6/Defs/ThingDefs_Buildings/">
-    <File Path="../1.6/Defs/ThingDefs_Buildings/Building_Buildable.xml" />
-    <File Path="../1.6/Defs/ThingDefs_Buildings/Building_Spawned.xml" />
+  <Folder Name="/XML/1.7/Defs/MapGeneration/">
+    <File Path="../1.7/Defs/MapGeneration/DeepMapGenerator.xml" />
   </Folder>
-  <Folder Name="/XML/1.6/Defs/BiomeDefs/">
-    <File Path="../1.6/Defs/BiomeDefs/Biome_Underground.xml" />
+  <Folder Name="/XML/1.7/Defs/BiomeDefs/">
+    <File Path="../1.7/Defs/BiomeDefs/Biome_Underground.xml" />
   </Folder>
-  <Folder Name="/XML/1.6/Defs/WorkGiverDefs/">
-    <File Path="../1.6/Defs/WorkGiverDefs/WorkGivers.xml" />
+  <Folder Name="/XML/1.7/Patches/">
+    <File Path="../1.7/Patches/BiomesCaverns_MapGen.xml" />
+    <File Path="../1.7/Patches/CaveBiome_MapGen.xml" />
+  </Folder>
+  <Folder Name="/XML/1.7/Defs/JobDefs/">
+    <File Path="../1.7/Defs/JobDefs/Jobs_Work.xml" />
+  </Folder>
+  <Folder Name="/XML/1.7/Defs/WorldObjectDefs/">
+    <File Path="../1.7/Defs/WorldObjectDefs/WorldObjects.xml" />
   </Folder>
 </Solution>

@@ -1,12 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <OutputPath>../1.5/Assemblies/</OutputPath>
+    <OutputPath>../1.6/Assemblies/</OutputPath>
     <TargetFramework>net481</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <DebugType>None</DebugType>
     <LangVersion>latest</LangVersion>
-    <FileVersion>1.5.6</FileVersion>
+    <FileVersion>1.6.2</FileVersion>
+    <Copyright>© meowmeow 2026 - MIT License</Copyright>
+    <AssemblyVersion>1.6</AssemblyVersion>
+    <Product>DeepRim (Continued)</Product>
+    <Nullable>warnings</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Krafs.Rimworld.Ref">
